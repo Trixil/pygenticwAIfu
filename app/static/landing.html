@@ -1,13 +1,18 @@
 <link rel="stylesheet" href="/assets/styles.css">
 
-<script src="/assets/render_cards.js" defer></script>
 <body>
     <div class="convo-page">
         <div class="layout">
             <div class="left">inshallah there will be a left sidebar here</div>
             <div class="middle">
                 <header id="character-cards-header">Characters</header>
-                <div id="character-cards">{{CHARACTER_CARDS}}</div>
+                <div id="character-cards">
+                    <button class="character-card new-character-card" type="button">
+                      <span class="new-character-plus">+</span>
+                      <span class="new-character-label">New Character</span>
+                    </button>
+                    {{CHARACTER_CARDS}}
+                </div>
             </div>
             <div class="right">inshallah there will be a right sidebar here</div>
         </div>

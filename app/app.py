@@ -141,6 +141,11 @@ def renderCharacterCards() -> HTMLResponse:
         charHtml = f"""
         <div class="character-card">
             <img src="/character-images/{image_name}" alt="Character Image" class="character-image"/>
+              <button class="character-edit-button" aria-label="Edit character">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M4 20h4l10.5-10.5-4-4L4 16v4zM15.5 4.5l4 4 1.2-1.2a1.4 1.4 0 0 0 0-2l-2-2a1.4 1.4 0 0 0-2 0l-1.2 1.2z" />
+                </svg>
+            </button>
             <div class="character-name">{characterCard.charName}</div>
         </div>
         """;
