@@ -1,6 +1,10 @@
-import definitions
 import json
 import os
+
+try:
+    from . import definitions
+except ImportError:
+    import definitions
 
 def validateFilename(filename):
     forbidden = '<>:"/\\|?*'

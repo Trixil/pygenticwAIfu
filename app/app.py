@@ -2,14 +2,18 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, HTMLResponse
 from pydantic import BaseModel, Field
-import definitions
 from contextlib import asynccontextmanager
 import os
 import time
 import glob
 import json
 from pathlib import Path
-import file_io
+
+try:
+    from . import definitions, file_io
+except ImportError:
+    import definitions
+    import file_io
 
 APP_DIR = Path(__file__).resolve().parent
 STATIC_DIR = APP_DIR / "static"
@@ -110,7 +114,10 @@ def checkStatus():
 
 @agenticwAIfuApp.get("/static")
 def mainpage():
-    return FileResponse(STATIC_DIR / "landing.html")
+    landing_html = (STATIC_DIR / "landing.html").read_text(encoding="utf-8")
+    cards_html = renderCharacterCards().body.decode("utf-8")
+    page_html = landing_html.replace("{{CHARACTER_CARDS}}", cards_html)
+    return HTMLResponse(content=page_html)
 
 @agenticwAIfuApp.get("/chat")
 def chatpage():
@@ -130,9 +137,10 @@ def renderCharacterCards() -> HTMLResponse:
         characterCard = file_io.loadChar(characterCardFile)
         image_name = Path(characterCard.charImageFile.strip('"')).name
 
+        # the problem is that these character cards need to be formatted appropriately with the  right html and css
         charHtml = f"""
         <div class="character-card">
-            <img src="/character-images/{image_name}" alt="Character Image" />
+            <img src="/character-images/{image_name}" alt="Character Image" class="character-image"/>
             <div class="character-name">{characterCard.charName}</div>
         </div>
         """;

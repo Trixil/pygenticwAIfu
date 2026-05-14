@@ -12,3 +12,35 @@ body {
   padding: 1rem;
   border: 1px solid #ccc;
 }
+
+/* static/landing.html */
+.layout {
+  display: flex;
+  gap: 20px;        /* padding between columns */
+}
+
+.left,
+.right {
+  width: 200px;
+}
+
+.middle {
+  flex: 1;          /* takes remaining space */
+}
+
+#character-cards {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+/* character card object */
+.character-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.character-image {
+  max-width: 200px;
+}
