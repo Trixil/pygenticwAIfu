@@ -20,6 +20,7 @@ class LLMConfig(BaseModel):
 
 class character(BaseModel):
     charName: str = ""
+    charNickname: str = ""
     charDesc: str = ""
     charScenario: str = ""
     charFile: str = ""

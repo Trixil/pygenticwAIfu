@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap');
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  padding: 2rem;
+  background: linear-gradient(#06194a, #3d33b7);
+  font-family: system-ui, sans-serif;
+}
+
+.modal-toggle {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.landing-page {
+  min-height: 100vh;
+}
+
+.panel {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.notice {
+  padding: 1rem;
+  border: 1px solid #ccc;
+}

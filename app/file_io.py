@@ -1,5 +1,6 @@
 import json
 import os
+from pydantic import BaseModel
 
 try:
     from . import definitions
@@ -9,8 +10,8 @@ except ImportError:
 def validateFilename(filename):
     forbidden = '<>:"/\\|?*'
     if any(symbol in filename for symbol in forbidden):
-        return "Bad filename"
-    return filename
+        return False
+    return True
 
 def saveChat(chatDict, chatFile):
     chatFile = validateFilename(chatFile)
@@ -23,10 +24,10 @@ def loadChat(chatFile) -> definitions.chat:
     
     return definitions.chat.model_validate(fullChat)
 
-def saveChar(charDict, charFile):
-    charFile = validateFilename(charFile)
+def saveChar(charObject, charFile):
+
     with open(charFile, "w", encoding="utf-8") as f:
-        json.dump(charDict, f, indent=2)
+        json.dump(charObject.model_dump(), f, indent=2)
 
 def loadChar(charFile) -> definitions.character:
     with open(charFile, "r", encoding="utf-8") as file:

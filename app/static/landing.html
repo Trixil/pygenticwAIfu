@@ -1,17 +1,70 @@
 <link rel="stylesheet" href="/assets/styles.css">
 
 <body>
+    <script src="/assets/saveCharacter.js" defer></script>
+    <input id="new-character-modal-toggle" class="modal-toggle" type="checkbox" />
     <div class="convo-page">
         <div class="layout">
             <div class="left">inshallah there will be a left sidebar here</div>
             <div class="middle">
                 <header id="character-cards-header">Characters</header>
                 <div id="character-cards">
-                    <button class="character-card new-character-card" type="button">
-                      <span class="new-character-plus">+</span>
-                      <span class="new-character-label">New Character</span>
-                    </button>
+                    <label class="character-card new-character-card" for="new-character-modal-toggle">
+                        <span class="new-character-card-content">
+                            <span class="new-character-plus" aria-hidden="true">+</span>
+                            <span class="new-character-label">New Character</span>
+                        </span>
+                    </label>
                     {{CHARACTER_CARDS}}
+                </div>
+
+                <div class="new-character-modal">
+                    <label class="new-character-modal-backdrop" for="new-character-modal-toggle"></label>
+                    <section class="new-character-pane" aria-labelledby="new-character-title">
+                        <div class="new-character-pane-header">
+                            <h2 id="new-character-title">New Character</h2>
+                            <label class="new-character-close" for="new-character-modal-toggle" aria-label="Close new character form">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                </svg>
+                            </label>
+                        </div>
+
+                        <form class="new-character-form">
+                            <p id="character-save-success"></p>
+                            <label class="new-character-field">
+                                <span>Portrait File</span>
+                                <input type="file" name="characterImage" accept="image/*" />
+                                <p id="character-image-error-message"></p>
+                            </label>
+
+                            <label class="new-character-field">
+                                <span>Character Name</span>
+                                <input type="text" name="characterName" />
+                            </label>
+
+                            <label class="new-character-field">
+                                <span>Nickname</span>
+                                <input type="text" name="nickname" />
+                            </label>
+
+                            <label class="new-character-field">
+                                <span>Description</span>
+                                <textarea name="description" rows="4"></textarea>
+                            </label>
+
+                            <label class="new-character-field">
+                                <span>Scenario</span>
+                                <textarea name="scenario" rows="5"></textarea>
+                            </label>
+
+                            <div class="new-character-actions">
+                                <label class="new-character-secondary" for="new-character-modal-toggle">Cancel</label>
+                                <button class="new-character-primary" type="submit">Create Character</button>
+                            </div>
+                        </form>
+                    </section>
                 </div>
             </div>
             <div class="right">inshallah there will be a right sidebar here</div>

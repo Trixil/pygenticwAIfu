@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Form, File, UploadFile
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, HTMLResponse
 from pydantic import BaseModel, Field
@@ -126,6 +126,35 @@ def chatpage():
 @agenticwAIfuApp.get("/api/ping")
 def pong():
     return {"ok": True, "message": "pong"}
+
+@agenticwAIfuApp.post("/api/create-character")
+def createCharacter(
+    characterName: str = Form(...),
+    characterImage: UploadFile = File(...),
+    nickname: str = Form(...),
+    description: str = Form(...),
+    scenario: str = Form(...)
+):
+
+    print("bruh")
+    if not file_io.validateFilename(characterName):
+        return {"validFilename": False}
+    
+    print("bruh")
+    characterFile = CHARACTERS_DIR / "definitions" / (characterName + ".json")
+    print("bruh")
+    newCharacter = definitions.character(
+        charName=characterName,
+        charNickname=nickname,
+        charDesc=description,
+        charScenario=scenario,
+        charFile=str(characterFile),
+        charImageFile=characterImage.filename,
+    )
+    print("bruh")
+    file_io.saveChar(newCharacter, characterFile)
+    print("bruh")
+    return {"validFilename": True}
 
 @agenticwAIfuApp.get("/character-cards", response_class=HTMLResponse)
 def renderCharacterCards() -> HTMLResponse:
