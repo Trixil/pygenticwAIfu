@@ -8,6 +8,7 @@ import time
 import glob
 import json
 from pathlib import Path
+import shutil
 
 try:
     from . import definitions, file_io
@@ -143,18 +144,42 @@ def createCharacter(
     print("bruh")
     characterFile = CHARACTERS_DIR / "definitions" / (characterName + ".json")
     print("bruh")
+    print("bruh")
+    imageFileDest = APP_DIR / "characters" / "images" / characterImage.filename
+
+    with imageFileDest.open("wb") as buffer:
+        shutil.copyfileobj(characterImage.file, buffer)
+    
     newCharacter = definitions.character(
         charName=characterName,
         charNickname=nickname,
         charDesc=description,
         charScenario=scenario,
-        charFile=str(characterFile),
-        charImageFile=characterImage.filename,
+        charFile=str(Path("characters") / "definitions" / f"{characterName}.json"),
+        charImageFile=str(Path("characters") / "definitions" / characterImage.filename)
     )
-    print("bruh")
+
     file_io.saveChar(newCharacter, characterFile)
     print("bruh")
     return {"validFilename": True}
+
+@agenticwAIfuApp.post("/add-character-card", response_class=HTMLResponse)
+def addCharacter(characterName: str = Form(...),
+                 characterImage: UploadFile = File(...)) -> HTMLResponse:
+    
+    charHtml = f"""
+        <div class="character-card">
+            <img src="/character-images/{characterImage.filename}" alt="Character Image" class="character-image"/>
+              <button class="character-edit-button" aria-label="Edit character">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M4 20h4l10.5-10.5-4-4L4 16v4zM15.5 4.5l4 4 1.2-1.2a1.4 1.4 0 0 0 0-2l-2-2a1.4 1.4 0 0 0-2 0l-1.2 1.2z" />
+                </svg>
+            </button>
+            <div class="character-name">{characterName}</div>
+        </div>
+        """;
+
+    return HTMLResponse(content=charHtml)
 
 @agenticwAIfuApp.get("/character-cards", response_class=HTMLResponse)
 def renderCharacterCards() -> HTMLResponse:
