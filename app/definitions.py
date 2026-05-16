@@ -23,6 +23,7 @@ class character(BaseModel):
     charNickname: str = ""
     charDesc: str = ""
     charScenario: str = ""
+    charExampleDialogue: str = ""
     charFile: str = ""
     charImageFile: str = ""
 

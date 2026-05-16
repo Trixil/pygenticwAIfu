@@ -1,11 +1,15 @@
 import json
 import os
 from pydantic import BaseModel
+import shutil
+from pathlib import Path
 
 try:
     from . import definitions
 except ImportError:
     import definitions
+
+APP_DIR = Path(__file__).resolve().parent
 
 def validateFilename(filename):
     forbidden = '<>:"/\\|?*'
@@ -26,6 +30,10 @@ def loadChat(chatFile) -> definitions.chat:
 
 def saveChar(charObject, charFile):
 
+    imageFileSrc = Path(charObject.charImageFile)
+    imageFileDest = APP_DIR / "characters" / "images" / imageFileSrc.name
+
+    shutil.copyfile(imageFileSrc, imageFileDest)
     with open(charFile, "w", encoding="utf-8") as f:
         json.dump(charObject.model_dump(), f, indent=2)
 
