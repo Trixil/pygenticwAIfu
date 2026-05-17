@@ -7,7 +7,7 @@
   pointer-events: none;
 }
 
-.modal-toggle:checked ~ .convo-page .new-character-modal {
+.modal-toggle:checked ~ .landing-page .new-character-modal {
   pointer-events: auto;
 }
 
@@ -34,11 +34,11 @@
   transition: transform 240ms ease;
 }
 
-.modal-toggle:checked ~ .convo-page .new-character-modal-backdrop {
+.modal-toggle:checked ~ .landing-page .new-character-modal-backdrop {
   background: rgba(0, 0, 0, 0.35);
 }
 
-.modal-toggle:checked ~ .convo-page .new-character-pane {
+.modal-toggle:checked ~ .landing-page .new-character-pane {
   transform: translateX(0);
 }
 
