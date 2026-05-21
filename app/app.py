@@ -247,13 +247,13 @@ async def startNewChat(request: Request):
     }
 
     print("chatDict is", chatDict)
-    file_io.saveChat(chatDict, f"chats/{chatID}.json")
+    file_io.saveChat(chatDict, str(CHATS_DIR / f"{chatID}.json"))
     return {"chatID": chatID}
 
 @agenticwAIfuApp.get("/chat/{chatID}", response_class=HTMLResponse)
 async def serveNewChat(chatID: str):
 
-    chatCard = file_io.loadChat(f"chats/{chatID}.json")
+    chatCard = file_io.loadChat(str(CHATS_DIR / f"{chatID}.json"))
     chatMessages = chatCard.messages
     messageHTML = """<div class="chat-bubbles">"""
     for message in chatMessages:

@@ -11,13 +11,14 @@ except ImportError:
 
 APP_DIR = Path(__file__).resolve().parent
 
+# this function is ass
 def validateFilename(filename):
     forbidden = '<>:"\\|?*'
     if any(symbol in filename for symbol in forbidden):
         raise ValueError(f"WHY DID YOU NAME IT THAT REEEEEEEEEEEEEEEEE the filename is {filename}")
 
 def saveChat(chatDict, chatFile):
-    validateFilename(chatFile)
+    #validateFilename(chatFile)
 
     print("finna dump")
     with open(chatFile, "w", encoding="utf-8") as f:
@@ -46,7 +47,7 @@ def loadChar(charFile) -> definitions.character:
     return definitions.character.model_validate(character)
 
 def saveLoadout(loadoutDict, loadoutFile):
-    loadoutFile = validateFilename(loadoutFile)
+    #loadoutFile = validateFilename(loadoutFile)
     with open(loadoutFile, "w", encoding="utf-8") as f:
         json.dump(loadoutDict, f, indent=2)
 

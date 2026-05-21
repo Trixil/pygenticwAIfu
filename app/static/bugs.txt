@@ -1,2 +1,4 @@
 clicking on Agent loadout brings it to selected-card class or somehting and it glows
 new character card is selectable upon reacing the new chat screen
+saving chat id by number is dangerous and can overwrite previous chats. use a randomly generated hash
+dashed lines around tiny convo head images
