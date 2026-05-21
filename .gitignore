@@ -5,3 +5,4 @@ app/characters/definitions/*
 app/characters/images/*
 .env
 .venv
+app/chats/*.json
