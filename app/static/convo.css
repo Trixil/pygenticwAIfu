@@ -235,3 +235,70 @@ body {
 .chat-window::-webkit-scrollbar {
   display: none;             /* Chrome/Safari/Edge */
 }
+
+.chat-input-bar {
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin: 12px 18px 18px;
+  padding: 10px 12px;
+
+  border-radius: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.chat-input {
+  flex: 1;
+
+  min-height: 42px;
+  max-height: 120px;
+
+  resize: none;
+  border: none;
+  outline: none;
+  background: transparent;
+
+  color: white;
+  font-family: "Gowun Batang", serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.chat-input::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.chat-send-button {
+  width: 46px;
+  height: 46px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.16);
+  color: white;
+
+  cursor: pointer;
+}
+
+.chat-send-button svg {
+  width: 26px;
+  height: 26px;
+
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.chat-send-button:hover {
+  background: rgba(255, 255, 255, 0.25);
+}

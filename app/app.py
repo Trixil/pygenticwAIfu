@@ -12,10 +12,11 @@ from pathlib import Path
 import shutil
 
 try:
-    from . import definitions, file_io
+    from . import definitions, file_io, htmlHelpers
 except ImportError:
     import definitions
     import file_io
+    import htmlHelpers
 
 APP_DIR = Path(__file__).resolve().parent
 STATIC_DIR = APP_DIR / "static"
@@ -250,6 +251,33 @@ async def startNewChat(request: Request):
     file_io.saveChat(chatDict, str(CHATS_DIR / f"{chatID}.json"))
     return {"chatID": chatID}
 
+@agenticwAIfuApp.post("/api/save-message")
+async def saveMessage(chatMessageInput: str = Form(...), 
+                    chatId: str = Form(...),
+                    role: str = Form(...)):
+    
+    chatFile = str(CHATS_DIR / f"{chatId}.json")
+    chatCard = file_io.loadChat(chatFile)
+    chatMessages = chatCard.messages
+
+    # /#/# USER NAME NOT IMPLEMENTED YET
+    newMessage = definitions.message.model_validate({
+        "role": role,
+        "sender": "Himothy NOT IMPLEMENTED YET",
+        "content": chatMessageInput
+    })
+
+    chatMessages = chatMessages.append(newMessage)
+    chatCard.messages = chatMessages
+    
+    file_io.saveChat(chatCard.model_dump(), chatFile)
+
+@agenticwAIfuApp.get("/render-new-message", response_class=HTMLResponse)
+def renderNewMessage(messageContent: str = Form(...),
+                    role: str = Form(...)):
+    messageHTML = htmlHelpers.buildMessageHTML(role, messageContent)
+    return HTMLResponse(content=messageHTML)
+
 @agenticwAIfuApp.get("/chat/{chatID}", response_class=HTMLResponse)
 async def serveNewChat(chatID: str):
 
@@ -257,19 +285,8 @@ async def serveNewChat(chatID: str):
     chatMessages = chatCard.messages
     messageHTML = """<div class="chat-bubbles">"""
     for message in chatMessages:
-        if message.role == "user":
-            classString = "user"
-        elif message.role == "assistant":
-            classString = "character"
-        else:
-            raise ValueError(f"Unknown message role: {message.role}")
+        messageHTML += htmlHelpers.buildMessageHTML(message.role, message.content)
 
-        messageHTML += f"""
-            <div class="{classString}-chat-bubble">
-                <p class="{classString}-message">{message.content}</p>
-            </div>
-        """
-    
     messageHTML += """
         </div>
     """

@@ -1,6 +1,7 @@
 <link rel="stylesheet" href="/assets/styles.css">
 
 <body>
+    <script src="/assets/sendChat.js" defer></script>
     <input id="new-character-modal-toggle" class="modal-toggle" type="checkbox" />
     <div class="convo-page">
         <div class="layout">
@@ -39,6 +40,20 @@
                             {{CONVO_MESSAGES}}
                         </div>
                     </div>
+                    <form class="chat-input-bar" id="chat-message-form">
+                        <textarea
+                            class="chat-input"
+                            id="chatMessageInput"
+                            name="chatMessageInput"
+                            placeholder="Type a message..."
+                        ></textarea>
+
+                        <button class="chat-send-button" type="submit" aria-label="Send message">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M5 12 H18 M13 7 L18 12 L13 17" />
+                            </svg>
+                        </button>
+                    </form>
                 </div>
             </div>
             <div class="right">inshallah there will be a right sidebar here</div>
