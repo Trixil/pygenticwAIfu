@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+
+app/characters/definitions/*
+app/characters/images/*
+.env
+.venv

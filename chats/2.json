@@ -1,0 +1,10 @@
+{
+  "chatName": "",
+  "chatID": 2,
+  "chatFile": "chats/2.json",
+  "chatAgentLoadout": "Loadout 1",
+  "chatCharacters": [
+    "Mutsuki"
+  ],
+  "messages": []
+}

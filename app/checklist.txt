@@ -1,0 +1,15 @@
+1. implement a barebones pipeline loading
+DONE
+
+2. implement character and pipeline sleection
+    a. go back button
+    b. upon clicking new chat, a javascript script queries all of the character card elements 
+    and adds them to a class that glows upon hovering
+    c. when the characters are added, then a new "add character" card is added onto the left navbar too. this is accomplished by setting the previously hidden image to visible and altering the  src image on it, and visibling the text as well.
+3. implement starting a ne wchat with character and pipeline
+
+4. logging and saving messages
+
+5. adding characters into character
+
+6. swapping pipeline

@@ -1,0 +1,179 @@
+<link rel="stylesheet" href="/assets/styles.css">
+
+<body>
+    <script src="/assets/saveCharacter.js" defer></script>
+    <script src="/assets/showPane.js" defer></script>
+    <script src="/assets/newChatPane.js" defer></script>
+    <script src="/assets/addToChat.js" defer></script>
+    <input id="new-character-modal-toggle" class="modal-toggle" type="checkbox" />
+    <div class="landing-page">
+        <div class="layout">
+            <div class="left">
+                <header id="chats-header">Chats</header>
+                <div id="chat-cards">
+                    <div class="active-chat-pane">
+                        <button class="chat-card new-chat-card" type="button" aria-label="New chat" onclick="showNewChatPane(); addCharacterToChat(); addLoadoutToChat()">
+                            <span class="new-chat-card-content">
+                                <span class="new-chat-plus" aria-hidden="true">+</span>
+                                <span class="new-chat-label">New Chat</span>
+                            </span>
+                        </button>
+                        <span class="chat-card">
+                            <img src="/character-images/Nino.png" class="chat-card-image">
+                            <div class="chat-card-text">
+                                <header>bruh</header>
+                            </div>
+                        </span>
+                    </div>
+                    <div class="new-chat-pane hidden">
+                        <button class="undo-new-chat chat-card" onclick="showActiveChatPane(); removeSelected()">
+                            <svg class="back-arrow" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M15 5 L8 12 L15 19" />
+                            </svg>
+                            <p id="undo-new-chat-text">Cancel</p>
+                        </button>
+                        <div class="choose-character">
+                            <header class="choose-character-instruction">1. Choose character(s).</header>
+                            <div class="chat-card empty-chat-card">
+                                <span class="empty-chat-card-content">
+                                    <svg
+                                        class="chat-person-icon"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 256 256"
+                                        aria-hidden="true">
+                                        <g fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="128" cy="84" r="40" />
+                                            <path d="M56 204c0-34 32-58 72-58s72 24 72 58" />
+                                        </g>
+                                    </svg>
+                                    <span class="empty-chat-label">Character 1</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="choose-loadout">
+                            <header class="choose-loadout-instruction">
+                                2. Choose agent loadout.
+                            </header>
+                            <div class="loadout-card empty-loadout-card">
+                                <span class="empty-loadout-card-content">
+                                    <svg
+                                        class="pipeline-diagram"
+                                        viewBox="0 0 480 360"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        aria-label="Minimal pipeline"
+                                        >
+                                        <g
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="16"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                        >
+                                            <!-- connectors -->
+                                            <line x1="168" y1="180" x2="212" y2="180" />
+                                            <line x1="240" y1="108" x2="240" y2="152" />
+                                            <line x1="260" y1="200" x2="320" y2="260" />
+                                            <line x1="168" y1="280" x2="312" y2="280" />
+
+                                            <!-- nodes -->
+                                            <circle cx="140" cy="180" r="28" />
+                                            <circle cx="240" cy="180" r="28" />
+                                            <circle cx="240" cy="80" r="28" />
+                                            <circle cx="140" cy="280" r="28" />
+                                            <circle cx="340" cy="280" r="28" />
+                                        </g>
+                                    </svg>
+                                    <span class="empty-loadout-label">Agent Loadout</span>
+                                </span>
+                            </div>
+                        </div>
+                        <button class="start-new-chat start-chat-off-button">
+                            <svg class="start-arrow hidden" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M9 5 L16 12 L9 19" />
+                            </svg>
+                            <p class="start-chat-off-header start-chat-header">Start</p>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="middle">
+                <div class="middle-head">
+                    <button id="character-cards-button" class="pane-tab-button" onclick="showPane('character-cards')">
+                        <header class="pane-tab-header">Characters</header>
+                    </button>
+                    <button id="loadout-cards-button" class="pane-tab-button" onclick="showPane('loadout-cards')">
+                        <header class="pane-tab-header">Loadouts</header>
+                    </button>
+                </div>
+                <div id="character-cards">
+                    <label class="character-card new-character-card" for="new-character-modal-toggle">
+                        <span class="new-character-card-content">
+                            <span class="new-character-plus" aria-hidden="true">+</span>
+                            <span class="new-character-label">New Character</span>
+                        </span>
+                    </label>
+                    {{CHARACTER_CARDS}}
+                </div>
+
+                <div id="loadout-cards" class="hidden">
+                    {{LOADOUT_CARDS}}
+                </div>
+
+                <div class="new-character-modal">
+                    <label class="new-character-modal-backdrop" for="new-character-modal-toggle"></label>
+                    <section class="new-character-pane" aria-labelledby="new-character-title">
+                        <div class="new-character-pane-header">
+                            <h2 id="new-character-title">New Character</h2>
+                            <label class="new-character-close" for="new-character-modal-toggle" aria-label="Close new character form">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                </svg>
+                            </label>
+                        </div>
+
+                        <form class="new-character-form">
+                            <p id="character-save-success"></p>
+                            <label class="new-character-field">
+                                <span>Portrait File</span>
+                                <input type="file" name="characterImage" accept="image/*" />
+                                <p id="character-image-error-message"></p>
+                            </label>
+
+                            <label class="new-character-field">
+                                <span>Character Name</span>
+                                <input type="text" name="characterName" />
+                            </label>
+
+                            <label class="new-character-field">
+                                <span>Nickname</span>
+                                <input type="text" name="nickname" />
+                            </label>
+
+                            <label class="new-character-field">
+                                <span>Description</span>
+                                <textarea name="description" rows="4"></textarea>
+                            </label>
+
+                            <label class="new-character-field">
+                                <span>Scenario</span>
+                                <textarea name="scenario" rows="5"></textarea>
+                            </label>
+                            
+                            <label class="new-character-field">
+                                <span>Example dialogue</span>
+                                <textarea name="exampleDialogue" rows="5"></textarea>
+                            </label>
+
+                            <div class="new-character-actions">
+                                <label class="new-character-secondary" for="new-character-modal-toggle">Cancel</label>
+                                <button class="new-character-primary" type="submit">Create Character</button>
+                            </div>
+                        </form>
+                    </section>
+                </div>
+            </div>
+            <div class="right">inshallah there will be a right sidebar here</div>
+        </div>
+    </div>
+</body>

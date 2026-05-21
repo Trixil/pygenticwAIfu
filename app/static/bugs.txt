@@ -1,0 +1,2 @@
+clicking on Agent loadout brings it to selected-card class or somehting and it glows
+new character card is selectable upon reacing the new chat screen
