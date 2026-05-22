@@ -1,0 +1,40 @@
+{
+    "loadoutName": "Loadout 1",
+    "loadoutFile": "data/loadouts/Loadout 1.json",
+    "loadoutImageFile": "data/loadouts/images/Loadout 1.png",
+    "loadoutAgents": {
+      "mainAgent": {
+        "agentName": "Main Agent",
+        "agentInstructions": "Respond as the main character.",
+        "agentLLMConfig": {
+          "LLMName": "gpt-4o-mini",
+          "temp": 0.7,
+          "maxTokens": 500,
+          "topP": 1.0
+        }
+      }
+    },
+    "loadoutPipeline": {
+      "agentSequence": {
+        "1": {
+          "agentName": "Main Agent",
+          "agentInstructions": "Respond as the main character.",
+          "agentLLMConfig": {
+            "LLMName": "gpt-4o-mini",
+            "temp": 0.7,
+            "maxTokens": 500,
+            "topP": 1.0
+          }
+        }
+      },
+      "outputFlow": {
+        "mainAgent": []
+      },
+      "pastMessageCount": {
+        "mainAgent": 10
+      },
+      "includeCharCards": {
+        "mainAgent": true
+      }
+    }
+}

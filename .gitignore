@@ -1,8 +1,30 @@
+# Python cache
 __pycache__/
 *.py[cod]
+*$py.class
 
-app/characters/definitions/*
-app/characters/images/*
+# Virtual env / secrets
 .env
-.venv
-app/chats/*.json
+.venv/
+venv/
+
+# Character data
+app/data/characters/definitions/*
+!app/data/characters/definitions/Mutsuki.json
+!app/data/characters/definitions/Nino.json
+
+app/data/characters/images/*
+!app/data/characters/images/Mutsuki.png
+!app/data/characters/images/Nino.png
+
+# Chat data
+app/data/chats/*.json
+!app/data/chats/Chat 1.json
+
+# Optional generated/experimental junk
+scratch.py
+
+# Python cache
+__pycache__/
+!app/__init__.py
+!app/**/__init__.py

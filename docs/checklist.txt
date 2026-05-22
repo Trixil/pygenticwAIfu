@@ -1,0 +1,25 @@
+1. implement a barebones pipeline loading
+DONE
+
+2. implement character and pipeline sleection
+    a. go back button
+    b. upon clicking new chat, a javascript script queries all of the character card elements 
+    and adds them to a class that glows upon hovering
+    c. when the characters are added, then a new "add character" card is added onto the left navbar too. this is accomplished by setting the previously hidden image to visible and altering the  src image on it, and visibling the text as well.
+DONE
+
+3. implement starting a ne wchat with character and pipeline
+DONE
+
+4. logging and saving messages
+DONE
+
+5. adding characters into character
+
+what needs to happen is that upon clicking the button, it executes a javscript that
+    a. gets a list of all of the characterIds in convo-head-imgs
+    b. gets a list of all of the data-set-character-characterIds
+    c. adds selectable-for-chat to all of them
+    d. removes selectable-for-chat from all of the data-set-character-ids with the first list
+    e. adds selected-for-chat to them instead
+6. swapping pipeline
