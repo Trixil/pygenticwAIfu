@@ -3,7 +3,7 @@ import os
 import shutil
 from pathlib import Path
 
-from ..core.paths import APP_DIR, CHARACTER_IMAGES_DIR
+from ..core.paths import APP_DIR, CHARACTER_IMAGES_DIR, CHATS_DIR
 from ..models import definitions
 
 # this function is ass
@@ -12,15 +12,26 @@ def validateFilename(filename):
     if any(symbol in filename for symbol in forbidden):
         raise ValueError(f"WHY DID YOU NAME IT THAT REEEEEEEEEEEEEEEEE the filename is {filename}")
 
-def saveChat(chatDict, chatFile):
+def saveChat(chatDict, chatFile=None, chatID=None):
     #validateFilename(chatFile)
 
+    if chatID is not None and chatFile is None:
+        chatFile = str(CHATS_DIR / f"{chatID}.json")
+    elif chatFile is not None and chatID is not None:
+        raise ValueError("pick one crodie")
+        
     print("finna dump")
     with open(chatFile, "w", encoding="utf-8") as f:
         json.dump(chatDict, f, indent=2)
     print("dumped")
 
-def loadChat(chatFile) -> definitions.chat:
+def loadChat(chatFile=None, chatID=None) -> definitions.chat:
+
+    if chatID is not None and chatFile is None:
+        chatFile = str(CHATS_DIR / f"{chatID}.json")
+    elif chatFile is not None and chatID is not None:
+        raise ValueError("pick one crodie")
+    
     with open(chatFile, "r", encoding="utf-8") as file:
         fullChat = json.load(file)
     

@@ -28,7 +28,7 @@ def chatpage():
 @router.get("/chat/{chatID}", response_class=HTMLResponse)
 async def serveNewChat(chatID: str):
 
-    chatCard = file_io.loadChat(str(CHATS_DIR / f"{chatID}.json"))
+    chatCard = file_io.loadChat(chatFile=str(CHATS_DIR / f"{chatID}.json"))
     chatMessages = chatCard.messages
     messageHTML = """<div class="chat-bubbles">"""
     for message in chatMessages:

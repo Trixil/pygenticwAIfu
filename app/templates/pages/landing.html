@@ -5,6 +5,7 @@
     <script src="/assets/js/ui/showPane.js" defer></script>
     <script src="/assets/js/chats/newChatPane.js" defer></script>
     <script src="/assets/js/chats/addToChat.js" defer></script>
+    <script src="/assets/js/ui/loadoutEditor.js" defer></script>
     <input id="new-character-modal-toggle" class="modal-toggle" type="checkbox" />
     <div class="landing-page">
         <div class="layout">
@@ -12,7 +13,7 @@
                 <header id="chats-header">Chats</header>
                 <div id="chat-cards">
                     <div class="active-chat-pane">
-                        <button class="chat-card new-chat-card" type="button" aria-label="New chat" onclick="showNewChatPane(); addCharacterToChat(); addLoadoutToChat()">
+                        <button class="chat-card new-chat-card" type="button" aria-label="New chat" onclick="showNewChatPane(); addCharacterToNewChat(); addLoadoutToChat()">
                             <span class="new-chat-card-content">
                                 <span class="new-chat-plus" aria-hidden="true">+</span>
                                 <span class="new-chat-label">New Chat</span>
@@ -101,6 +102,7 @@
                     <button id="character-cards-button" class="pane-tab-button" onclick="showPane('character-cards')">
                         <header class="pane-tab-header">Characters</header>
                     </button>
+                    <header class="loadout-config-header">Loadout Configuration</header>
                     <button id="loadout-cards-button" class="pane-tab-button" onclick="showPane('loadout-cards')">
                         <header class="pane-tab-header">Loadouts</header>
                     </button>
@@ -116,6 +118,12 @@
                 </div>
 
                 <div id="loadout-cards" class="hidden">
+                    <label class="loadout-card new-loadout-card" onclick="showLoadoutEditor()">
+                        <span class="new-loadout-card-content">
+                            <span class="new-loadout-plus" aria-hidden="true">+</span>
+                            <span class="new-loadout-label">New Loadout</span>
+                        </span>
+                    </label>
                     {{LOADOUT_CARDS}}
                 </div>
 

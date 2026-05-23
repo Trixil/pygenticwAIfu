@@ -1,7 +1,7 @@
 const selectedCharacterIds = new Set();
 
-function addCharacterToChat() {
-    console.log("addCharacterToChat() called");
+function addCharacterToNewChat() {
+    console.log("addCharacterToNewChat() called");
 
     const characterCards = document.querySelectorAll(".character-card");
     console.log("Character cards found:", characterCards.length);

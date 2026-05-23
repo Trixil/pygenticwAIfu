@@ -57,4 +57,37 @@ document.addEventListener("DOMContentLoaded", function () {
 function addCharacterToChat() {
     const characterPicker = document.querySelector(".chat-character-picker");
     characterPicker.classList.toggle("open");
+    
+    // unhide the X button
+    document.querySelector(".convo-head-x").classList.toggle("hidden", false);
+    document.querySelector(".convo-head-add").classList.toggle("hidden", true);
+}
+
+async function continueConvoWithCharacters()
+{
+    const selectedCharacterImgs = document.querySelectorAll("[data-image-character-id]");
+    const selectedCharacterIds = new Set([...selectedCharacterImgs].map(function (img) {
+        return img.dataset.imageCharacterId;
+    }));
+
+    
+    if (selectedCharacterIds.size > 0)
+    {
+        const chatId = window.location.pathname.split("/").filter(Boolean).pop();
+        const response = await fetch("/continue-convo-with-characters", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({selectedCharacterIds: [...selectedCharacterIds],
+                chatId: chatId
+            })
+        })
+
+        const responseBody = await response.text();
+
+        document.querySelector(".convo-head-x").classList.toggle("hidden", true);
+        document.querySelector(".convo-head-add").classList.toggle("hidden", false);
+        
+        const characterPicker = document.querySelector(".chat-character-picker");
+        characterPicker.classList.toggle("open");
+    }
 }

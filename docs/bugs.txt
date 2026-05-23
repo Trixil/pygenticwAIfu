@@ -3,3 +3,5 @@ new character card is selectable upon reacing the new chat screen
 saving chat id by number is dangerous and can overwrite previous chats. use a randomly generated hash
 dashed lines around tiny convo head images
 you can visit chats/1/2/3/4/5 in the url
+clicking the + new card button permanently puts it on "selected for chat" i think. CHECK THIS
+the expansion of the pipeline config does not quite match the width of the "layout" flex container that contains left, middle, and right

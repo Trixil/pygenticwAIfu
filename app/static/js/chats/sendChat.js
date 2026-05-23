@@ -12,18 +12,29 @@ chatBar.addEventListener("submit", async function (event) {
     
     // /#/#/ USER NAME NOT IMPLEMENTED YET \#\#\
     // formData.append("sender", username);
-
+    
+    console.log("before render");
+    const renderResponse = await fetch("/render-new-message", {
+        method: "POST",
+        body: formData
+    });
+    
+    const newMessageHTML = await renderResponse.text();
+    document.querySelector(".chat-bubbles").insertAdjacentHTML("beforeend", newMessageHTML);
+    
+    const userBubbles = document.querySelectorAll(".user-chat-bubble");
+    const lastUserBubble = userBubbles[userBubbles.length - 1];
+    
+    
+    const messageBubble = lastUserBubble.closest("[data-message-id]");
+    const messageId = messageBubble.dataset.messageId;
+    formData.append("messageId", messageId);
+    
     console.log("before save");
     const saveResponse = await fetch("/api/save-message", {
         method: "POST",
         body: formData
     });
 
-    console.log("before render");
-    const renderResponse = await fetch("/render-new-message", {
-        method: "POST",
-        body: formData
-    });
-    const newMessageHTML = await renderResponse.text();
-    document.querySelector(".chat-bubbles").insertAdjacentHTML("beforeend", newMessageHTML);
+    
 })

@@ -41,10 +41,11 @@ async def startNewChat(request: Request):
 @router.post("/api/save-message")
 async def saveMessage(chatMessageInput: str = Form(...), 
                     chatId: str = Form(...),
-                    role: str = Form(...)):
+                    role: str = Form(...),
+                    messageId: str = Form(...)):
     
     chatFile = str(CHATS_DIR / f"{chatId}.json")
-    chatCard = file_io.loadChat(chatFile)
+    chatCard = file_io.loadChat(chatFile=chatFile)
     chatMessages = chatCard.messages
 
     print("role is " + role)
@@ -53,7 +54,8 @@ async def saveMessage(chatMessageInput: str = Form(...),
     newMessage = definitions.message.model_validate({
         "role": role,
         "sender": "Himothy NOT IMPLEMENTED YET",
-        "content": chatMessageInput
+        "content": chatMessageInput,
+        "messageId": messageId
     })
     
     chatCard.messages.append(newMessage)
@@ -80,3 +82,39 @@ async def renderConvoHeadImage(request: Request):
     imageFile = Path(characterImageFiles[0]).name
     html = htmlHelpers.buildConvoHeadImageHTML(characterID, imageFile)
     return HTMLResponse(content=html)
+
+@router.post("/continue-convo-with-characters")
+async def continueConvoWithCharacters(request: Request):
+
+    data = await request.json()
+    selectedCharacterIDs = data["selectedCharacterIds"]
+    chatID = data["chatId"]
+
+    chatFile = str(CHATS_DIR / f"{chatID}.json")
+    chatCard = file_io.loadChat(chatFile=chatFile)
+    chatCard.chatCharacters = selectedCharacterIDs
+
+    file_io.saveChat(chatCard.model_dump(), chatFile)
+
+@router.post("/save-edited-user-message")
+async def saveEditedUserMessage(request: Request):
+    data = await request.json()
+    newMessageContent = data["newMessageContent"]
+    chatID = data["chatId"]
+    messageID = data["messageId"]
+
+    chatCard = file_io.loadChat(chatID=chatID)
+
+    print("newMessageContent" + newMessageContent)
+    print("chatID" + chatID)
+    print("messageID" + messageID)
+    
+    for msg in chatCard.messages:
+        print("msg is " + msg.content)
+        if msg.messageId == messageID:
+            print("oldmessage is " + msg.content)
+            msg.content = newMessageContent
+            print("newmessage is " + msg.content)
+            break
+
+    file_io.saveChat(chatCard.model_dump(), chatID=chatID)

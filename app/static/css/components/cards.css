@@ -113,3 +113,47 @@
   font-family: "Manrope", sans-serif;
   font-size: 1.1rem;
 }
+
+.new-loadout-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  border: 2px dashed rgba(255, 255, 255, 0.45);
+  background: rgba(20, 20, 60, 0.35);
+}
+
+.new-loadout-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  height: 100%;
+}
+
+.new-loadout-card:hover {
+  border-color: rgba(255, 255, 255, 0.75);
+  background: rgba(20, 20, 60, 0.5);
+}
+
+.new-loadout-plus {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  font-family: "Manrope", sans-serif;
+  font-size: 4rem;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.new-loadout-label {
+  font-family: "Manrope", sans-serif;
+  font-size: 1.1rem;
+}
+

@@ -23,12 +23,12 @@
   background: rgba(255, 255, 255, 0.15);
 }
 
-.pane-tab-header {
+.pane-tab-header,
+.loadout-config-header {
   padding: 22px 0px 14px;
   font-family: "Gowun Batang", serif;
   font-weight: 700;
   font-size: 3rem;
-  font-weight: 700;
   line-height: 1;
   letter-spacing: 0.01em;
   color: #000;
@@ -38,6 +38,8 @@
     -0.5px 0 0 rgba(255, 255, 255, 0.95),
     0 0.5px 0 rgba(255, 255, 255, 0.95),
     0 -0.5px 0 rgba(255, 255, 255, 0.95);
+
+  transition: opacity 250ms ease;
 }
 
 
@@ -61,10 +63,13 @@
 }
 
 .middle-head {
+  position: relative;
+
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+
   border-bottom: 2px solid rgba(255, 255, 255, 0.42);
 }
 
@@ -122,3 +127,83 @@
   cursor: pointer;
 }
 
+.middle,
+#character-cards,
+#loadout-cards {
+  transition: all 250ms ease;
+}
+
+.left,
+.right,
+#loadout-cards-button
+#character-cards-button {
+  opacity: 1;
+  transition:
+    opacity 250ms ease,
+    width 700ms ease;
+}
+
+.layout.config-expand-widen #loadout-cards,
+.layout.config-expand-widen #character-cards {
+  opacity: 0;
+}
+
+.layout.config-expand-widen .left,
+.layout.config-expand-widen .right {
+  width: 0;
+}
+
+.layout.config-expand-hide .left,
+.layout.config-expand-hide .right {
+  opacity: 0;
+}
+
+.pane-tab-header,
+.loadout-config-header {
+  transition: opacity 250ms ease;
+}
+
+.loadout-config-header {
+  position: absolute;
+  left: 30px;
+
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.layout.config-expand-widen .pane-tab-header {
+  opacity: 0;
+}
+
+.layout.config-expand-widen .loadout-config-header {
+  opacity: 1;
+}
+
+.layout.config-expand-widen .loadout-config-header {
+  opacity: 1;
+}
+
+.layout.config-expand-widen #character-cards-button,
+.layout.config-expand-widen #loadout-cards-button {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#character-cards-button {
+  align-self: flex-start;
+  margin-left: 30px;
+}
+
+#loadout-cards-button {
+  align-self: flex-end;
+  margin-right: 30px;
+}
+
+.pane-tab-button {
+  border: none;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+  transition: opacity 250ms ease;
+}

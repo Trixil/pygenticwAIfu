@@ -3,6 +3,7 @@
 <body>
     <script src="/assets/js/chats/sendChat.js" defer></script>
     <script src="/assets/js/ui/addCharacterToChat.js" defer></script>
+    <script src="/assets/js/chats/editMessage.js" defer></script>
     <div class="convo-page">
         <div class="layout">
              <div class="left">
@@ -32,6 +33,11 @@
                             <button class="convo-head-add" type="button" aria-label="Add character" onclick="addCharacterToChat()">
                                 <svg class="convo-head-add-icon" viewBox="0 0 24 24" aria-hidden="true">
                                     <path d="M12 5v14M5 12h14" />
+                                </svg>
+                            </button>
+                            <button class="convo-head-x hidden" type="button" aria-label="Remove character" onclick="continueConvoWithCharacters()">
+                                <svg class="convo-head-x-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M6 6l12 12M18 6L6 18" />
                                 </svg>
                             </button>
                             {{CONVO_HEAD_CHARACTERS}}

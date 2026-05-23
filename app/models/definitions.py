@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Any
+from uuid import uuid4
 
 def ensure_list(value: Any) -> list:
     if value is None:
@@ -48,6 +49,7 @@ class message(BaseModel):
     role: str = ""
     sender: str = ""
     content: str  = ""
+    messageId: str = Field(default_factory=lambda: uuid4().hex)
 
 class chat(BaseModel):
     chatName: str = ""
