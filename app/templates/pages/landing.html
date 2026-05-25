@@ -118,7 +118,7 @@
                 </div>
 
                 <div id="loadout-cards" class="hidden">
-                    <label class="loadout-card new-loadout-card" onclick="showLoadoutEditor()">
+                    <label class="loadout-card new-loadout-card" onclick="showLoadoutEditor(); startLoadoutEditor()">
                         <span class="new-loadout-card-content">
                             <span class="new-loadout-plus" aria-hidden="true">+</span>
                             <span class="new-loadout-label">New Loadout</span>
@@ -179,6 +179,54 @@
                             </div>
                         </form>
                     </section>
+                </div>
+                <div class="loadout-editor hidden">
+                    <div class="agent-card">
+                        <div class="agent-card__inputs">
+                            <div class="agent-card__button agent-card__button--chat">
+                            <span class="agent-card__chat-icon" aria-hidden="true"></span>
+
+                            <div class="agent-card__chat-number">3</div>
+
+                            <div class="agent-card__chat-stepper">
+                                <span class="agent-card__stepper-block">
+                                    <span class="agent-card__chevron agent-card__chevron--up"></span>
+                                </span>
+
+                                <span class="agent-card__stepper-block">
+                                    <span class="agent-card__chevron agent-card__chevron--down"></span>
+                                </span>
+                            </div>
+                            </div>
+
+                            <div class="agent-card__button agent-card__button--active">
+                            <span class="agent-card__brace-icon" aria-hidden="true"></span>
+                            </div>
+
+                            <div class="agent-card__button agent-card__button--flat">
+                            <span class="agent-card__person-icon" aria-hidden="true"></span>
+                            <span class="agent-card__checkbox"></span>
+                            </div>
+
+                            <div class="agent-card__button agent-card__button--flat">
+                            <span class="agent-card__camera-icon" aria-hidden="true"></span>
+                            <span class="agent-card__checkbox"></span>
+                            </div>
+
+                            <div class="agent-card__button agent-card__button--flat">
+                            <span class="agent-card__redo-icon" aria-hidden="true"></span>
+                            <span class="agent-card__checkbox"></span>
+                            </div>
+                        </div>
+
+                        <div class="agent-card__divider"></div>
+
+                        <div class="agent-card__name">Event Agent</div>
+
+                        <div class="agent-card__instructions">
+                            You are... otherwise... o therwise....
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="right">inshallah there will be a right sidebar here</div>

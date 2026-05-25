@@ -1,0 +1,417 @@
+.loadout-editor {
+  transition: opacity 500ms ease;
+}
+
+.layout.config-expand-widen .loadout-editor {
+  opacity: 1;
+}
+
+.agent-card,
+.agent-card * {
+  box-sizing: border-box;
+}
+
+.agent-card {
+  --agent-scale: 0.4;
+
+  --agent-width: calc(920px * var(--agent-scale));
+
+  --agent-padding-x: calc(40px * var(--agent-scale));
+  --agent-padding-top: calc(54px * var(--agent-scale));
+  --agent-padding-bottom: calc(56px * var(--agent-scale));
+
+  --agent-radius: calc(34px * var(--agent-scale));
+
+  --control-height: calc(88px * var(--agent-scale));
+  --control-gap: calc(18px * var(--agent-scale));
+  --control-radius: calc(18px * var(--agent-scale));
+
+  --icon-size: calc(54px * var(--agent-scale));
+  --checkbox-size: calc(36px * var(--agent-scale));
+  --checkbox-border: calc(3px * var(--agent-scale));
+
+  --chat-number-size: calc(36px * var(--agent-scale));
+  --chevron-size: calc(20px * var(--agent-scale));
+  --chevron-thickness: calc(4px * var(--agent-scale));
+
+  --divider-margin-top: calc(36px * var(--agent-scale));
+  --divider-margin-bottom: calc(42px * var(--agent-scale));
+
+  --name-size: calc(64px * var(--agent-scale));
+  --name-margin-bottom: calc(28px * var(--agent-scale));
+
+  --instructions-min-height: calc(138px * var(--agent-scale));
+  --instructions-padding-y: calc(46px * var(--agent-scale));
+  --instructions-padding-x: calc(38px * var(--agent-scale));
+  --instructions-radius: calc(20px * var(--agent-scale));
+  --instructions-font-size: calc(32px * var(--agent-scale));
+
+  --agent-border-width: 2px;
+  --control-border-width: 2px;
+  --instructions-border-width: 2px;
+
+  --io-tab-width: calc(58px * var(--agent-scale));
+  --io-tab-height: calc(132px * var(--agent-scale));
+  --io-tab-font-size: calc(36px * var(--agent-scale));
+
+  position: relative;
+  overflow: hidden;
+
+  width: var(--agent-width);
+  max-width: 100%;
+
+  padding:
+    var(--agent-padding-top)
+    var(--agent-padding-x)
+    var(--agent-padding-bottom);
+
+  border: var(--agent-border-width) solid rgba(169, 183, 210, 0.32);
+  border-radius: var(--agent-radius);
+
+  background:
+    linear-gradient(180deg, rgba(26, 33, 48, 0.94), rgba(12, 18, 30, 0.96)),
+    #101722;
+
+  box-shadow:
+    0 calc(26px * var(--agent-scale)) calc(70px * var(--agent-scale)) rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+.agent-card::before,
+.agent-card::after {
+  position: absolute;
+  top: 50%;
+  width: 16px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transform: translateY(-50%);
+  writing-mode: vertical-rl;
+
+  font-size: 0.45rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+
+  border: 1px solid rgba(169, 183, 210, 0.22);
+  background: rgba(25, 31, 48, 0.9);
+  pointer-events: none;
+}
+
+.agent-card::before {
+  content: "IN";
+  left: 0;
+  color: white;
+  border-left: none;
+  border-radius: 0 10px 10px 0;
+}
+
+.agent-card::after {
+  content: "OUT";
+  right: 0;
+  color: black;
+  background: #9d18ff;
+  border-right: none;
+  border-radius: 10px 0 0 10px;
+}
+
+.agent-card__inputs {
+  display: grid;
+  grid-template-columns: 1.25fr 0.85fr 1.08fr 1.08fr 1.08fr;
+  gap: var(--control-gap);
+  align-items: center;
+}
+
+.agent-card__button {
+  height: var(--control-height);
+  border-radius: var(--control-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.agent-card__button--flat,
+.agent-card__button--chat {
+  border: var(--control-border-width) solid rgba(172, 187, 216, 0.36);
+  background: transparent;
+  box-shadow: none;
+}
+
+.agent-card__button--flat {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 1fr auto;
+  column-gap: calc(18px * var(--agent-scale));
+  justify-items: center;
+  padding: 0 calc(var(--control-height) * 0.25);
+  justify-content: space-around;
+  padding: 0 calc(var(--control-height) * 0.3);
+}
+
+.agent-card__button--active {
+  border: var(--control-border-width) solid rgba(53, 126, 255, 0.95);
+  background:
+    linear-gradient(180deg, rgba(50, 89, 174, 0.18), rgba(21, 34, 66, 0.08)),
+    rgba(13, 21, 36, 0.42);
+  box-shadow:
+    0 0 calc(22px * var(--agent-scale)) rgba(36, 111, 255, 0.2),
+    inset 0 0 calc(18px * var(--agent-scale)) rgba(47, 105, 246, 0.13);
+  display: grid;
+  align-items: center;
+  place-items: center;
+}
+
+.agent-card__button--chat {
+  justify-content: stretch;
+  overflow: hidden;
+}
+
+.agent-card__chat-icon,
+.agent-card__chat-number,
+.agent-card__chat-stepper {
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.agent-card__chat-icon {
+  width: 34%;
+}
+
+.agent-card__chat-number {
+  width: 38%;
+  border-left: none;
+  border-right: var(--control-border-width) solid rgba(172, 187, 216, 0.24);
+  color: #eef3ff;
+  font-size: var(--chat-number-size);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+}
+
+.agent-card__chat-stepper {
+  width: 28%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: calc(6px * var(--agent-scale));
+  padding: calc(9px * var(--agent-scale)) 0;
+}
+
+.agent-card__stepper-block {
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  border: none;
+}
+
+/* Mask icons: use these instead of inline SVG scaling */
+
+.agent-card__chat-icon,
+.agent-card__brace-icon,
+.agent-card__person-icon,
+.agent-card__camera-icon,
+.agent-card__redo-icon {
+  display: block;
+  width: var(--icon-size);
+  height: var(--icon-size);
+  flex-shrink: 0;
+
+  background: currentColor;
+
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+}
+
+/* Hide old inline SVGs if they are still inside these elements */
+
+.agent-card__chat-icon svg,
+.agent-card__brace-icon svg,
+.agent-card__person-icon svg,
+.agent-card__camera-icon svg,
+.agent-card__redo-icon svg {
+  display: none;
+}
+
+/* Icon files */
+
+.agent-card__chat-icon {
+  color: #d8dfef;
+  mask-image: url("/assets/icons/message-circle.svg");
+  -webkit-mask-image: url("/assets/icons/message-circle.svg");
+}
+
+.agent-card__brace-icon {
+  color: #58a6ff;
+  mask-image: url("/assets/icons/braces.svg");
+  -webkit-mask-image: url("/assets/icons/braces.svg");
+
+  text-shadow: none;
+  font-size: 0;
+  letter-spacing: 0;
+}
+
+.agent-card__person-icon {
+  color: #76df93;
+  mask-image: url("/assets/icons/user.svg");
+  -webkit-mask-image: url("/assets/icons/user.svg");
+}
+
+.agent-card__camera-icon {
+  color: #ffd76a;
+  mask-image: url("/assets/icons/camera.svg");
+  -webkit-mask-image: url("/assets/icons/camera.svg");
+}
+
+.agent-card__redo-icon {
+  color: #d7deeb;
+  mask-image: url("/assets/icons/refresh.svg");
+  -webkit-mask-image: url("/assets/icons/refresh.svg");
+}
+
+.agent-card__button--flat {
+  justify-content: space-around;
+  padding: 0 calc(var(--control-height) * 0.3);
+}
+
+.agent-card__checkbox {
+  width: var(--checkbox-size);
+  height: var(--checkbox-size);
+  border: var(--checkbox-border) solid #c7cfdd;
+  border-radius: calc(var(--checkbox-size) * 0.22);
+  background: transparent;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 0 calc(12px * var(--agent-scale)) rgba(198, 210, 232, 0.1);
+  flex-shrink: 0;
+}
+
+.agent-card__chevron {
+  width: calc(var(--chevron-size) * 0.75);
+  height: calc(var(--chevron-size) * 0.75);
+  border-right: var(--chevron-thickness) solid #a65dff;
+  border-bottom: var(--chevron-thickness) solid #a65dff;
+  display: block;
+}
+
+.agent-card__chevron--up {
+  transform: rotate(225deg);
+}
+
+.agent-card__chevron--down {
+  transform: rotate(45deg);
+}
+
+.agent-card__divider {
+  height: 1px;
+  margin:
+    var(--divider-margin-top)
+    0
+    var(--divider-margin-bottom);
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(180, 193, 218, 0.32),
+    transparent
+  );
+}
+
+.agent-card__name {
+  margin: 0 0 var(--name-margin-bottom);
+  text-align: center;
+  color: #f4f7ff;
+  font-size: var(--name-size);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.055em;
+  text-shadow:
+    0 calc(2px * var(--agent-scale)) 0 rgba(255, 255, 255, 0.14),
+    0 calc(12px * var(--agent-scale)) calc(22px * var(--agent-scale)) rgba(0, 0, 0, 0.4);
+}
+
+/* Removed purple glow bar */
+
+.agent-card__title-glow {
+  display: none;
+}
+
+.agent-card__instructions {
+  min-height: var(--instructions-min-height);
+  padding:
+    var(--instructions-padding-y)
+    var(--instructions-padding-x);
+
+  border: var(--instructions-border-width) solid rgba(145, 89, 255, 0.5);
+  border-radius: var(--instructions-radius);
+  background: rgba(20, 22, 39, 0.45);
+  color: rgba(219, 226, 244, 0.78);
+  font-size: var(--instructions-font-size);
+  font-weight: 400;
+  letter-spacing: -0.04em;
+  box-shadow:
+    inset 0 0 calc(28px * var(--agent-scale)) rgba(103, 62, 183, 0.06),
+    0 0 calc(16px * var(--agent-scale)) rgba(104, 66, 186, 0.06);
+}
+
+@media (max-width: 900px) {
+  .agent-card {
+    --agent-padding-x: calc(22px * var(--agent-scale));
+    --agent-padding-top: calc(32px * var(--agent-scale));
+    --agent-padding-bottom: calc(36px * var(--agent-scale));
+
+    --control-height: calc(76px * var(--agent-scale));
+    --control-gap: calc(14px * var(--agent-scale));
+
+    --icon-size: calc(44px * var(--agent-scale));
+    --checkbox-size: calc(30px * var(--agent-scale));
+
+    --chat-number-size: calc(32px * var(--agent-scale));
+
+    --instructions-min-height: calc(110px * var(--agent-scale));
+    --instructions-padding-y: calc(34px * var(--agent-scale));
+    --instructions-padding-x: calc(28px * var(--agent-scale));
+  }
+
+  .agent-card__inputs {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .agent-card__button--chat {
+    grid-column: span 2;
+  }
+
+  .agent-card__button--flat:last-child {
+    grid-column: span 2;
+  }
+}
+
+.agent-card__chat-icon,
+.agent-card__brace-icon,
+.agent-card__person-icon,
+.agent-card__camera-icon,
+.agent-card__redo-icon {
+  margin: auto;
+}
+
+.agent-card__stepper-block {
+  display: grid;
+  place-items: center;
+  min-height: 0;
+}

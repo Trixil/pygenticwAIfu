@@ -31,5 +31,11 @@ DONE
 DONE
 
 9. add new pipeline card
+DONE
+
+10. implement agent card
+DONE
+
+11. move around agent card with mouse
 
 ???. implement character editing in chat
