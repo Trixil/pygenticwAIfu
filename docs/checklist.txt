@@ -37,5 +37,6 @@ DONE
 DONE
 
 11. move around agent card with mouse
-
+    a. add event listener to each agent card, tracked by agentid, that tracks for mousedown
+    b. calculate the position of the box
 ???. implement character editing in chat
