@@ -172,7 +172,7 @@
                                 <span>Example dialogue</span>
                                 <textarea name="exampleDialogue" rows="5"></textarea>
                             </label>
-
+                            
                             <div class="new-character-actions">
                                 <label class="new-character-secondary" for="new-character-modal-toggle">Cancel</label>
                                 <button class="new-character-primary" type="submit">Create Character</button>
@@ -181,51 +181,76 @@
                     </section>
                 </div>
                 <div class="loadout-editor hidden">
-                    <div class="agent-card">
+                    <div class="agent-card" data-agent-id="agent1">
+                        <button class="agent-port agent-port--in" type="button" aria-label="Agent input port">
+                            IN
+                        </button>
+
+                        <svg class="wire-layer"></svg>
+
                         <div class="agent-card__inputs">
                             <div class="agent-card__button agent-card__button--chat">
-                            <span class="agent-card__chat-icon" aria-hidden="true"></span>
+                                <button class="agent-card__chat-main" type="button" aria-label="Use chat history">
+                                    <span class="agent-card__chat-icon" aria-hidden="true"></span>
+                                    <span class="agent-card__chat-number">3</span>
+                                </button>
 
-                            <div class="agent-card__chat-number">3</div>
+                                <div class="agent-card__chat-stepper">
+                                    <button class="agent-card__stepper-block" type="button" aria-label="Increase chat history amount">
+                                        <span class="agent-card__chevron agent-card__chevron--up" aria-hidden="true"></span>
+                                    </button>
 
-                            <div class="agent-card__chat-stepper">
-                                <span class="agent-card__stepper-block">
-                                    <span class="agent-card__chevron agent-card__chevron--up"></span>
-                                </span>
-
-                                <span class="agent-card__stepper-block">
-                                    <span class="agent-card__chevron agent-card__chevron--down"></span>
-                                </span>
-                            </div>
-                            </div>
-
-                            <div class="agent-card__button agent-card__button--active">
-                            <span class="agent-card__brace-icon" aria-hidden="true"></span>
+                                    <button class="agent-card__stepper-block" type="button" aria-label="Decrease chat history amount">
+                                        <span class="agent-card__chevron agent-card__chevron--down" aria-hidden="true"></span>
+                                    </button>
+                                </div>
                             </div>
 
-                            <div class="agent-card__button agent-card__button--flat">
-                            <span class="agent-card__person-icon" aria-hidden="true"></span>
-                            <span class="agent-card__checkbox"></span>
-                            </div>
+                            <button class="agent-card__button agent-card__button--active agent-instructions" type="button" aria-label="Edit agent prompt">
+                                <span class="agent-card__brace-icon" aria-hidden="true"></span>
+                            </button>
 
-                            <div class="agent-card__button agent-card__button--flat">
-                            <span class="agent-card__camera-icon" aria-hidden="true"></span>
-                            <span class="agent-card__checkbox"></span>
-                            </div>
+                            <button class="agent-card__button agent-card__button--flat agent-character-input" type="button" aria-label="Toggle character input">
+                                <span class="agent-card__person-icon" aria-hidden="true"></span>
+                                <span class="agent-card__checkbox" aria-hidden="true"></span>
+                            </button>
 
-                            <div class="agent-card__button agent-card__button--flat">
-                            <span class="agent-card__redo-icon" aria-hidden="true"></span>
-                            <span class="agent-card__checkbox"></span>
-                            </div>
+                            <button class="agent-card__button agent-card__button--flat agent-scenario" type="button" aria-label="Toggle image input">
+                                <span class="agent-card__camera-icon" aria-hidden="true"></span>
+                                <span class="agent-card__checkbox" aria-hidden="true"></span>
+                            </button>
+
+                            <button class="agent-card__button agent-card__button--flat agent-carryover" type="button" aria-label="Toggle previous output input">
+                                <span class="agent-card__redo-icon" aria-hidden="true"></span>
+                                <span class="agent-card__checkbox" aria-hidden="true"></span>
+                            </button>
                         </div>
 
                         <div class="agent-card__divider"></div>
 
                         <div class="agent-card__name">Event Agent</div>
 
-                        <div class="agent-card__instructions">
-                            You are... otherwise... o therwise....
+                        <div class="agent-card__lower">
+                            <div class="agent-card__instructions">
+                                You are... otherwise... o therwise....
+                            </div>
+
+                            <div class="agent-card__meta">
+                                <div class="agent-card__meta-bubble">
+                                    <span class="agent-card__brain-icon" aria-hidden="true"></span>
+                                    <span class="agent-card__meta-text">GPT-4.1</span>
+                                </div>
+
+                                <div class="agent-card__meta-bubble">
+                                    <span class="agent-card__tokens-icon" aria-hidden="true"></span>
+                                    <span class="agent-card__meta-text">2k tokens</span>
+                                </div>
+                            </div>
                         </div>
+
+                        <button class="agent-port agent-port--out" type="button" aria-label="Agent output port">
+                            OUT
+                        </button>
                     </div>
                 </div>
             </div>
