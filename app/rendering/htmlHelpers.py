@@ -29,4 +29,8 @@ def buildConvoHeadImageHTML(characterId: str, imageFile: str) -> str:
     return f"""
         <img class="convo-head-img" data-image-character-id="{characterId}" src="/character-images/{imageFile}">
     """
-    
+
+def buildOutputListEntryHTML(agentSlug: str):
+    return f"""
+    <button class="loadout-editor-output-chip" type="button">{{{agentSlug}_output}}</button>
+    """

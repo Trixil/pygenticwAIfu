@@ -4,8 +4,9 @@ from pathlib import Path
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
 
-from ..core.paths import LOADOUTS_DIR
+from ..core.paths import LOADOUTS_DIR, TEMPLATES_DIR
 from ..storage import file_io
+from ..models import definitions
 
 router = APIRouter()
 
@@ -39,7 +40,7 @@ def renderLoadoutCards() -> HTMLResponse:
 
         # the problem is that these loadout cards need to be formatted appropriately with the  right html and css
         loadoutHtml = f"""
-        <div data-loadout-id="{loadoutCard.loadoutName}" class="loadout-card">
+        <div data-loadout-id="{loadoutCard.loadoutName}" class="loadout-card" onclick="showLoadoutEditor(this)">
             <img src="/loadout-images/{image_name}" alt="Loadout Image" class="loadout-image"/>
               <button class="loadout-edit-button" aria-label="Edit loadout">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -53,3 +54,62 @@ def renderLoadoutCards() -> HTMLResponse:
         fullLoadoutCardHTML += loadoutHtml
     
     return HTMLResponse(content=fullLoadoutCardHTML)
+
+
+@router.post("/save-loadout-configuration")
+async def saveLoadoutConfiguration(request: Request):
+    data = await request.json()
+
+    allConfigsById = data["allConfigsById"]
+    print (allConfigsById)
+    agentLoadout = definitions.agentLoadout()
+
+    for agentName, agentConfig in allConfigsById.items():
+        print(agentConfig)
+        agentConfig = agentConfig["agentConfiguration"]
+        agentLLMConfig = definitions.LLMConfig.model_validate(agentConfig["agentLLMConfig"])
+        agentDict = {
+            "agentName": agentName,
+            "agentId": agentConfig["agentId"],
+            "agentInstructions": agentConfig["agentInstructions"],
+            "characterInput": agentConfig["characterInput"],
+            "scenario": agentConfig["scenario"],
+            "carryOver": agentConfig["carryOver"],
+            "parents": agentConfig["parents"],
+            "children": agentConfig["children"],
+            "agentLLMConfig": agentConfig["agentLLMConfig"]
+        }
+
+        agent = definitions.agent.model_validate(agentDict)
+        print(agent)
+        agentLoadout.loadoutAgents.append(agent)
+
+    print(agentLoadout)
+
+@router.post("/render-agent-pane", response_class=HTMLResponse)
+async def renderAgentPane(request: Request):
+    data = await request.json()
+
+    print("data is")
+    print(data)
+    agentConfig = data["agentConfig"]["agentConfiguration"]
+    agentName = data["agentName"]
+
+    agentPaneHTML = (TEMPLATES_DIR / "pages" / "loadoutPane.html").read_text(encoding="utf-8")
+
+    agentPaneHTML = agentPaneHTML.replace("{{AGENT_NAME}}", agentName)
+    agentPaneHTML = agentPaneHTML.replace("{{AGENT_INSTRUCTIONS}}", agentConfig["agentInstructions"])
+    agentPaneHTML = agentPaneHTML.replace("{{AGENT_LLM}}", agentConfig["agentLLMConfig"]["LLMName"])
+    agentPaneHTML = agentPaneHTML.replace("{{AGENT_LLM_TEMP}}", str(agentConfig["agentLLMConfig"]["temp"]))
+    agentPaneHTML = agentPaneHTML.replace("{{AGENT_LLM_MAX_TOKENS}}", str(agentConfig["agentLLMConfig"]["maxTokens"]))
+    agentPaneHTML = agentPaneHTML.replace("{{AGENT_LLM_TOP_P}}", str(agentConfig["agentLLMConfig"]["topP"]))
+    agentPaneHTML = agentPaneHTML.replace("{{AGENT_PAST_MESSAGE_COUNT}}", "0")
+    
+    useCharacterInput = "checked" if agentConfig["characterInput"] else ""
+    useScenario = "checked" if agentConfig["scenario"] else ""
+    useCarryOver = "checked" if agentConfig["carryOver"] else ""
+    agentPaneHTML = agentPaneHTML.replace("{{USE_CHARACTER_CARDS}}", useCharacterInput)
+    agentPaneHTML = agentPaneHTML.replace("{{USE_CARRYOVER}}", useCarryOver)
+    agentPaneHTML = agentPaneHTML.replace("{{USE_SCENARIO}}", useScenario)
+    
+    return HTMLResponse(content=agentPaneHTML)

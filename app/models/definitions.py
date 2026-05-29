@@ -29,21 +29,21 @@ class character(BaseModel):
 
 class agent(BaseModel):
     agentName: str = ""
+    agentId: str = Field(default_factory=lambda: uuid4().hex)
     agentInstructions: str = ""
+    characterInput: bool = False
+    scenario: bool = False
+    carryOver: bool = False
+    parents: list[str] = Field(default_factory=list)
+    children: list[str] = Field(default_factory=list)
     agentLLMConfig: LLMConfig = Field(default_factory=LLMConfig)
-
-class agentPipeline(BaseModel):
-    agentSequence: dict[int, agent] = Field(default_factory=dict)
-    outputFlow: dict[str, list[str]] = Field(default_factory=dict)
-    pastMessageCount: dict[str, int] = Field(default_factory=dict)
-    includeCharCards: dict[str, bool] = Field(default_factory=dict)
 
 class agentLoadout(BaseModel):
     loadoutName: str = ""
+    loadoutId: str = Field(default_factory=lambda: uuid4().hex)
     loadoutImageFile: str = ""
     loadoutFile: str = ""
-    loadoutAgents: dict[str, agent] = Field(default_factory=dict)
-    loadoutPipeline: agentPipeline = Field(default_factory=agentPipeline)
+    loadoutAgents: list[agent] = Field(default_factory=list)
 
 class message(BaseModel):
     role: str = ""

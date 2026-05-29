@@ -1,9 +1,31 @@
 .loadout-editor {
   transition: opacity 500ms ease;
+  position: relative;
+  height: 100%;
 }
 
 .layout.config-expand-widen .loadout-editor {
   opacity: 1;
+}
+
+.loadout-actions {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  transition:
+    opacity 1000ms ease,
+    visibility 0s linear 500ms;
+}
+
+.layout.config-expand-widen .loadout-actions {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+
+  transition:
+    opacity 1000ms ease,
+    visibility 0s linear 0s;
 }
 
 .agent-card,
@@ -12,7 +34,7 @@
 }
 
 .agent-card {
-  --agent-scale: 0.4;
+  --agent-scale: 0.28;
 
   --agent-width: calc(920px * var(--agent-scale));
 
@@ -350,8 +372,18 @@
   text-shadow:
     0 calc(2px * var(--agent-scale)) 0 rgba(255, 255, 255, 0.14),
     0 calc(12px * var(--agent-scale)) calc(22px * var(--agent-scale)) rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  transition: color 180ms ease, text-shadow 180ms ease;
 }
 
+.agent-card__name:hover {
+  color: #ffffff;
+  text-shadow:
+    0 0 calc(6px * var(--agent-scale)) rgba(255, 255, 255, 0.75),
+    0 0 calc(14px * var(--agent-scale)) rgba(130, 170, 255, 0.65),
+    0 0 calc(28px * var(--agent-scale)) rgba(90, 120, 255, 0.45),
+    0 calc(12px * var(--agent-scale)) calc(22px * var(--agent-scale)) rgba(0, 0, 0, 0.4);
+}
 /* Removed purple glow bar */
 
 .agent-card__title-glow {
@@ -542,4 +574,110 @@
   color: #a65dff;
   mask-image: url("/assets/icons/tokens.svg");
   -webkit-mask-image: url("/assets/icons/tokens.svg");
+}
+
+.loadout-actions {
+    position: absolute;
+    top: 24px;
+    right: 34px;
+
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    z-index: 20;
+}
+
+.loadout-action-button {
+    height: 39px;
+    min-width: 96px;
+    padding: 0 18px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+
+    border: 0;
+    border-radius: 7px;
+
+    font-family: "Gowun Batang", sans-serif;
+    font-size: 0.95rem;
+    font-weight: 800;
+    line-height: 1;
+
+    color: white;
+    cursor: pointer;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.18),
+        0 4px 10px rgba(0, 0, 0, 0.22);
+
+    transition:
+        transform 120ms ease,
+        filter 120ms ease,
+        box-shadow 120ms ease;
+}
+
+.loadout-action-button:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.08);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.22),
+        0 6px 14px rgba(0, 0, 0, 0.28);
+}
+
+.loadout-action-button:active {
+    transform: translateY(0);
+    filter: brightness(0.96);
+}
+
+.loadout-save-button {
+    background: linear-gradient(180deg, #c018f0 0%, #a306dd 100%);
+}
+
+.loadout-delete-button {
+    background: linear-gradient(180deg, #b4112d 0%, #970b23 100%);
+}
+
+.loadout-tips-button {
+    background: linear-gradient(180deg, #695be7 0%, #4c72df 100%);
+}
+
+.loadout-action-icon {
+    width: 17px;
+    height: 17px;
+
+    display: inline-block;
+    flex: 0 0 auto;
+
+    background-color: white;
+
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+}
+
+.loadout-action-text {
+    display: inline-block;
+    transform: translateY(-0.5px);
+}
+
+.loadout-save-icon {
+    mask-image: url("/assets/icons/save-loadout.svg");
+    -webkit-mask-image: url("/assets/icons/save-loadout.svg");
+}
+
+.loadout-delete-icon {
+    mask-image: url("/assets/icons/delete-loadout.svg");
+    -webkit-mask-image: url("/assets/icons/delete-loadout.svg");
+}
+
+.loadout-tips-icon {
+    mask-image: url("/assets/icons/tips-loadout.svg");
+    -webkit-mask-image: url("/assets/icons/tips-loadout.svg");
 }

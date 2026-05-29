@@ -1,0 +1,210 @@
+<div class="loadout-editor-pane" data-active-tab="instructions">
+    <button class="loadout-editor-pane-hide-button" type="button" aria-label="Hide pane">
+        &gt;
+    </button>
+    <div class="loadout-editor-pane--head">
+        <input
+            class="loadout-editor-pane-header loadout-editor-pane-name-input"
+            type="text"
+            value="{{AGENT_NAME}}"
+            aria-label="Agent name"
+            readonly
+        >
+        <div class="loadout-editor-pane--tabs">
+            <div class="loadout-editor-pane--tab" data-tab="instructions">Instructions</div>
+            <div class="loadout-editor-pane--tab" data-tab="llm">LLM</div>
+            <div class="loadout-editor-pane--tab" data-tab="messages">Messages</div>
+            <div class="loadout-editor-pane--tab" data-tab="inputs">Inputs</div>
+            <div class="loadout-editor-pane--tab" data-tab="other">Other</div>
+        </div>
+    </div>
+    <div class="loadout-editor-pane--body">
+        <section class="loadout-tab-panel" data-panel="instructions">
+            <section class="loadout-editor-section">
+                <h2 class="loadout-editor-section-title">Available Agent Outputs</h2>
+
+                <p class="loadout-editor-section-description">
+                    Outputs of previously executed agents made available to {{AGENT_NAME}}.
+                </p>
+
+                <div class="loadout-editor-output-list">
+                    <button class="loadout-editor-output-chip" type="button">{eventAgent}</button>
+                    <button class="loadout-editor-output-chip" type="button">{goalAgent}</button>
+                </div>
+            </section>
+
+            <section class="loadout-editor-section loadout-editor-instructions-section">
+                <h2 class="loadout-editor-section-title">Agent Instructions</h2>
+
+                <p class="loadout-editor-section-description">
+                    Instructions given to {{AGENT_NAME}}.
+                </p>
+
+                <textarea
+                    class="loadout-editor-instructions-textarea"
+                    aria-label="Agent instructions"
+                >{{AGENT_INSTRUCTIONS}}</textarea>
+            </section>
+        </section>
+        <section class="loadout-tab-panel" data-panel="llm">
+            <section class="loadout-editor-section loadout-editor-llm-section">
+                <label class="loadout-editor-section-title" for="loadout-model-name">
+                    Model Name
+                </label>
+
+                <p class="loadout-editor-section-description">
+                    Choose the model used by this agent.
+                </p>
+
+                <input
+                    id="loadout-model-name"
+                    class="loadout-editor-llm-input"
+                    type="text"
+                    value="{{AGENT_LLM}}"
+                >
+            </section>
+
+            <section class="loadout-editor-section loadout-editor-llm-section">
+                <label class="loadout-editor-section-title" for="loadout-temperature">
+                    Temperature
+                </label>
+
+                <p class="loadout-editor-section-description">
+                    Controls randomness in the model's responses.
+                </p>
+
+                <input
+                    id="loadout-temperature"
+                    class="loadout-editor-llm-input"
+                    type="text"
+                    min="0"
+                    max="2"
+                    step="0.1"
+                    value="{{AGENT_LLM_TEMP}}"
+                >
+            </section>
+
+            <section class="loadout-editor-section loadout-editor-llm-section">
+                <label class="loadout-editor-section-title" for="loadout-top-p">
+                    Top P
+                </label>
+
+                <p class="loadout-editor-section-description">
+                    Limits token selection to the most probable tokens.
+                </p>
+
+                <input
+                    id="loadout-top-p"
+                    class="loadout-editor-llm-input"
+                    type="text"
+                    min="0"
+                    max="1"
+                    step="0.05"
+                    value="{{AGENT_LLM_TOP_P}}"
+                >
+            </section>
+
+            <section class="loadout-editor-section loadout-editor-llm-section">
+                <label class="loadout-editor-section-title" for="loadout-max-tokens">
+                    Max Tokens
+                </label>
+
+                <p class="loadout-editor-section-description">
+                    Maximum number of tokens the model may generate.
+                </p>
+
+                <input
+                    id="loadout-max-tokens"
+                    class="loadout-editor-llm-input"
+                    type="text"
+                    min="1"
+                    step="1"
+                    value="{{AGENT_LLM_MAX_TOKENS}}"
+                >
+            </section>
+        </section>
+
+        <section class="loadout-tab-panel" data-panel="messages">
+            <section class="loadout-editor-section loadout-editor-messages-section">
+                <label class="loadout-editor-section-title" for="loadout-past-messages">
+                    Past Messages
+                </label>
+
+                <p class="loadout-editor-section-description">
+                    How many messages in the past conversation {{AGENT_NAME}} can see, including user and non-user messages.
+                </p>
+
+                <input
+                    id="loadout-past-messages"
+                    class="loadout-editor-messages-input"
+                    type="text"
+                    inputmode="numeric"
+                    value="{{AGENT_PAST_MESSAGE_COUNT}}"
+                >
+            </section>
+        </section>
+
+        <section class="loadout-tab-panel" data-panel="inputs">
+            <section class="loadout-editor-section loadout-editor-inputs-section">
+                <label class="loadout-editor-checkbox-row" for="loadout-use-character-cards">
+                    <span class="loadout-editor-checkbox-text">
+                        <span class="loadout-editor-section-title">Character Cards</span>
+
+                        <span class="loadout-editor-section-description">
+                            Expose all character cards of all characters in the running chat to {{AGENT_NAME}}.
+                        </span>
+                    </span>
+
+                    <input
+                        id="loadout-use-character-cards"
+                        class="loadout-editor-checkbox"
+                        type="checkbox"
+                        {{USE_CHARACTER_CARDS}}
+                    >
+                </label>
+            </section>
+
+            <section class="loadout-editor-section loadout-editor-inputs-section">
+                <label class="loadout-editor-checkbox-row" for="loadout-use-scenario">
+                    <span class="loadout-editor-checkbox-text">
+                        <span class="loadout-editor-section-title">Scenario</span>
+
+                        <span class="loadout-editor-section-description">
+                            Expose the scenario description in the running chat to {{AGENT_NAME}}.
+                        </span>
+                    </span>
+
+                    <input
+                        id="loadout-use-scenario"
+                        class="loadout-editor-checkbox"
+                        type="checkbox"
+                        {{USE_SCENARIO}}
+                    >
+                </label>
+            </section>
+
+            <section class="loadout-editor-section loadout-editor-inputs-section">
+                <label class="loadout-editor-checkbox-row" for="loadout-use-carryover">
+                    <span class="loadout-editor-checkbox-text">
+                        <span class="loadout-editor-section-title">Carry Over Last Generation</span>
+
+                        <span class="loadout-editor-section-description">
+                            Expose the previously generated output from {{AGENT_NAME}} to itself.
+                        </span>
+                    </span>
+
+                    <input
+                        id="loadout-use-carryover"
+                        class="loadout-editor-checkbox"
+                        type="checkbox"
+                        {{USE_CARRYOVER}}
+                    >
+                </label>
+            </section>
+        </section>
+
+        <section class="loadout-tab-panel" data-panel="other">
+            Other content
+        </section>
+    </div>
+</div>
