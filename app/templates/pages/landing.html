@@ -1,6 +1,7 @@
 <link rel="stylesheet" href="/assets/css/styles.css">
 
 <body>
+    <script src="/assets/js/ui/toast.js" defer></script>
     <script src="/assets/js/characters/saveCharacter.js" defer></script>
     <script src="/assets/js/ui/showPane.js" defer></script>
     <script src="/assets/js/chats/newChatPane.js" defer></script>
@@ -206,22 +207,17 @@
 
                         <div class="agent-card__inputs">
                             <div class="agent-card__button agent-card__button--chat">
-                                <button class="agent-card__chat-main" type="button" aria-label="Use chat history">
-                                    <span class="agent-card__chat-icon" aria-hidden="true"></span>
-                                    <span class="agent-card__chat-number">3</span>
-                                </button>
+                                <span class="agent-card__chat-icon" aria-hidden="true"></span>
 
-                                <div class="agent-card__chat-stepper">
-                                    <button class="agent-card__stepper-block" type="button" aria-label="Increase chat history amount">
-                                        <span class="agent-card__chevron agent-card__chevron--up" aria-hidden="true"></span>
-                                    </button>
-
-                                    <button class="agent-card__stepper-block" type="button" aria-label="Decrease chat history amount">
-                                        <span class="agent-card__chevron agent-card__chevron--down" aria-hidden="true"></span>
-                                    </button>
-                                </div>
+                                <input
+                                    class="agent-card__chat-count-input"
+                                    type="number"
+                                    min="0"
+                                    step="1"
+                                    value="3"
+                                    aria-label="Chat history message count"
+                                >
                             </div>
-
                             <button class="agent-card__button agent-card__button--active agent-instructions" type="button" aria-label="Edit agent prompt">
                                 <span class="agent-card__brace-icon" aria-hidden="true"></span>
                             </button>
@@ -248,7 +244,6 @@
 
                         <div class="agent-card__lower">
                             <div class="agent-card__instructions">
-                                You are... otherwise... o therwise....
                             </div>
 
                             <div class="agent-card__meta">
@@ -277,20 +272,16 @@
 
                         <div class="agent-card__inputs">
                             <div class="agent-card__button agent-card__button--chat">
-                                <button class="agent-card__chat-main" type="button" aria-label="Use chat history">
-                                    <span class="agent-card__chat-icon" aria-hidden="true"></span>
-                                    <span class="agent-card__chat-number">3</span>
-                                </button>
+                                <span class="agent-card__chat-icon" aria-hidden="true"></span>
 
-                                <div class="agent-card__chat-stepper">
-                                    <button class="agent-card__stepper-block" type="button" aria-label="Increase chat history amount">
-                                        <span class="agent-card__chevron agent-card__chevron--up" aria-hidden="true"></span>
-                                    </button>
-
-                                    <button class="agent-card__stepper-block" type="button" aria-label="Decrease chat history amount">
-                                        <span class="agent-card__chevron agent-card__chevron--down" aria-hidden="true"></span>
-                                    </button>
-                                </div>
+                                <input
+                                    class="agent-card__chat-count-input"
+                                    type="number"
+                                    min="0"
+                                    step="1"
+                                    value="3"
+                                    aria-label="Chat history message count"
+                                >
                             </div>
 
                             <button class="agent-card__button agent-card__button--active agent-instructions" type="button" aria-label="Edit agent prompt">
@@ -348,20 +339,16 @@
 
                         <div class="agent-card__inputs">
                             <div class="agent-card__button agent-card__button--chat">
-                                <button class="agent-card__chat-main" type="button" aria-label="Use chat history">
-                                    <span class="agent-card__chat-icon" aria-hidden="true"></span>
-                                    <span class="agent-card__chat-number">3</span>
-                                </button>
+                                <span class="agent-card__chat-icon" aria-hidden="true"></span>
 
-                                <div class="agent-card__chat-stepper">
-                                    <button class="agent-card__stepper-block" type="button" aria-label="Increase chat history amount">
-                                        <span class="agent-card__chevron agent-card__chevron--up" aria-hidden="true"></span>
-                                    </button>
-
-                                    <button class="agent-card__stepper-block" type="button" aria-label="Decrease chat history amount">
-                                        <span class="agent-card__chevron agent-card__chevron--down" aria-hidden="true"></span>
-                                    </button>
-                                </div>
+                                <input
+                                    class="agent-card__chat-count-input"
+                                    type="number"
+                                    min="0"
+                                    step="1"
+                                    value="3"
+                                    aria-label="Chat history message count"
+                                >
                             </div>
 
                             <button class="agent-card__button agent-card__button--active agent-instructions" type="button" aria-label="Edit agent prompt">
@@ -415,4 +402,5 @@
             <div class="right">inshallah there will be a right sidebar here</div>
         </div>
     </div>
+    <div id="toast-container" class="toast-container"></div>
 </body>

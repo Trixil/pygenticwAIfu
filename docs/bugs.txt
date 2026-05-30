@@ -7,3 +7,6 @@ clicking the + new card button permanently puts it on "selected for chat" i thin
 the expansion of the pipeline config does not quite match the width of the "layout" flex container that contains left, middle, and right
 the svgs are too close to the borders on the agent box
 the cards can be clicked from the loadout editor screen
+the connector lines in the editor lie under the input for the agent
+if the user clicks on the input form in the agent pane, the instructins preview goes blank. if they click away, it stays blank
+make buttons fill the width of the line above in the loadout pane

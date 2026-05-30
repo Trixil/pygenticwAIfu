@@ -45,24 +45,51 @@ function registerPaneNameEditor(editorPane, agentId, agent) {
         nameInput.select();
     });
 
+    function resetNameInput() {
+        nameInput.value =
+            editorState.allConfigsById[agentId].agentName ||
+            overviewName.textContent.trim();
+
+        nameInput.readOnly = true;
+    }
+
     function commitNameChange() {
-        const newName = nameInput.value.trim();
+        const newName = nameInput.value.trim().replace(/\s{2,}/g, " ");
+        const currentName =
+            editorState.allConfigsById[agentId].agentName ||
+            overviewName.textContent.trim();
 
         if (newName === "") {
-            nameInput.value =
-                editorState.allConfigsById[agentId].agentName ||
-                overviewName.textContent.trim();
-
-            nameInput.readOnly = true;
+            resetNameInput();
             return;
         }
 
-        editorState.allConfigsById[agentId].agentName = newName;
+        const duplicateNameExists = Object.entries(editorState.allConfigsById)
+            .some(([id, config]) => {
+                return id !== agentId && config.agentName === newName;
+            });
 
+        if (duplicateNameExists) {
+            showToast("Two agents can't have the same name! Get creative!");
+            resetNameInput();
+            return;
+        }
+
+        const oldName = editorState.allConfigsById[agentId].agentName;
+        editorState.allConfigsById[agentId].agentName = newName;
         overviewName.textContent = newName;
 
         nameInput.value = newName;
         nameInput.readOnly = true;
+
+        editorState.allConfigsById[agentId].agentConfiguration.childrenId.forEach(function (agentChildId) {
+            const childConfig = editorState.allConfigsById[agentChildId].agentConfiguration;
+            const parentNameIdx = childConfig.parents.indexOf(oldName);
+
+            if (parentNameIdx !== -1) {
+                childConfig.parents[parentNameIdx] = newName;
+            }
+        });
     }
 
     nameInput.addEventListener("blur", commitNameChange);
@@ -75,16 +102,12 @@ function registerPaneNameEditor(editorPane, agentId, agent) {
 
         if (event.key === "Escape") {
             event.preventDefault();
-
-            nameInput.value =
-                editorState.allConfigsById[agentId].agentName ||
-                overviewName.textContent.trim();
-
-            nameInput.readOnly = true;
+            resetNameInput();
             nameInput.blur();
         }
     });
 }
+
 
 function registerLoadoutPaneControls(editorPane, agentId, agent) {
     const agentConfig = editorState.allConfigsById[agentId];
@@ -166,24 +189,50 @@ function registerLoadoutPaneControls(editorPane, agentId, agent) {
         .textContent = modelNameInput.value;
         agent.querySelector(".agent-card__meta-text").textContent = modelNameInput.value;
     });
-
+    
     temperatureInput.addEventListener("input", function () {
         config.agentLLMConfig.temp = Number(temperatureInput.value);
     });
-
+    
     topPInput.addEventListener("input", function () {
         config.agentLLMConfig.topP = Number(topPInput.value);
     });
-
+    
     maxTokensInput.addEventListener("input", function () {
         config.agentLLMConfig.maxTokens = Number(maxTokensInput.value);
     });
-
+    
     // ---------- messages ----------
     const pastMessagesInput = editorPane.querySelector("#loadout-past-messages");
+    const agentPastMessagesInput = agent.querySelector(".agent-card__chat-count-input");
+
+    function normalizePastMessageCount(value) {
+        const number = Number(value);
+
+        if (!Number.isFinite(number) || number < 0) {
+            return 0;
+        }
+
+        return Math.floor(number);
+    }
+
+    function setPastMessageCount(value) {
+        const pastMessageCount = normalizePastMessageCount(value);
+
+        config.pastMessageCount = pastMessageCount;
+
+        pastMessagesInput.value = pastMessageCount;
+        agentPastMessagesInput.value = pastMessageCount;
+    }
+
+    setPastMessageCount(config.pastMessageCount);
 
     pastMessagesInput.addEventListener("input", function () {
-        config.pastMessageCount = Number(pastMessagesInput.value);
+        setPastMessageCount(pastMessagesInput.value);
+    });
+
+    agentPastMessagesInput.addEventListener("input", function () {
+        setPastMessageCount(agentPastMessagesInput.value);
     });
 
     // ---------- input checkboxes ----------
@@ -261,6 +310,8 @@ async function showAgentPane(agent) {
     wrapper.innerHTML = html.trim();
 
     const editorPane = wrapper.firstElementChild;
+
+    editorPane.setAttribute("data-selected-agent-id", agent.dataset.agentId);
 
     editorPane.classList.add("pane-hidden");
 
@@ -507,15 +558,37 @@ function registerAgent(agent) {
 
             editorState.allChildren[startAgentId].add(endAgentId);
 
+            const endAgentName = agent
+                .querySelector(".agent-card__name")
+                .textContent
+                .trim();
+
+            const startAgent = document.querySelector(`[data-agent-id="${startAgentId}"]`);
+
+            const startAgentName = startAgent
+                .querySelector(".agent-card__name")
+                .textContent
+                .trim();
+            
             editorState.allConfigsById[startAgentId]
                 .agentConfiguration
                 .children
-                .add(endAgentId);
+                .push(endAgentName);
+
+            editorState.allConfigsById[startAgentId]
+                .agentConfiguration
+                .childrenId
+                .push(endAgentId);
 
             editorState.allConfigsById[endAgentId]
                 .agentConfiguration
                 .parents
-                .add(startAgentId);
+                .push(startAgentName);
+
+            editorState.allConfigsById[endAgentId]
+                .agentConfiguration
+                .parentsId
+                .push(startAgentId);
 
             editorState.draggedLine.remove();
             editorState.draggedLine = null;
@@ -537,7 +610,9 @@ function createDefaultAgentConfig(agentId) {
             carryOver: false,
             pastMessageCount: 0,
             parents: [],
+            parentsId: [],
             children: [],
+            childrenId: [],
             agentLLMConfig: {
                 LLMName: "",
                 temp: 1,
@@ -605,7 +680,7 @@ async function startLoadoutEditor() {
                     agentConfiguration: {
                         ...agentConfig.agentConfiguration,
 
-                        parents: [...agentConfig.agentConfiguration.parents],
+                        parents: [...agentConfig.agentConfiguration.parents]    ,
                         children: [...agentConfig.agentConfiguration.children],
 
                         agentLLMConfig: {

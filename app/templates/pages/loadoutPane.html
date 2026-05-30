@@ -24,12 +24,11 @@
                 <h2 class="loadout-editor-section-title">Available Agent Outputs</h2>
 
                 <p class="loadout-editor-section-description">
-                    Outputs of previously executed agents made available to {{AGENT_NAME}}.
+                    Outputs of previously executed agents made available to this agent.
                 </p>
 
                 <div class="loadout-editor-output-list">
-                    <button class="loadout-editor-output-chip" type="button">{eventAgent}</button>
-                    <button class="loadout-editor-output-chip" type="button">{goalAgent}</button>
+                    {{INPUT_LIST}}
                 </div>
             </section>
 
@@ -37,7 +36,7 @@
                 <h2 class="loadout-editor-section-title">Agent Instructions</h2>
 
                 <p class="loadout-editor-section-description">
-                    Instructions given to {{AGENT_NAME}}.
+                    Instructions given to this agent.
                 </p>
 
                 <textarea
@@ -131,7 +130,7 @@
                 </label>
 
                 <p class="loadout-editor-section-description">
-                    How many messages in the past conversation {{AGENT_NAME}} can see, including user and non-user messages.
+                    How many messages in the past conversation this agent can see, including user and non-user messages.
                 </p>
 
                 <input
@@ -151,7 +150,7 @@
                         <span class="loadout-editor-section-title">Character Cards</span>
 
                         <span class="loadout-editor-section-description">
-                            Expose all character cards of all characters in the running chat to {{AGENT_NAME}}.
+                            Expose all character cards of all characters in the running chat to this agent.
                         </span>
                     </span>
 
@@ -170,7 +169,7 @@
                         <span class="loadout-editor-section-title">Scenario</span>
 
                         <span class="loadout-editor-section-description">
-                            Expose the scenario description in the running chat to {{AGENT_NAME}}.
+                            Expose the scenario description in the running chat to this agent.
                         </span>
                     </span>
 
@@ -189,7 +188,7 @@
                         <span class="loadout-editor-section-title">Carry Over Last Generation</span>
 
                         <span class="loadout-editor-section-description">
-                            Expose the previously generated output from {{AGENT_NAME}} to itself.
+                            Expose the previously generated output from this agent to itself.
                         </span>
                     </span>
 

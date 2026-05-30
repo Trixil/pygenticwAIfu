@@ -7,6 +7,7 @@ from fastapi.responses import HTMLResponse
 from ..core.paths import LOADOUTS_DIR, TEMPLATES_DIR
 from ..storage import file_io
 from ..models import definitions
+from ..rendering import htmlHelpers
 
 router = APIRouter()
 
@@ -112,4 +113,29 @@ async def renderAgentPane(request: Request):
     agentPaneHTML = agentPaneHTML.replace("{{USE_CARRYOVER}}", useCarryOver)
     agentPaneHTML = agentPaneHTML.replace("{{USE_SCENARIO}}", useScenario)
     
+    inputHTML = ""
+    for inputLLM in agentConfig["parents"]:
+        agentSlug = inputLLM.replace(" ", "")
+        inputHTML += htmlHelpers.buildOutputListEntryHTML(agentSlug)
+    
+    agentPaneHTML = agentPaneHTML.replace("{{INPUT_LIST}}", inputHTML)
+
     return HTMLResponse(content=agentPaneHTML)
+
+# agentName: "",
+# agentConfiguration: {
+#     agentId: agentId,
+#     agentInstructions: "",
+#     characterInput: false,
+#     scenario: false,
+#     carryOver: false,
+#     pastMessageCount: 0,
+#     parents: [],
+#     children: [],
+#     agentLLMConfig: {
+#         LLMName: "",
+#         temp: 1,
+#         maxTokens: 4000,
+#         topP: 1
+#     }
+# }

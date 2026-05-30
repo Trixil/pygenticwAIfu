@@ -52,7 +52,7 @@
   --checkbox-size: calc(36px * var(--agent-scale));
   --checkbox-border: calc(3px * var(--agent-scale));
 
-  --chat-number-size: calc(36px * var(--agent-scale));
+  --chat-number-size: calc(50px * var(--agent-scale));
   --chevron-size: calc(20px * var(--agent-scale));
   --chevron-thickness: calc(4px * var(--agent-scale));
 
@@ -200,37 +200,6 @@
 .agent-card__button--chat {
   justify-content: stretch;
   overflow: hidden;
-}
-
-.agent-card__chat-icon,
-.agent-card__chat-number,
-.agent-card__chat-stepper {
-  height: 100%;
-  display: grid;
-  place-items: center;
-}
-
-.agent-card__chat-icon {
-  width: 34%;
-}
-
-.agent-card__chat-number {
-  width: 38%;
-  border-left: none;
-  border-right: var(--control-border-width) solid rgba(172, 187, 216, 0.24);
-  color: #eef3ff;
-  font-size: var(--chat-number-size);
-  font-weight: 500;
-  letter-spacing: -0.04em;
-}
-
-.agent-card__chat-stepper {
-  width: 28%;
-  height: 100%;
-  display: grid;
-  grid-template-rows: 1fr 1fr;
-  gap: calc(6px * var(--agent-scale));
-  padding: calc(9px * var(--agent-scale)) 0;
 }
 
 .agent-card__stepper-block {
@@ -680,4 +649,53 @@
 .loadout-tips-icon {
     mask-image: url("/assets/icons/tips-loadout.svg");
     -webkit-mask-image: url("/assets/icons/tips-loadout.svg");
+}
+
+.agent-card__button--chat {
+  display: grid;
+  grid-template-columns: 34% 1fr;
+  align-items: center;
+  overflow: hidden;
+}
+
+.agent-card__button--chat .agent-card__chat-icon {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  margin: 0;
+}
+
+.agent-card__chat-count-input {
+  width: 100%;
+  height: 100%;
+
+  padding: 0;
+  margin: 0;
+
+  display: block;
+
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #eef3ff;
+
+  font-family: "Manrope", sans-serif;
+  font-size: var(--chat-number-size);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  text-align: center;
+
+  border-left: var(--control-border-width) solid rgba(172, 187, 216, 0.24);
+
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.agent-card__chat-count-input::-webkit-outer-spin-button,
+.agent-card__chat-count-input::-webkit-inner-spin-button {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
 }
