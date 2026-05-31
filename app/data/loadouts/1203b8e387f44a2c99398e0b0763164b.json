@@ -1,0 +1,56 @@
+{
+  "loadoutName": "",
+  "loadoutId": "e37023cf5bd34ba5ae94634a1b3b88f8",
+  "loadoutImageFile": "C:\\Users\\mashhood\\repos\\agenticwAIfu\\app\\data\\loadouts\\images\\1203b8e387f44a2c99398e0b0763164b.png",
+  "loadoutFile": "",
+  "loadoutAgents": [
+    {
+      "agentName": "",
+      "agentId": "agent1",
+      "agentInstructions": "",
+      "characterInput": false,
+      "scenario": false,
+      "carryOver": false,
+      "parents": [],
+      "children": [],
+      "agentLLMConfig": {
+        "LLMName": "",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      }
+    },
+    {
+      "agentName": "",
+      "agentId": "agent2",
+      "agentInstructions": "",
+      "characterInput": false,
+      "scenario": false,
+      "carryOver": false,
+      "parents": [],
+      "children": [],
+      "agentLLMConfig": {
+        "LLMName": "",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      }
+    },
+    {
+      "agentName": "",
+      "agentId": "agent3",
+      "agentInstructions": "",
+      "characterInput": false,
+      "scenario": false,
+      "carryOver": false,
+      "parents": [],
+      "children": [],
+      "agentLLMConfig": {
+        "LLMName": "",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      }
+    }
+  ]
+}

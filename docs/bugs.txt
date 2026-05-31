@@ -10,3 +10,13 @@ the cards can be clicked from the loadout editor screen
 the connector lines in the editor lie under the input for the agent
 if the user clicks on the input form in the agent pane, the instructins preview goes blank. if they click away, it stays blank
 make buttons fill the width of the line above in the loadout pane
+compressed character images
+lines do not move with the agents
+title on agent should be larger and centered
+make agent card title much narrower horizontally
+remove line in agent card for chatmessagecount
+longer names should not change the sizeof the card; the name should go upward, producing a larger black portion
+only one agent pane at a time should be allowed to appear.
+scrolling all the way down on the homepage, showing loadout cards and agent cards.
+the loadout image creator should be more purple-themed, using the css colors.
+show "saved config" toast

@@ -70,7 +70,7 @@ function registerPaneNameEditor(editorPane, agentId, agent) {
             });
 
         if (duplicateNameExists) {
-            showToast("Two agents can't have the same name! Get creative!");
+            showToast("Two agents can't have the same name! Get creative, BAKA~!");
             resetNameInput();
             return;
         }
@@ -107,7 +107,6 @@ function registerPaneNameEditor(editorPane, agentId, agent) {
         }
     });
 }
-
 
 function registerLoadoutPaneControls(editorPane, agentId, agent) {
     const agentConfig = editorState.allConfigsById[agentId];
@@ -287,6 +286,17 @@ async function showAgentPane(agent) {
 
     const loadoutId = document.querySelector(".loadout-editor").dataset.loadoutId;
 
+    const agentNamesById = {};
+    document.querySelectorAll(".agent-card").forEach(function (thisAgent) {
+        const agentId = thisAgent.dataset.agentId;
+        const agentName = thisAgent
+            .querySelector(".agent-card__name")
+            .textContent
+            .trim();
+
+        agentNamesById[agentId] = agentName;
+    });
+
     const response = await fetch("/render-agent-pane", {
         method: "POST",
         headers: {
@@ -295,7 +305,8 @@ async function showAgentPane(agent) {
         body: JSON.stringify({
             loadoutId: loadoutId,
             agentConfig: agentConfig,
-            agentName: agentName
+            agentName: agentName,
+            agentNamesById: agentNamesById
         })
     });
 
@@ -602,6 +613,10 @@ function registerAgent(agent) {
 function createDefaultAgentConfig(agentId) {
     return {
         agentName: "",
+        layout: {
+            x: 0,
+            y: 0
+        },
         agentConfiguration: {
             agentId: agentId,
             agentInstructions: "",
@@ -621,6 +636,21 @@ function createDefaultAgentConfig(agentId) {
             }
         }
     };
+}
+
+function syncAgentLayoutToEditorState() {
+    document.querySelectorAll(".agent-card[data-agent-id]").forEach(function (agent) {
+        const agentId = agent.dataset.agentId;
+
+        if (!editorState.allConfigsById[agentId]) {
+            editorState.allConfigsById[agentId] = createDefaultAgentConfig(agentId);
+        }
+
+        editorState.allConfigsById[agentId].layout = {
+            x: Number.parseFloat(agent.style.left) || 0,
+            y: Number.parseFloat(agent.style.top) || 0
+        };
+    });
 }
 
 async function startLoadoutEditor() {
@@ -672,24 +702,33 @@ async function startLoadoutEditor() {
         const loadoutEditor = document.querySelector(".loadout-editor");
         const loadoutId = loadoutEditor.dataset.loadoutId;
 
-        const payload = Object.fromEntries(
-            Object.entries(editorState.allConfigsById).map(([agentId, agentConfig]) => [
-                agentId,
-                {
-                    ...agentConfig,
-                    agentConfiguration: {
-                        ...agentConfig.agentConfiguration,
+        syncAgentLayoutToEditorState();
 
-                        parents: [...agentConfig.agentConfiguration.parents]    ,
-                        children: [...agentConfig.agentConfiguration.children],
+            const payload = Object.fromEntries(
+                Object.entries(editorState.allConfigsById).map(([agentId, agentConfig]) => [
+                    agentId,
+                    {
+                        ...agentConfig,
+                        layout: {
+                            ...agentConfig.layout
+                        },
+                        agentConfiguration: {
+                            ...agentConfig.agentConfiguration,
 
-                        agentLLMConfig: {
-                            ...agentConfig.agentConfiguration.agentLLMConfig
+                            parents: [...agentConfig.agentConfiguration.parents],
+                            parentsId: [...agentConfig.agentConfiguration.parentsId],
+
+                            children: [...agentConfig.agentConfiguration.children],
+                            childrenId: [...agentConfig.agentConfiguration.childrenId],
+
+                            agentLLMConfig: {
+                                ...agentConfig.agentConfiguration.agentLLMConfig
+                            }
                         }
                     }
-                }
-            ])
-        );
+                ])
+            );
+
 
         const response = await fetch("/save-loadout-configuration", {
             method: "POST",
@@ -729,6 +768,165 @@ function isLoop(source, destination, kindergarten)
     return hasLoop;
 
 }
+
+async function openSavedLoadout(loadoutCardElement) {
+    const loadoutId = loadoutCardElement.dataset.loadoutId;
+
+    const response = await fetch(`/loadout-configuration/${loadoutId}`);
+
+    if (!response.ok) {
+        console.error("Failed to load loadout:", loadoutId);
+        return;
+    }
+
+    const loadoutData = await response.json();
+
+    showLoadoutEditor(loadoutCardElement);
+
+    loadSavedLoadoutIntoEditor(loadoutData);
+}
+
+function loadSavedLoadoutIntoEditor(loadoutData) {
+    const editor = document.querySelector(".loadout-editor");
+
+    editorState.allConfigsById = {};
+    editorState.allChildren = {};
+    editorState.isDraggingAgent = false;
+    editorState.isDraggingLine = false;
+    editorState.draggedAgent = null;
+    editorState.draggedLine = null;
+    editorState.activeSvg = null;
+
+    editor.querySelectorAll(".agent-card").forEach(function (agent) {
+        agent.remove();
+    });
+
+    loadoutData.loadoutAgents.forEach(function (savedAgent) {
+        const agent = createAgentCardFromSavedAgent(savedAgent);
+
+        editor.appendChild(agent);
+
+        editorState.allConfigsById[savedAgent.agentId] = {
+            agentName: savedAgent.agentName,
+            layout: savedAgent.layout || {
+                x: 0,
+                y: 0
+            },
+            agentConfiguration: {
+                agentId: savedAgent.agentId,
+                agentInstructions: savedAgent.agentInstructions || "",
+                characterInput: savedAgent.characterInput || false,
+                scenario: savedAgent.scenario || false,
+                carryOver: savedAgent.carryOver || false,
+                pastMessageCount: savedAgent.pastMessageCount || 0,
+
+                parents: [],
+                parentsId: savedAgent.parents || [],
+
+                children: [],
+                childrenId: savedAgent.children || [],
+
+                agentLLMConfig: savedAgent.agentLLMConfig || {
+                    LLMName: "",
+                    temp: 1,
+                    maxTokens: 4000,
+                    topP: 1
+                }
+            }
+        };
+
+        editorState.allChildren[savedAgent.agentId] = new Set(savedAgent.children || []);
+
+        registerAgent(agent);
+    });
+
+    requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+            rebuildAllSavedWires();
+        });
+    });
+}
+
+async function createAgentCardFromSavedAgent(savedAgent) {
+
+    const agentWrapper = document.createElement("div");
+    
+    const response = await fetch("/render-agent-card", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            savedAgent: savedAgent,
+        })
+    });
+
+    agentWrapper.innerHTML = await response.text().trim();
+    
+    const agent = agentWrapper.firstElementChild;
+
+    const layout = savedAgent.layout || {
+        x: 0,
+        y: 0
+    };
+
+    agent.style.position = "absolute";
+    agent.style.left = `${layout.x}px`;
+    agent.style.top = `${layout.y}px`;
+
+    return agent;
+}
+
+function rebuildAllSavedWires() {
+    document.querySelectorAll(".wire-layer line").forEach(function (line) {
+        line.remove();
+    });
+
+    Object.entries(editorState.allConfigsById).forEach(function ([startAgentId, agentConfigWrapper]) {
+        const childrenIds = agentConfigWrapper.agentConfiguration.childrenId || [];
+
+        childrenIds.forEach(function (endAgentId) {
+            drawSavedWire(startAgentId, endAgentId);
+        });
+    });
+}
+
+function drawSavedWire(startAgentId, endAgentId) {
+    const startAgent = document.querySelector(`.agent-card[data-agent-id="${startAgentId}"]`);
+    const endAgent = document.querySelector(`.agent-card[data-agent-id="${endAgentId}"]`);
+
+    if (!startAgent || !endAgent) return;
+
+    const startOutput = startAgent.querySelector(".agent-port--out");
+    const endInput = endAgent.querySelector(".agent-port--in");
+    const svg = startAgent.querySelector(".wire-layer");
+
+    if (!startOutput || !endInput || !svg) return;
+
+    const svgRect = svg.getBoundingClientRect();
+    const outRect = startOutput.getBoundingClientRect();
+    const inRect = endInput.getBoundingClientRect();
+
+    const startX = outRect.left + outRect.width / 2 - svgRect.left;
+    const startY = outRect.top + outRect.height / 2 - svgRect.top;
+
+    const endX = inRect.left + inRect.width / 2 - svgRect.left;
+    const endY = inRect.top + inRect.height / 2 - svgRect.top;
+
+    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+
+    line.setAttribute("x1", startX);
+    line.setAttribute("y1", startY);
+    line.setAttribute("x2", endX);
+    line.setAttribute("y2", endY);
+    line.setAttribute("stroke", "white");
+    line.setAttribute("stroke-width", "2");
+    line.setAttribute("data-agent-start", startAgentId);
+    line.setAttribute("data-agent-end", endAgentId);
+
+    svg.appendChild(line);
+}
+
 // agent config created
 // add eventlistener for all buttons
 // eventListener sets the agent config value

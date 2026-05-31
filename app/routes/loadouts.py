@@ -1,13 +1,14 @@
+import numpy
 import glob
 from pathlib import Path
-
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
+from fastapi import HTTPException
 
 from ..core.paths import LOADOUTS_DIR, TEMPLATES_DIR
 from ..storage import file_io
 from ..models import definitions
-from ..rendering import htmlHelpers
+from ..rendering import htmlHelpers, loadoutCardImages
 
 router = APIRouter()
 
@@ -29,7 +30,7 @@ async def renderChatCardOfLoadout(request: Request):
 
     return {"cardHtml": cardHtml}
 
-@router.get("/loadout-cards", response_class=HTMLResponse)
+@router.get("/render-loadout-cards", response_class=HTMLResponse)
 def renderLoadoutCards() -> HTMLResponse:
 
     fullLoadoutCardHTML = ''
@@ -41,7 +42,7 @@ def renderLoadoutCards() -> HTMLResponse:
 
         # the problem is that these loadout cards need to be formatted appropriately with the  right html and css
         loadoutHtml = f"""
-        <div data-loadout-id="{loadoutCard.loadoutName}" class="loadout-card" onclick="showLoadoutEditor(this)">
+        <div data-loadout-id="{loadoutCard.loadoutId}" class="loadout-card" onclick="openSavedLoadout(this)">
             <img src="/loadout-images/{image_name}" alt="Loadout Image" class="loadout-image"/>
               <button class="loadout-edit-button" aria-label="Edit loadout">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -62,30 +63,47 @@ async def saveLoadoutConfiguration(request: Request):
     data = await request.json()
 
     allConfigsById = data["allConfigsById"]
-    print (allConfigsById)
-    agentLoadout = definitions.agentLoadout()
+    loadoutID = data["loadoutId"]
 
-    for agentName, agentConfig in allConfigsById.items():
-        print(agentConfig)
-        agentConfig = agentConfig["agentConfiguration"]
-        agentLLMConfig = definitions.LLMConfig.model_validate(agentConfig["agentLLMConfig"])
+    agentLoadout = definitions.agentLoadout()
+    agentLoadout.loadoutId = loadoutID
+
+    for agentID, agentConfigWrapper in allConfigsById.items():
+        agentName = agentConfigWrapper["agentName"]
+        agentConfig = agentConfigWrapper["agentConfiguration"]
+
+        layout = agentConfigWrapper.get("layout", {
+            "x": 0,
+            "y": 0
+        })
+
         agentDict = {
             "agentName": agentName,
-            "agentId": agentConfig["agentId"],
+            "agentId": agentID,
             "agentInstructions": agentConfig["agentInstructions"],
             "characterInput": agentConfig["characterInput"],
             "scenario": agentConfig["scenario"],
             "carryOver": agentConfig["carryOver"],
-            "parents": agentConfig["parents"],
-            "children": agentConfig["children"],
-            "agentLLMConfig": agentConfig["agentLLMConfig"]
+            "parents": agentConfig["parentsId"],
+            "children": agentConfig["childrenId"],
+            "agentLLMConfig": agentConfig["agentLLMConfig"],
+            "layout": layout
         }
 
         agent = definitions.agent.model_validate(agentDict)
-        print(agent)
         agentLoadout.loadoutAgents.append(agent)
 
-    print(agentLoadout)
+    agentLoadout.loadoutImageFile = loadoutCardImages.create_loadout_quilt_image(
+        loadoutID,
+        str(LOADOUTS_DIR / "images")
+    )
+
+    file_io.saveLoadout(
+        agentLoadout.model_dump(),
+        str(LOADOUTS_DIR / f"{loadoutID}.json")
+    )
+
+    return {"status": "saved"}
 
 @router.post("/render-agent-pane", response_class=HTMLResponse)
 async def renderAgentPane(request: Request):
@@ -95,6 +113,7 @@ async def renderAgentPane(request: Request):
     print(data)
     agentConfig = data["agentConfig"]["agentConfiguration"]
     agentName = data["agentName"]
+    agentNamesByID = data["agentNamesById"]
 
     agentPaneHTML = (TEMPLATES_DIR / "pages" / "loadoutPane.html").read_text(encoding="utf-8")
 
@@ -104,7 +123,7 @@ async def renderAgentPane(request: Request):
     agentPaneHTML = agentPaneHTML.replace("{{AGENT_LLM_TEMP}}", str(agentConfig["agentLLMConfig"]["temp"]))
     agentPaneHTML = agentPaneHTML.replace("{{AGENT_LLM_MAX_TOKENS}}", str(agentConfig["agentLLMConfig"]["maxTokens"]))
     agentPaneHTML = agentPaneHTML.replace("{{AGENT_LLM_TOP_P}}", str(agentConfig["agentLLMConfig"]["topP"]))
-    agentPaneHTML = agentPaneHTML.replace("{{AGENT_PAST_MESSAGE_COUNT}}", "0")
+    agentPaneHTML = agentPaneHTML.replace("{{AGENT_PAST_MESSAGE_COUNT}}", str(agentConfig["agentLLMConfig"]["pastMessageCount"]))
     
     useCharacterInput = "checked" if agentConfig["characterInput"] else ""
     useScenario = "checked" if agentConfig["scenario"] else ""
@@ -114,13 +133,57 @@ async def renderAgentPane(request: Request):
     agentPaneHTML = agentPaneHTML.replace("{{USE_SCENARIO}}", useScenario)
     
     inputHTML = ""
-    for inputLLM in agentConfig["parents"]:
-        agentSlug = inputLLM.replace(" ", "")
+    for inputId in agentConfig["parentsId"]:
+        inputName = agentNamesByID[inputId]
+        agentSlug = inputName.replace(" ", "")
         inputHTML += htmlHelpers.buildOutputListEntryHTML(agentSlug)
     
     agentPaneHTML = agentPaneHTML.replace("{{INPUT_LIST}}", inputHTML)
 
     return HTMLResponse(content=agentPaneHTML)
+
+
+@router.post("/render-agent-card", response_class=HTMLResponse)
+async def renderAgentCard(request: Request):
+    data = await request.json()
+
+    print("data is")
+    print(data)
+    agentConfig = data["agentConfig"]["agentConfiguration"]
+    agentID = agentConfig["agentId"]
+    agentName = data["agentName"]
+
+    agentCardHTML = (TEMPLATES_DIR / "pages" / "agentCard.html").read_text(encoding="utf-8")
+
+    agentInstructions = agentConfig["agentInstructions"]
+    endIdx = min(250, len(agentInstructions) - 1)
+    agentInstructionsCropped = agentInstructions[:endIdx]
+
+    agentCardHTML = agentCardHTML.replace("{{AGENT_NAME}}", agentName)
+    agentCardHTML = agentCardHTML.replace("{{AGENT_ID}}", agentID)
+    agentCardHTML = agentCardHTML.replace("{{AGENT_INSTRUCTIONS_CROPPED}}", agentInstructionsCropped)
+    agentCardHTML = agentCardHTML.replace("{{AGENT_LLM}}", agentConfig["agentLLMConfig"]["LLMName"])
+    agentCardHTML = agentCardHTML.replace("{{AGENT_PAST_MESSAGE_COUNT}}", agentConfig["agentLLMConfig"]["pastMessageCount"])
+    agentCardHTML = agentCardHTML.replace("{{AGENT_TOKENS}}", numpy.ceil(agentInstructions/4))
+    
+    useCharacterInput = "agent-card__button--checked" if agentConfig["characterInput"] else ""
+    useScenario = "agent-card__button--checked" if agentConfig["scenario"] else ""
+    useCarryOver = "agent-card__button--checked" if agentConfig["carryOver"] else ""
+    agentCardHTML = agentCardHTML.replace("{{USE_CHARACTER_CARDS}}", useCharacterInput)
+    agentCardHTML = agentCardHTML.replace("{{USE_CARRYOVER}}", useCarryOver)
+    agentCardHTML = agentCardHTML.replace("{{USE_SCENARIO}}", useScenario)
+    
+    return HTMLResponse(content=agentCardHTML)
+
+@router.get("/loadout-configuration/{loadout_id}")
+async def getLoadoutConfiguration(loadout_id: str):
+    loadoutFile = LOADOUTS_DIR / f"{loadout_id}.json"
+
+    print(loadoutFile)
+    if not loadoutFile.exists():
+        raise HTTPException(status_code=404, detail="Loadout not found")
+
+    return file_io.loadLoadout(str(loadoutFile)).model_dump()
 
 # agentName: "",
 # agentConfiguration: {

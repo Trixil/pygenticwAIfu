@@ -27,6 +27,10 @@ class character(BaseModel):
     charFile: str = ""
     charImageFile: str = ""
 
+class agentLayout(BaseModel):
+    x: float = 0
+    y: float = 0
+
 class agent(BaseModel):
     agentName: str = ""
     agentId: str = Field(default_factory=lambda: uuid4().hex)
@@ -37,6 +41,8 @@ class agent(BaseModel):
     parents: list[str] = Field(default_factory=list)
     children: list[str] = Field(default_factory=list)
     agentLLMConfig: LLMConfig = Field(default_factory=LLMConfig)
+    layout: agentLayout = Field(default_factory=agentLayout)
+
 
 class agentLoadout(BaseModel):
     loadoutName: str = ""

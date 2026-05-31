@@ -1,0 +1,63 @@
+{
+  "loadoutName": "",
+  "loadoutId": "ea4241ade2bc4cb093d32ac8f7b26324",
+  "loadoutImageFile": "C:\\Users\\mashhood\\repos\\agenticwAIfu\\app\\data\\loadouts\\3938e44a41394ed98057b3a9390c1094.png",
+  "loadoutFile": "",
+  "loadoutAgents": [
+    {
+      "agentName": "bruh1",
+      "agentId": "agent1",
+      "agentInstructions": "bruh1 instructions",
+      "characterInput": false,
+      "scenario": true,
+      "carryOver": false,
+      "parents": [],
+      "children": [
+        "agent2",
+        "agent3"
+      ],
+      "agentLLMConfig": {
+        "LLMName": "gpt-4.1",
+        "temp": 0.2,
+        "maxTokens": 2000,
+        "topP": 0.32
+      }
+    },
+    {
+      "agentName": "brhu3",
+      "agentId": "agent2",
+      "agentInstructions": "bruh3 instructions",
+      "characterInput": true,
+      "scenario": false,
+      "carryOver": false,
+      "parents": [
+        "agent1"
+      ],
+      "children": [],
+      "agentLLMConfig": {
+        "LLMName": "",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      }
+    },
+    {
+      "agentName": "bruh2",
+      "agentId": "agent3",
+      "agentInstructions": "bruh2 instructions",
+      "characterInput": false,
+      "scenario": true,
+      "carryOver": false,
+      "parents": [
+        "agent1"
+      ],
+      "children": [],
+      "agentLLMConfig": {
+        "LLMName": "",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      }
+    }
+  ]
+}

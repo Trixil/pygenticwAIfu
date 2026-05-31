@@ -1,0 +1,63 @@
+{
+  "loadoutName": "",
+  "loadoutId": "ddc3d9016a6940f0ac9b8bb329d0f5fb",
+  "loadoutImageFile": "",
+  "loadoutFile": "",
+  "loadoutAgents": [
+    {
+      "agentName": "agent1",
+      "agentId": "agent1",
+      "agentInstructions": "bruh1 instruction",
+      "characterInput": true,
+      "scenario": true,
+      "carryOver": false,
+      "parents": [],
+      "children": [
+        "agent2",
+        "agent3"
+      ],
+      "agentLLMConfig": {
+        "LLMName": "",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      }
+    },
+    {
+      "agentName": "agent2",
+      "agentId": "agent2",
+      "agentInstructions": "bruh3 instructions",
+      "characterInput": true,
+      "scenario": false,
+      "carryOver": false,
+      "parents": [
+        "agent1"
+      ],
+      "children": [],
+      "agentLLMConfig": {
+        "LLMName": "",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      }
+    },
+    {
+      "agentName": "agent3",
+      "agentId": "agent3",
+      "agentInstructions": "instructions for bruh2",
+      "characterInput": false,
+      "scenario": true,
+      "carryOver": false,
+      "parents": [
+        "agent1"
+      ],
+      "children": [],
+      "agentLLMConfig": {
+        "LLMName": "",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      }
+    }
+  ]
+}

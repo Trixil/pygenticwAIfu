@@ -1,0 +1,63 @@
+{
+  "loadoutName": "",
+  "loadoutId": "2de27c0831ff4eb8b50d32c70b3a9fb3",
+  "loadoutImageFile": "",
+  "loadoutFile": "",
+  "loadoutAgents": [
+    {
+      "agentName": "agent1",
+      "agentId": "agent1",
+      "agentInstructions": "bruh1",
+      "characterInput": false,
+      "scenario": false,
+      "carryOver": false,
+      "parents": [],
+      "children": [
+        "Event Agent",
+        "Event Agent"
+      ],
+      "agentLLMConfig": {
+        "LLMName": "",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      }
+    },
+    {
+      "agentName": "agent2",
+      "agentId": "agent2",
+      "agentInstructions": "brhu2",
+      "characterInput": false,
+      "scenario": true,
+      "carryOver": false,
+      "parents": [
+        "Event Agent"
+      ],
+      "children": [],
+      "agentLLMConfig": {
+        "LLMName": "gpt-4.2",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      }
+    },
+    {
+      "agentName": "agent3",
+      "agentId": "agent3",
+      "agentInstructions": "bruh3",
+      "characterInput": true,
+      "scenario": true,
+      "carryOver": false,
+      "parents": [
+        "Event Agent"
+      ],
+      "children": [],
+      "agentLLMConfig": {
+        "LLMName": "gpt-4.3",
+        "temp": 0.3,
+        "maxTokens": 3000,
+        "topP": 0.33
+      }
+    }
+  ]
+}

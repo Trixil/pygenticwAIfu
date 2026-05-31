@@ -1,0 +1,66 @@
+<div class="agent-card" data-agent-id="{{AGENT_ID}}">
+    <button class="agent-port agent-port--in" type="button" aria-label="Agent input port">
+        IN
+    </button>
+
+    <svg class="wire-layer"></svg>
+
+    <div class="agent-card__inputs">
+        <div class="agent-card__button agent-card__button--chat">
+            <span class="agent-card__chat-icon" aria-hidden="true"></span>
+
+            <input
+                class="agent-card__chat-count-input"
+                type="number"
+                min="0"
+                step="1"
+                value="{{AGENT_PAST_MESSAGE_COUNT}}"
+                aria-label="Chat history message count"
+            >
+        </div>
+        <button class="agent-card__button agent-card__button--active agent-instructions" type="button" aria-label="Edit agent prompt">
+            <span class="agent-card__brace-icon" aria-hidden="true"></span>
+        </button>
+
+        <button class="agent-card__button agent-card__button--flat agent-character-input {{USE_CHARACTER_CARDS}}" type="button" aria-label="Toggle character input">
+            <span class="agent-card__person-icon" aria-hidden="true"></span>
+            <span class="agent-card__checkbox" aria-hidden="true"></span>
+        </button>
+
+        <button class="agent-card__button agent-card__button--flat agent-scenario {{USE_SCENARIO}}" type="button" aria-label="Toggle image input">
+            <span class="agent-card__camera-icon" aria-hidden="true"></span>
+            <span class="agent-card__checkbox" aria-hidden="true"></span>
+        </button>
+
+        <button class="agent-card__button agent-card__button--flat agent-carryover {{USE_CARRYOVER}}" type="button" aria-label="Toggle previous output input">
+            <span class="agent-card__redo-icon" aria-hidden="true"></span>
+            <span class="agent-card__checkbox" aria-hidden="true"></span>
+        </button>
+    </div>
+
+    <div class="agent-card__divider"></div>
+
+    <div class="agent-card__name">{{AGENT_NAME}}</div>
+
+    <div class="agent-card__lower">
+        <div class="agent-card__instructions">
+            {{AGENT_INSTRUCTIONS_CROPPED}}
+        </div>
+
+        <div class="agent-card__meta">
+            <div class="agent-card__meta-bubble  model-bubble">
+                <span class="agent-card__brain-icon" aria-hidden="true"></span>
+                <span class="agent-card__meta-text">{{AGENT_LLM}}</span>
+            </div>
+
+            <div class="agent-card__meta-bubble  token-bubble">
+                <span class="agent-card__tokens-icon" aria-hidden="true"></span>
+                <span class="agent-card__meta-text">~{{ESTIMATED_TOKENS}} tokens</span>
+            </div>
+        </div>
+    </div>
+
+    <button class="agent-port agent-port--out" type="button" aria-label="Agent output port">
+        OUT
+    </button>
+</div>
