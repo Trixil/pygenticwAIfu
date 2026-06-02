@@ -20,6 +20,7 @@ class LLMConfig(BaseModel):
 
 class character(BaseModel):
     charName: str = ""
+    charId: str = Field(default_factory=lambda: uuid4().hex)
     charNickname: str = ""
     charDesc: str = ""
     charScenario: str = ""
@@ -38,6 +39,7 @@ class agent(BaseModel):
     characterInput: bool = False
     scenario: bool = False
     carryOver: bool = False
+    pastMessageCount: int = Field(default_factory=int)
     parents: list[str] = Field(default_factory=list)
     children: list[str] = Field(default_factory=list)
     agentLLMConfig: LLMConfig = Field(default_factory=LLMConfig)

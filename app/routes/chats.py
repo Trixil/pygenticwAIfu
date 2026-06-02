@@ -1,17 +1,33 @@
 import glob
+import asyncio
+import json
+import os
 
+from openai import OpenAI
 from pathlib import Path
 from fastapi import APIRouter, Form
 from fastapi.responses import HTMLResponse
 from fastapi import Request
+from enum import Enum
 
-from ..core.paths import CHATS_DIR, CHARACTER_IMAGES_DIR
+from ..core.paths import CHATS_DIR, CHARACTER_IMAGES_DIR, TEMPLATES_DIR
 from ..models import definitions
 from ..rendering import htmlHelpers
 from ..storage import file_io
 from ..utils.normalize import normalize
 
 router = APIRouter()
+outputTable = {}
+statusTable = {}
+allAgentCards = {}
+messages = []
+
+recursiveChatCard = []
+characterInfo = []
+scenarioInfo = []
+characterInfoSection = []
+characterScenarioSection = []
+messageCards = []
 
 @router.post("/start-new-chat")
 async def startNewChat(request: Request):
@@ -61,6 +77,7 @@ async def saveMessage(chatMessageInput: str = Form(...),
     chatCard.messages.append(newMessage)
     
     file_io.saveChat(chatCard.model_dump(), chatFile)
+
 
 @router.post("/render-new-message", response_class=HTMLResponse)
 def renderNewMessage(chatMessageInput: str = Form(...),
@@ -118,3 +135,206 @@ async def saveEditedUserMessage(request: Request):
             break
 
     file_io.saveChat(chatCard.model_dump(), chatID=chatID)
+
+@router.post("/generate-assistant-message")
+async def generateAssistantMessage(chatMessageInput: str = Form(...), 
+                    chatId: str = Form(...),
+                    role: str = Form(...),
+                    messageId: str = Form(...)):
+        
+    global characterInfo
+    global characterScenario
+    global characterInfoSection
+    global characterScenarioSection
+    global messageCards
+
+    chatCard = file_io.loadChat(chatID=chatId)
+    recursiveChatCard = chatCard
+
+    loadoutID = chatCard.chatAgentLoadout
+    loadoutCard = file_io.loadLoadout(loadoutID=loadoutID)
+    
+    agents = loadoutCard.loadoutAgents
+    startingAgents = []
+    events = {}
+    for agent in agents:
+        outputTable[agent.agentId] = ""
+        events[agent.agentId] = asyncio.Event()
+        statusTable[agent.agentId] = AgentStatus.WAITING
+        if agent.parents == []:
+            startingAgents.append(agent)
+    
+    if startingAgents == []:
+        raise ValueError("where the parent at crodie")
+    
+    ### CHARACTER INFO
+    characterInfo = []
+    characterScenario = []
+    for characterId in recursiveChatCard.chatCharacters:
+        character = file_io.loadChar(charID=characterId)
+        characterInfo += f"""
+            ---------- CHARACTER DESCRIPTION: {character.charName} ---------- 
+            {character.charDesc}"""
+        
+        characterScenario += f"""
+            ---------- SCENARIO FOR CHARACTER: {character.charName} ---------- 
+            {character.charScenario}"""
+    
+    messageCards = recursiveChatCard.messages
+
+    characterInfoSection = htmlHelpers.buildCharacterInfoSection(characterInfo)
+    characterScenarioSection = htmlHelpers.buildScenarioInfoSection(characterScenario)
+
+    asyncio.run(kickOffGeneration(startingAgents, agents, events))
+
+async def watchStartingAgents(startingAgents, events):
+    await asyncio.gather(
+        *(recursiveGenerate(x, events) for x in startingAgents)
+    )        
+
+async def kickOffGeneration(startingAgents, events):
+    await asyncio.create_task(watchStartingAgents(startingAgents, events))
+
+def getAgentByID(allAgentCards, selectedAgentID):
+    for agent in allAgentCards:
+        if agent.agentId == selectedAgentID:
+            return agent
+    
+    raise ValueError("Agent not found")
+
+def getAgentSlugByID(allAgentCards, selectedAgentID):
+    for agent in allAgentCards:
+        if agent.agentId == selectedAgentID:
+            selectedAgent = getAgentByID(allAgentCards, selectedAgentID)
+            return selectedAgent.agentName.replace(" ", "")
+    
+    raise ValueError("Agent not found")
+
+async def waiter(key, events):
+    await events[key].wait()
+    
+async def waitForParents(tasks):
+    await asyncio.gather(*tasks)
+
+async def recursiveGenerate(agent, events):
+
+    statusTable[agent.agentId] = AgentStatus.RUNNING
+
+    waitingParentIds = []
+    for parentId in agent.parents:
+        if statusTable[parentId] != AgentStatus.DONE:
+            waitingParentIds.append(parentId)
+    
+    tasks = []
+    for waitingParentId in waitingParentIds:
+        tasks.append(waiter(waitingParentId, events))
+    
+    await asyncio.create_task(waitForParents(tasks))
+
+    message = await generateLLMMessage(agent, events)
+    outputTable[agent.agentId] = message
+    
+    events[agent.agentId].set()
+
+    waitingChildren = []
+    for childId in agent.children:
+        if statusTable[childId] == AgentStatus.WAITING:
+            waitingChildren.append(getAgentByID(childId))
+    
+    if waitingChildren:
+        await asyncio.gather(
+            *(recursiveGenerate(x, events) for x in waitingChildren)
+        )
+    
+
+class AgentStatus(Enum):
+    WAITING = "waiting"
+    RUNNING = "running"
+    DONE = "done"
+
+async def generateLLMMessage(agent, events):
+
+    # insert llm call here
+    instructionSet = agent.agentInstructions
+    for parentId in agent.parents:
+        parent = getAgentByID(parentId)
+        parentSlug = getAgentSlugByID(parentId)
+
+        instructionSet.replace("{{parentSlug}}", parent.agentInstructions)
+
+    masterInput = ""
+    ### INSTRUCTIONS
+    masterInput += htmlHelpers.buildInstructionSection(instructionSet)
+
+    ### CHARACTER INFO
+    characterCards = []
+    for characterId in recursiveChatCard.chatCharacters:
+        character = file_io.loadChar(charID=characterId)
+        characterCards.append(character)
+
+    characterInput: bool = False
+    scenario: bool = False
+    carryOver: bool = False
+    
+    if agent.characterInput:
+        masterInput += characterInfoSection
+
+    if agent.scenario:
+        masterInput += characterScenarioSection
+    
+    if agent.carryOver:
+        agentOutputsFile = CHATS_DIR / "agentOutputs" / f"{recursiveChatCard.chatID}"
+        with open(agentOutputsFile, "r", encoding="utf-8") as f:
+            agentOutputs = json.load(agentOutputsFile)
+
+        masterInput += htmlHelpers.buildCarryoverSection(agentOutputs[agent.agentId])
+
+    outputTable[agent.agentId] = await asyncio.sleep(2)
+    events[agent.agentId].set()
+    statusTable[agent.agentId] = AgentStatus.DONE
+
+    systemMessage = masterInput
+    openrouterMessages = [
+        {
+            "role": "system",
+            "content": systemMessage
+        }
+    ]
+
+    pastMessageContent = ""
+    userMessage = ""
+    if agent.pastMessageCount > 0:
+        for messageNumber in range(len(messageCards) - 1, len(messageCards) - agent.pastMessageCount - 1, -1):
+            role = "User" if messageCards[messageNumber].role == "user" else "Narrator"
+            content = messageCards[messageNumber].content
+            pastMessageContent += f"""
+            {role}: {content}"""
+
+        userMessage = htmlHelpers.buildMessageLogSection(pastMessageContent)
+        openrouterMessages.append(
+        {
+            "role": "user",
+            "content": userMessage
+        })
+    
+    
+    # load chat card
+    # from this, load agent loadout
+    # find the agent that has no parents
+    # query the api for this agent
+    # store this output into a DTO
+    # iterate over all of the children simultaneously, querying each of them too provided that all of their parents have an output stored in the DTO
+
+
+
+    # startingAgents = {A, B}
+    # A, B, ... H: notSelected state
+    # simul recursiveGenerate(A, B)
+    # A: A set to selected
+    # A: queries A for response
+    # A: A set to finished
+    # A: get list of notSelected children
+    # A: recursiveGenerate(C)
+    # C: 
+    # C: C set to selected
+    # C: queries C for response

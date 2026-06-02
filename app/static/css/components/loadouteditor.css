@@ -699,3 +699,43 @@
   -webkit-appearance: none;
   margin: 0;
 }
+.new-agent-card-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+
+    margin: 25px 0 0 25px;
+
+    border: none;
+    border-radius: 10px;
+
+    font-family: "Manrope", sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+
+    color: white;
+    background: linear-gradient(180deg, #d018ff 0%, #8624f0 100%);
+    cursor: pointer;
+
+      width: 10vw;
+    min-width: 190px;
+    max-width: 260px;
+
+    height: 5vh;
+    min-height: 56px;
+    max-height: 80px;
+
+    padding: 0 24px;
+}
+
+.new-agent-card-icon {
+    width: 28px;
+    height: 28px;
+}
+
+.loadout-config-header[contenteditable="true"] {
+    outline: none;
+    cursor: text;
+    caret-color: white;
+}

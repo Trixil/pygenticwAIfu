@@ -103,7 +103,13 @@
                     <button id="character-cards-button" class="pane-tab-button" onclick="showPane('character-cards')">
                         <header class="pane-tab-header">Characters</header>
                     </button>
-                    <header class="loadout-config-header">Loadout Configuration</header>
+                        <div class="loadout-title-group">
+                            <header class="loadout-config-header">Loadout Configuration</header>
+
+                            <button class="loadout-title-edit-button" type="button" aria-label="Edit loadout title">
+                                <img class="loadout-title-edit-icon" src="/assets/icons/pencil.svg" alt="">
+                            </button>
+                        </div>
                     <button id="loadout-cards-button" class="pane-tab-button" onclick="showPane('loadout-cards')">
                         <header class="pane-tab-header">Loadouts</header>
                     </button>
@@ -198,6 +204,10 @@
                     </section>
                 </div>
                 <div class="loadout-editor hidden">
+                    <button class="new-agent-card-button" type="button" onclick="addNewAgent()">
+                        <img class="new-agent-card-icon" src="/assets/icons/plus.svg" alt="">
+                        <span>New Card</span>
+                    </button>
                 </div>
             </div>
             <div class="right">inshallah there will be a right sidebar here</div>

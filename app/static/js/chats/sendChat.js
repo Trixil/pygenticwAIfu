@@ -36,5 +36,8 @@ chatBar.addEventListener("submit", async function (event) {
         body: formData
     });
 
-    
+    const llmResponse = await fetch("/generate-assistant-message", {
+        method: "POST",
+        body: formData
+    });
 })

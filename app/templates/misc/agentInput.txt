@@ -1,0 +1,23 @@
+--------------- AGENT INSTRUCTIONS ---------------
+You must follow all of these instructions exactly.
+
+{{INSTRUCTIONS}}
+
+--------------- CHARACTER INFORMATION ---------------
+These are details on all of the character(s) in the chat.
+
+{{CHARACTER_INFO}}
+
+--------------- SCENARIO INFORMATION ---------------
+The fictional scenario that this chat occurs in.
+
+{{SCENARIO_INFO}}
+
+--------------- PREVIOUS OUTPUT ---------------
+The output that you generated last turn.
+
+{{CARRYOVER_INFO}}
+
+--------------- MESSAGE LOG ---------------
+
+{{MESSAGE_LOG}}

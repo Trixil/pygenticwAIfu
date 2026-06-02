@@ -1,0 +1,81 @@
+{
+  "loadoutName": "",
+  "loadoutId": "7a21917a505b4d15a032066b77baece5",
+  "loadoutImageFile": "C:\\Users\\mashhood\\repos\\agenticwAIfu\\app\\data\\loadouts\\images\\7a21917a505b4d15a032066b77baece5.png",
+  "loadoutFile": "",
+  "loadoutAgents": [
+    {
+      "agentName": "bruh1",
+      "agentId": "57ae17dbca7f42dda294b7d98183d56a",
+      "agentInstructions": "Why do they call it the oven when you of in the cold food of out hot eat the food?",
+      "characterInput": false,
+      "scenario": false,
+      "carryOver": false,
+      "pastMessageCount": 0,
+      "parents": [],
+      "children": [
+        "0c00bb49e05a4670a8316a226ec2d601",
+        "bce90668db6e44e9b3d08bd401eb3ad3"
+      ],
+      "agentLLMConfig": {
+        "LLMName": "gpt-4.1",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      },
+      "layout": {
+        "x": 100.0,
+        "y": 100.0
+      }
+    },
+    {
+      "agentName": "bruh2",
+      "agentId": "bce90668db6e44e9b3d08bd401eb3ad3",
+      "agentInstructions": "Why do they call it the oven when you of in the cold food of out hot eat the food?",
+      "characterInput": false,
+      "scenario": false,
+      "carryOver": false,
+      "pastMessageCount": 0,
+      "parents": [
+        "57ae17dbca7f42dda294b7d98183d56a"
+      ],
+      "children": [
+        "0c00bb49e05a4670a8316a226ec2d601"
+      ],
+      "agentLLMConfig": {
+        "LLMName": "gpt-4.1",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      },
+      "layout": {
+        "x": 532.0,
+        "y": 286.667
+      }
+    },
+    {
+      "agentName": "bruh3",
+      "agentId": "0c00bb49e05a4670a8316a226ec2d601",
+      "agentInstructions": "bruh3 insts",
+      "characterInput": false,
+      "scenario": false,
+      "carryOver": false,
+      "pastMessageCount": 0,
+      "parents": [
+        "57ae17dbca7f42dda294b7d98183d56a",
+        "bce90668db6e44e9b3d08bd401eb3ad3"
+      ],
+      "children": [],
+      "agentLLMConfig": {
+        "LLMName": "gpt-4.1",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      },
+      "layout": {
+        "x": 844.533,
+        "y": 109.6
+      }
+    }
+  ]
+}

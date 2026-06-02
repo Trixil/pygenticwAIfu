@@ -1,0 +1,29 @@
+{
+  "loadoutName": "",
+  "loadoutId": "090dd1ead50f4a9aad7b6bb13e698fad",
+  "loadoutImageFile": "C:\\Users\\mashhood\\repos\\agenticwAIfu\\app\\data\\loadouts\\images\\090dd1ead50f4a9aad7b6bb13e698fad.png",
+  "loadoutFile": "",
+  "loadoutAgents": [
+    {
+      "agentName": "bruh",
+      "agentId": "c2d5eb64bbd24373a1214ea787521c56",
+      "agentInstructions": "Why do they call it the oven when you of in the cold food of out hot eat the food?",
+      "characterInput": false,
+      "scenario": false,
+      "carryOver": false,
+      "pastMessageCount": 0,
+      "parents": [],
+      "children": [],
+      "agentLLMConfig": {
+        "LLMName": "gpt-4.1",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      },
+      "layout": {
+        "x": 361.333,
+        "y": 128.444
+      }
+    }
+  ]
+}

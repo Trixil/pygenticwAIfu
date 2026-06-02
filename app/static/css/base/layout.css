@@ -163,24 +163,64 @@
   transition: opacity 250ms ease;
 }
 
-.loadout-config-header {
-  position: absolute;
-  left: 30px;
+.loadout-title-group {
+    position: absolute;
+    left: 30px;
+    top: 50%;
+    transform: translateY(-50%);
 
-  opacity: 0;
-  pointer-events: none;
-  white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    white-space: nowrap;
+}
+
+.loadout-title-group .loadout-config-header {
+    position: static;
+    left: auto;
+
+    opacity: 0;
+    pointer-events: auto;
+    white-space: nowrap;
+
+    margin: 0;
+}
+
+.loadout-title-edit-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 42px;
+    height: 42px;
+    padding: 0;
+
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    flex: 0 0 auto;
+}
+
+.loadout-title-edit-icon {
+    display: block;
+    width: 28px;
+    height: 28px;
+    opacity: 0;
+    transition: opacity 500ms ease;
+
+}
+
+.loadout-title-edit-button:hover {
+    color: #d7b7ff;
 }
 
 .layout.config-expand-widen .pane-tab-header {
   opacity: 0;
 }
 
-.layout.config-expand-widen .loadout-config-header {
-  opacity: 1;
-}
-
-.layout.config-expand-widen .loadout-config-header {
+.layout.config-expand-widen .loadout-config-header,
+.layout.config-expand-widen .loadout-title-edit-icon {
   opacity: 1;
 }
 

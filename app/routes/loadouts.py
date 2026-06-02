@@ -64,9 +64,11 @@ async def saveLoadoutConfiguration(request: Request):
 
     allConfigsById = data["allConfigsById"]
     loadoutID = data["loadoutId"]
+    loadoutName = data["loadoutName"]
 
     agentLoadout = definitions.agentLoadout()
     agentLoadout.loadoutId = loadoutID
+    agentLoadout.loadoutName = loadoutName
 
     for agentID, agentConfigWrapper in allConfigsById.items():
         agentName = agentConfigWrapper["agentName"]
@@ -84,8 +86,9 @@ async def saveLoadoutConfiguration(request: Request):
             "characterInput": agentConfig["characterInput"],
             "scenario": agentConfig["scenario"],
             "carryOver": agentConfig["carryOver"],
-            "parents": agentConfig["parentsId"],
-            "children": agentConfig["childrenId"],
+            "pastMessageCount": agentConfig["pastMessageCount"],
+            "parents": agentConfig["parents"],
+            "children": agentConfig["children"],
             "agentLLMConfig": agentConfig["agentLLMConfig"],
             "layout": layout
         }
@@ -123,7 +126,7 @@ async def renderAgentPane(request: Request):
     agentPaneHTML = agentPaneHTML.replace("{{AGENT_LLM_TEMP}}", str(agentConfig["agentLLMConfig"]["temp"]))
     agentPaneHTML = agentPaneHTML.replace("{{AGENT_LLM_MAX_TOKENS}}", str(agentConfig["agentLLMConfig"]["maxTokens"]))
     agentPaneHTML = agentPaneHTML.replace("{{AGENT_LLM_TOP_P}}", str(agentConfig["agentLLMConfig"]["topP"]))
-    agentPaneHTML = agentPaneHTML.replace("{{AGENT_PAST_MESSAGE_COUNT}}", str(agentConfig["agentLLMConfig"]["pastMessageCount"]))
+    agentPaneHTML = agentPaneHTML.replace("{{AGENT_PAST_MESSAGE_COUNT}}", str(agentConfig["pastMessageCount"]))
     
     useCharacterInput = "checked" if agentConfig["characterInput"] else ""
     useScenario = "checked" if agentConfig["scenario"] else ""
@@ -133,7 +136,7 @@ async def renderAgentPane(request: Request):
     agentPaneHTML = agentPaneHTML.replace("{{USE_SCENARIO}}", useScenario)
     
     inputHTML = ""
-    for inputId in agentConfig["parentsId"]:
+    for inputId in agentConfig["parents"]:
         inputName = agentNamesByID[inputId]
         agentSlug = inputName.replace(" ", "")
         inputHTML += htmlHelpers.buildOutputListEntryHTML(agentSlug)
@@ -161,10 +164,10 @@ async def renderAgentCard(request: Request):
 
     agentCardHTML = agentCardHTML.replace("{{AGENT_NAME}}", agentName)
     agentCardHTML = agentCardHTML.replace("{{AGENT_ID}}", agentID)
-    agentCardHTML = agentCardHTML.replace("{{AGENT_INSTRUCTIONS_CROPPED}}", agentInstructionsCropped)
-    agentCardHTML = agentCardHTML.replace("{{AGENT_LLM}}", agentConfig["agentLLMConfig"]["LLMName"])
-    agentCardHTML = agentCardHTML.replace("{{AGENT_PAST_MESSAGE_COUNT}}", agentConfig["agentLLMConfig"]["pastMessageCount"])
-    agentCardHTML = agentCardHTML.replace("{{AGENT_TOKENS}}", numpy.ceil(agentInstructions/4))
+    agentCardHTML = agentCardHTML.replace("{{AGENT_INSTRUCTIONS_CROPPED}}", str(agentInstructionsCropped))
+    agentCardHTML = agentCardHTML.replace("{{AGENT_LLM}}", str(agentConfig["agentLLMConfig"]["LLMName"]))
+    agentCardHTML = agentCardHTML.replace("{{AGENT_PAST_MESSAGE_COUNT}}", str(agentConfig["pastMessageCount"]))
+    agentCardHTML = agentCardHTML.replace("{{AGENT_ESTIMATED_TOKENS}}", str(int(numpy.ceil(len(agentInstructions) / 4))))
     
     useCharacterInput = "agent-card__button--checked" if agentConfig["characterInput"] else ""
     useScenario = "agent-card__button--checked" if agentConfig["scenario"] else ""

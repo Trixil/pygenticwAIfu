@@ -34,3 +34,42 @@ def buildOutputListEntryHTML(agentSlug: str):
     return f"""
     <button class="loadout-editor-output-chip" type="button">{{{agentSlug}_output}}</button>
     """
+
+def buildInstructionSection(instructions: str):
+    return f"""
+    --------------- AGENT INSTRUCTIONS ---------------
+    You must follow all of these instructions exactly.
+
+    {instructions}
+    """
+
+def buildCharacterInfoSection(characterInfo: str):
+    return f"""
+    --------------- CHARACTER INFORMATION ---------------
+    These are details on all of the character(s) in the chat.
+
+    {characterInfo}
+    """
+
+def buildScenarioInfoSection(scenarioInfo: str):
+    return f"""
+    --------------- SCENARIO INFORMATION ---------------
+    The fictional scenario that this chat occurs in.
+
+    {scenarioInfo}
+    """
+
+def buildCarryoverSection(carryover: str):
+    return f"""
+    --------------- PREVIOUS OUTPUT ---------------
+    The output that you generated last turn.
+
+    {carryover}
+    """
+
+def buildMessageLogSection(pastMessageContent: str):
+    return f"""
+    --------------- MESSAGE LOG ---------------
+
+    {pastMessageContent}
+    """

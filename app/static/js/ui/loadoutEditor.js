@@ -1,3 +1,9 @@
+function generateId()
+{
+    const Id = crypto.randomUUID().replace(/-/g, "");
+    return Id;
+}
+
 async function showLoadoutEditor(loadoutCardElement)
 {
     document.querySelector(".layout").classList.toggle("config-expand-hide");
@@ -11,7 +17,7 @@ async function showLoadoutEditor(loadoutCardElement)
 
     if (loadoutId === "NEW LOADOUT")
     {
-        loadoutId = crypto.randomUUID().replace(/-/g, "");
+        loadoutId = generateId();
     }
 
     document.querySelector(".loadout-editor").setAttribute("data-loadout-id", loadoutId);
@@ -81,15 +87,6 @@ function registerPaneNameEditor(editorPane, agentId, agent) {
 
         nameInput.value = newName;
         nameInput.readOnly = true;
-
-        editorState.allConfigsById[agentId].agentConfiguration.childrenId.forEach(function (agentChildId) {
-            const childConfig = editorState.allConfigsById[agentChildId].agentConfiguration;
-            const parentNameIdx = childConfig.parents.indexOf(oldName);
-
-            if (parentNameIdx !== -1) {
-                childConfig.parents[parentNameIdx] = newName;
-            }
-        });
     }
 
     nameInput.addEventListener("blur", commitNameChange);
@@ -164,7 +161,7 @@ function registerLoadoutPaneControls(editorPane, agentId, agent) {
                     .agentConfiguration
                     .agentInstructions = instructions;
             }
-        }, 2000);
+        }, 250);
     });
 
     instructionsTextarea.addEventListener("blur", function () {
@@ -580,25 +577,15 @@ function registerAgent(agent) {
                 .querySelector(".agent-card__name")
                 .textContent
                 .trim();
-            
-            editorState.allConfigsById[startAgentId]
-                .agentConfiguration
-                .children
-                .push(endAgentName);
 
             editorState.allConfigsById[startAgentId]
                 .agentConfiguration
-                .childrenId
+                .children
                 .push(endAgentId);
 
             editorState.allConfigsById[endAgentId]
                 .agentConfiguration
                 .parents
-                .push(startAgentName);
-
-            editorState.allConfigsById[endAgentId]
-                .agentConfiguration
-                .parentsId
                 .push(startAgentId);
 
             editorState.draggedLine.remove();
@@ -610,26 +597,22 @@ function registerAgent(agent) {
 
 }
 
+defaultAgentPosition = {x: 100, y: 100};
 function createDefaultAgentConfig(agentId) {
     return {
-        agentName: "",
-        layout: {
-            x: 0,
-            y: 0
-        },
+        agentName: "Untitled agent",
+        layout: defaultAgentPosition,
         agentConfiguration: {
             agentId: agentId,
-            agentInstructions: "",
+            agentInstructions: "Why do they call it the oven when you of in the cold food of out hot eat the food?",
             characterInput: false,
             scenario: false,
             carryOver: false,
             pastMessageCount: 0,
             parents: [],
-            parentsId: [],
             children: [],
-            childrenId: [],
             agentLLMConfig: {
-                LLMName: "",
+                LLMName: "gpt-4.1",
                 temp: 1,
                 maxTokens: 4000,
                 topP: 1
@@ -701,6 +684,7 @@ async function startLoadoutEditor() {
     async function saveLoadoutConfiguration() {
         const loadoutEditor = document.querySelector(".loadout-editor");
         const loadoutId = loadoutEditor.dataset.loadoutId;
+        const loadoutName = document.querySelector(".loadout-config-header").innerText;
 
         syncAgentLayoutToEditorState();
 
@@ -716,10 +700,8 @@ async function startLoadoutEditor() {
                             ...agentConfig.agentConfiguration,
 
                             parents: [...agentConfig.agentConfiguration.parents],
-                            parentsId: [...agentConfig.agentConfiguration.parentsId],
 
                             children: [...agentConfig.agentConfiguration.children],
-                            childrenId: [...agentConfig.agentConfiguration.childrenId],
 
                             agentLLMConfig: {
                                 ...agentConfig.agentConfiguration.agentLLMConfig
@@ -737,6 +719,7 @@ async function startLoadoutEditor() {
             },
             body: JSON.stringify({
                 loadoutId: loadoutId,
+                loadoutName: loadoutName,
                 allConfigsById: payload
             })
         });
@@ -783,10 +766,10 @@ async function openSavedLoadout(loadoutCardElement) {
 
     showLoadoutEditor(loadoutCardElement);
 
-    loadSavedLoadoutIntoEditor(loadoutData);
+    await loadSavedLoadoutIntoEditor(loadoutData);
 }
 
-function loadSavedLoadoutIntoEditor(loadoutData) {
+async function loadSavedLoadoutIntoEditor(loadoutData) {
     const editor = document.querySelector(".loadout-editor");
 
     editorState.allConfigsById = {};
@@ -801,49 +784,34 @@ function loadSavedLoadoutIntoEditor(loadoutData) {
         agent.remove();
     });
 
-    loadoutData.loadoutAgents.forEach(function (savedAgent) {
-        const agent = createAgentCardFromSavedAgent(savedAgent);
+    for (const savedAgent of loadoutData.loadoutAgents) {
+        const {
+            agentName,
+            layout,
+            ...agentConfiguration
+        } = savedAgent;
 
-        editor.appendChild(agent);
-
-        editorState.allConfigsById[savedAgent.agentId] = {
-            agentName: savedAgent.agentName,
-            layout: savedAgent.layout || {
-                x: 0,
-                y: 0
-            },
+        const runtimeAgent = {
+            agentName: agentName,
+            layout: layout || defaultAgentPosition,
             agentConfiguration: {
-                agentId: savedAgent.agentId,
-                agentInstructions: savedAgent.agentInstructions || "",
-                characterInput: savedAgent.characterInput || false,
-                scenario: savedAgent.scenario || false,
-                carryOver: savedAgent.carryOver || false,
-                pastMessageCount: savedAgent.pastMessageCount || 0,
-
-                parents: [],
-                parentsId: savedAgent.parents || [],
-
-                children: [],
-                childrenId: savedAgent.children || [],
-
-                agentLLMConfig: savedAgent.agentLLMConfig || {
-                    LLMName: "",
-                    temp: 1,
-                    maxTokens: 4000,
-                    topP: 1
-                }
+                ...agentConfiguration,
+                parents: savedAgent.parents || [],
+                children: savedAgent.children || []
             }
         };
 
+        editorState.allConfigsById[savedAgent.agentId] = runtimeAgent;
         editorState.allChildren[savedAgent.agentId] = new Set(savedAgent.children || []);
 
+        const agent = await createAgentCardFromSavedAgent(runtimeAgent);
+        editor.appendChild(agent);
+
         registerAgent(agent);
-    });
+    }
 
     requestAnimationFrame(function () {
-        requestAnimationFrame(function () {
-            rebuildAllSavedWires();
-        });
+        rebuildAllSavedWires();
     });
 }
 
@@ -851,24 +819,28 @@ async function createAgentCardFromSavedAgent(savedAgent) {
 
     const agentWrapper = document.createElement("div");
     
+    const agentId = savedAgent.agentConfiguration.agentId
+    const agentName = savedAgent.agentName;
+
+    if (!editorState.allConfigsById[agentId]) {
+        editorState.allConfigsById[agentId] = savedAgent;
+    }
+
     const response = await fetch("/render-agent-card", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            savedAgent: savedAgent,
+            agentConfig: savedAgent,
+            agentName: agentName
         })
     });
 
-    agentWrapper.innerHTML = await response.text().trim();
-    
+    agentWrapper.innerHTML = (await response.text()).trim();    
     const agent = agentWrapper.firstElementChild;
 
-    const layout = savedAgent.layout || {
-        x: 0,
-        y: 0
-    };
+    const layout = savedAgent.layout || defaultAgentPosition;
 
     agent.style.position = "absolute";
     agent.style.left = `${layout.x}px`;
@@ -883,7 +855,7 @@ function rebuildAllSavedWires() {
     });
 
     Object.entries(editorState.allConfigsById).forEach(function ([startAgentId, agentConfigWrapper]) {
-        const childrenIds = agentConfigWrapper.agentConfiguration.childrenId || [];
+        const childrenIds = agentConfigWrapper.agentConfiguration.children || [];
 
         childrenIds.forEach(function (endAgentId) {
             drawSavedWire(startAgentId, endAgentId);
@@ -927,6 +899,50 @@ function drawSavedWire(startAgentId, endAgentId) {
     svg.appendChild(line);
 }
 
+async function addNewAgent()
+{
+    agentId = generateId();
+    editorState.allConfigsById[agentId] = createDefaultAgentConfig(agentId);
+    newAgent = await createAgentCardFromSavedAgent(editorState.allConfigsById[agentId]);
+
+    registerAgent(newAgent);
+    const editor = document.querySelector(".loadout-editor");
+    editor.appendChild(newAgent);
+}
+
+const titleEditButton = document.querySelector(".loadout-title-edit-button");
+const titleHeader = document.querySelector(".loadout-config-header");
+
+titleEditButton.addEventListener("click", function () {
+    titleHeader.setAttribute("contenteditable", "true");
+    titleHeader.setAttribute("spellcheck", "false");
+
+    titleHeader.focus();
+
+    const range = document.createRange();
+    const selection = window.getSelection();
+
+    range.selectNodeContents(titleHeader);
+    range.collapse(false);
+
+    selection.removeAllRanges();
+    selection.addRange(range);
+});
+
+titleHeader.addEventListener("blur", function () {
+    titleHeader.removeAttribute("contenteditable");
+});
+
+titleHeader.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        titleHeader.blur();
+    }
+
+    if (event.key === "Escape") {
+        titleHeader.blur();
+    }
+});
 // agent config created
 // add eventlistener for all buttons
 // eventListener sets the agent config value
