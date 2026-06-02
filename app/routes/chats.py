@@ -4,6 +4,9 @@ import json
 import os
 
 from openai import OpenAI
+from openai import AsyncOpenAI
+from openai import APIError, APIConnectionError, RateLimitError, BadRequestError
+from datetime import datetime
 from pathlib import Path
 from fastapi import APIRouter, Form
 from fastapi.responses import HTMLResponse
@@ -147,6 +150,9 @@ async def generateAssistantMessage(chatMessageInput: str = Form(...),
     global characterInfoSection
     global characterScenarioSection
     global messageCards
+    global allAgentCards
+    global recursiveChatCard
+    global outputTable
 
     chatCard = file_io.loadChat(chatID=chatId)
     recursiveChatCard = chatCard
@@ -155,7 +161,7 @@ async def generateAssistantMessage(chatMessageInput: str = Form(...),
     loadoutCard = file_io.loadLoadout(loadoutID=loadoutID)
     
     agents = loadoutCard.loadoutAgents
-    startingAgents = []
+    startingAgents: list[definitions.agent] = []
     events = {}
     for agent in agents:
         outputTable[agent.agentId] = ""
@@ -164,7 +170,7 @@ async def generateAssistantMessage(chatMessageInput: str = Form(...),
         if agent.parents == []:
             startingAgents.append(agent)
     
-    if startingAgents == []:
+    if startingAgents == {}:
         raise ValueError("where the parent at crodie")
     
     ### CHARACTER INFO
@@ -195,14 +201,18 @@ async def watchStartingAgents(startingAgents, events):
 async def kickOffGeneration(startingAgents, events):
     await asyncio.create_task(watchStartingAgents(startingAgents, events))
 
-def getAgentByID(allAgentCards, selectedAgentID):
+def getAgentByID(selectedAgentID):
+    global allAgentCards
+
     for agent in allAgentCards:
         if agent.agentId == selectedAgentID:
             return agent
     
     raise ValueError("Agent not found")
 
-def getAgentSlugByID(allAgentCards, selectedAgentID):
+def getAgentSlugByID(selectedAgentID):
+    global allAgentCards
+
     for agent in allAgentCards:
         if agent.agentId == selectedAgentID:
             selectedAgent = getAgentByID(allAgentCards, selectedAgentID)
@@ -218,6 +228,8 @@ async def waitForParents(tasks):
 
 async def recursiveGenerate(agent, events):
 
+    global statusTable
+    global outputTable
     statusTable[agent.agentId] = AgentStatus.RUNNING
 
     waitingParentIds = []
@@ -225,18 +237,16 @@ async def recursiveGenerate(agent, events):
         if statusTable[parentId] != AgentStatus.DONE:
             waitingParentIds.append(parentId)
     
-    tasks = []
-    for waitingParentId in waitingParentIds:
-        tasks.append(waiter(waitingParentId, events))
+    await asyncio.gather(
+        *(events[parentId].wait() for parentId in waitingParentIds)
+    )
     
-    await asyncio.create_task(waitForParents(tasks))
-
     message = await generateLLMMessage(agent, events)
     outputTable[agent.agentId] = message
     
     events[agent.agentId].set()
 
-    waitingChildren = []
+    waitingChildren: list[definitions.agent] = []
     for childId in agent.children:
         if statusTable[childId] == AgentStatus.WAITING:
             waitingChildren.append(getAgentByID(childId))
@@ -254,27 +264,28 @@ class AgentStatus(Enum):
 
 async def generateLLMMessage(agent, events):
 
+    global characterInfoSection
+    global characterScenarioSection
+    global recursiveChatCard
+
+    masterInput = ""
+
     # insert llm call here
     instructionSet = agent.agentInstructions
     for parentId in agent.parents:
         parent = getAgentByID(parentId)
         parentSlug = getAgentSlugByID(parentId)
 
-        instructionSet.replace("{{parentSlug}}", parent.agentInstructions)
+        instructionSet.replace(f"{{{parentSlug}}}", parent.agentInstructions)
 
-    masterInput = ""
     ### INSTRUCTIONS
     masterInput += htmlHelpers.buildInstructionSection(instructionSet)
 
     ### CHARACTER INFO
-    characterCards = []
+    characterCards: list[definitions.character] = []
     for characterId in recursiveChatCard.chatCharacters:
         character = file_io.loadChar(charID=characterId)
         characterCards.append(character)
-
-    characterInput: bool = False
-    scenario: bool = False
-    carryOver: bool = False
     
     if agent.characterInput:
         masterInput += characterInfoSection
@@ -283,15 +294,11 @@ async def generateLLMMessage(agent, events):
         masterInput += characterScenarioSection
     
     if agent.carryOver:
-        agentOutputsFile = CHATS_DIR / "agentOutputs" / f"{recursiveChatCard.chatID}"
+        agentOutputsFile = str(CHATS_DIR / "agentOutputs" / f"{recursiveChatCard.chatID}")
         with open(agentOutputsFile, "r", encoding="utf-8") as f:
             agentOutputs = json.load(agentOutputsFile)
 
         masterInput += htmlHelpers.buildCarryoverSection(agentOutputs[agent.agentId])
-
-    outputTable[agent.agentId] = await asyncio.sleep(2)
-    events[agent.agentId].set()
-    statusTable[agent.agentId] = AgentStatus.DONE
 
     systemMessage = masterInput
     openrouterMessages = [
@@ -317,7 +324,78 @@ async def generateLLMMessage(agent, events):
             "content": userMessage
         })
     
+    writeOpenRouterMessagesDebug(openrouterMessages, agent)
     
+    client = AsyncOpenAI(
+        base_url="https://openrouter.ai/api/v1",
+        api_key=os.getenv("OPENROUTER_API_KEY"),
+    )
+
+    try:
+        completion = await client.chat.completions.create(
+            model=agent.agentLLMConfig.LLMName,
+            messages=openrouterMessages,
+            temperature=agent.agentLLMConfig.temp,
+            top_p = agent.agentLLMConfig.topP,
+            max_tokens = agent.agentLLMConfig.maxTokens
+        )
+
+        assistant_message = completion.choices[0].message.content
+        print(assistant_message)
+    except BadRequestError as e:
+        print("Bad request:")
+        print(e)
+
+    except RateLimitError as e:
+        print("Rate limit error:")
+        print(e)
+
+    except APIConnectionError as e:
+        print("Connection error:")
+        print(e)
+
+    except APIError as e:
+        print("API error:")
+        print(e)
+
+    except Exception as e:
+        print("Unexpected error:")
+        print(type(e).__name__)
+        print(e)
+    
+    events[agent.agentId].set()
+    statusTable[agent.agentId] = AgentStatus.DONE
+
+
+def writeOpenRouterMessagesDebug(openrouterMessages, agent):
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    filePath = CHATS_DIR / "debugoutputs.txt"
+
+    with open(filePath, "a", encoding="utf-8") as file:
+        file.write("\n")
+        file.write("=" * 80)
+        file.write("\n")
+        file.write(f"Datetime: {timestamp}\n")
+        file.write(f"Agent ID: {agent.agentId}\n")
+        file.write("=" * 80)
+        file.write("\n\n")
+
+        file.write(json.dumps(openrouterMessages, indent=2, ensure_ascii=False))
+        file.write("\n\n")
+
+    return filePath
+
+
+
+
+
+
+
+
+
+
+
+
     # load chat card
     # from this, load agent loadout
     # find the agent that has no parents

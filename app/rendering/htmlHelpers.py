@@ -54,7 +54,7 @@ def buildCharacterInfoSection(characterInfo: str):
 def buildScenarioInfoSection(scenarioInfo: str):
     return f"""
     --------------- SCENARIO INFORMATION ---------------
-    The fictional scenario that this chat occurs in.
+    The fictional scenario that this chat occurs in. The scenario specific to each character is written.
 
     {scenarioInfo}
     """
