@@ -1,0 +1,106 @@
+{
+  "loadoutName": "the best one",
+  "loadoutId": "933892103ded4fb49d34c3823e1a8d2f",
+  "loadoutImageFile": "C:\\Users\\nnnex\\repos\\pygenticwAIfu\\app\\data\\loadouts\\images\\933892103ded4fb49d34c3823e1a8d2f.png",
+  "loadoutFile": "",
+  "loadoutAgents": [
+    {
+      "agentName": "Events",
+      "agentId": "01c688fb439c475ab56d0e1bf7383aa9",
+      "agentInstructions": "Generate a realistic series of events for the scenario based off of the characters and scenario. It must be  formatted as a list of  3 causally connected events. They must  be brief.",
+      "characterInput": true,
+      "scenario": false,
+      "carryOver": false,
+      "pastMessageCount": 3,
+      "parents": [],
+      "children": [
+        "d950820b5a9e4a4b90afe89732292687",
+        "7441c0f063cb4995a3c1c4c2eb447217"
+      ],
+      "agentLLMConfig": {
+        "LLMName": "openai/gpt-5.1",
+        "temp": 0.6,
+        "maxTokens": 1000,
+        "topP": 0.8
+      },
+      "layout": {
+        "x": 100.0,
+        "y": 100.0
+      }
+    },
+    {
+      "agentName": "Mental Synopsis",
+      "agentId": "d950820b5a9e4a4b90afe89732292687",
+      "agentInstructions": "Write a brief description of each character's feelings in the scene besides the user's.",
+      "characterInput": true,
+      "scenario": false,
+      "carryOver": false,
+      "pastMessageCount": 5,
+      "parents": [
+        "01c688fb439c475ab56d0e1bf7383aa9"
+      ],
+      "children": [
+        "a158776e325d4495a39d818caff91a7b"
+      ],
+      "agentLLMConfig": {
+        "LLMName": "openai/gpt-5.1",
+        "temp": 0.9,
+        "maxTokens": 3000,
+        "topP": 1.0
+      },
+      "layout": {
+        "x": 532.0,
+        "y": 85.7778
+      }
+    },
+    {
+      "agentName": "Author",
+      "agentId": "a158776e325d4495a39d818caff91a7b",
+      "agentInstructions": "You are an author LLM that synthesizes all of  the above information to generate a realistic, interesting response to  the user's actions. Use these things:\nA. their emotions: {MentalSynopsis_output}\nB. their feelings toward the user: {Relationship_output}",
+      "characterInput": true,
+      "scenario": true,
+      "carryOver": false,
+      "pastMessageCount": 10,
+      "parents": [
+        "d950820b5a9e4a4b90afe89732292687",
+        "7441c0f063cb4995a3c1c4c2eb447217"
+      ],
+      "children": [],
+      "agentLLMConfig": {
+        "LLMName": "openai/gpt-5.1",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      },
+      "layout": {
+        "x": 1012.89,
+        "y": 166.667
+      }
+    },
+    {
+      "agentName": "Relationship",
+      "agentId": "7441c0f063cb4995a3c1c4c2eb447217",
+      "agentInstructions": "Write a list of relationship  stats for each character in the story besides the user. It must describe how they feel about  User. They have three values: affection, trust, and love.\nEach response must  look like this:\n\nAFFECTION: 20.0/100.0\nLOVE: 31.0/100.0\nTRUST: 29.3/100.0\n\nWith real values for each, of course. Update the value of each trait in a way that makes sense for the  story based off of the previous relationship traits.",
+      "characterInput": false,
+      "scenario": false,
+      "carryOver": false,
+      "pastMessageCount": 10,
+      "parents": [
+        "01c688fb439c475ab56d0e1bf7383aa9"
+      ],
+      "children": [
+        "a158776e325d4495a39d818caff91a7b"
+      ],
+      "agentLLMConfig": {
+        "LLMName": "openai/gpt-5.1",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      },
+      "layout": {
+        "x": 530.222,
+        "y": 323.111
+      }
+    }
+  ]
+}

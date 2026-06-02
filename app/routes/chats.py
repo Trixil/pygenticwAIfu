@@ -298,7 +298,9 @@ async def generateLLMMessage(agent, events):
         with open(agentOutputsFile, "r", encoding="utf-8") as f:
             agentOutputs = json.load(agentOutputsFile)
 
-        masterInput += htmlHelpers.buildCarryoverSection(agentOutputs[agent.agentId])
+        carryOver = agentOutputs.get(agent.agentId, [])
+
+        masterInput += htmlHelpers.buildCarryoverSection(agentOutputs[agent.agentId]) if carryOver != [] else ""
 
     systemMessage = masterInput
     openrouterMessages = [
@@ -311,7 +313,7 @@ async def generateLLMMessage(agent, events):
     pastMessageContent = ""
     userMessage = ""
     if agent.pastMessageCount > 0:
-        for messageNumber in range(len(messageCards) - 1, len(messageCards) - agent.pastMessageCount - 1, -1):
+        for messageNumber in range(len(messageCards) - 1, max(len(messageCards) - agent.pastMessageCount - 1, 0), -1):
             role = "User" if messageCards[messageNumber].role == "user" else "Narrator"
             content = messageCards[messageNumber].content
             pastMessageContent += f"""
