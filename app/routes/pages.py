@@ -40,14 +40,9 @@ async def serveNewChat(chatID: str):
 
     convoHeadImgHTML = """<div class="convo-head-imgs">"""
     for characterID in chatCard.chatCharacters:
-        characterImageFiles = glob.glob(
-            str(CHARACTER_IMAGES_DIR / f"{characterID}.*")
-        )
-
-        if not characterImageFiles:
-            raise FileNotFoundError(f"No image found for {characterID}")
+        characterCard = file_io.loadChar(charID=characterID)
         
-        imageFile = Path(characterImageFiles[0]).name
+        imageFile = Path(characterCard.charImageFile).name
         convoHeadImgHTML += htmlHelpers.buildConvoHeadImageHTML(characterID, imageFile)
 
     convoHeadImgHTML += """

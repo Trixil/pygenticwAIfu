@@ -11,6 +11,11 @@ characterForm.addEventListener("submit", async function (event) {
     successMessage.textContent = "";
 
     const formData = new FormData(characterForm);
+
+    for (const [key, value] of formData.entries()) {
+        console.log(key, value);
+    }
+
     const response = await fetch("/api/create-character", 
         {   method:"POST",
             body: formData
@@ -22,8 +27,9 @@ characterForm.addEventListener("submit", async function (event) {
     }
 
     const responseJson = await response.json();
+    const characterID = responseJson["characterID"]
     successMessage.innerHTML = "Saved successfully."
-
+    formData.append("characterID", characterID);
     const characterResponse = await fetch("/add-character-card", 
         {
             method: "POST",

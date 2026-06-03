@@ -40,4 +40,5 @@ chatBar.addEventListener("submit", async function (event) {
         method: "POST",
         body: formData
     });
+    
 })

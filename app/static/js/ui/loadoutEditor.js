@@ -753,6 +753,10 @@ function isLoop(source, destination, kindergarten)
 }
 
 async function openSavedLoadout(loadoutCardElement) {
+    if (loadoutCardElement.classList.contains("selectable-for-chat")) {
+        loadoutCardElement.classList.toggle("selected-for-chat");
+        return;
+    }
     const loadoutId = loadoutCardElement.dataset.loadoutId;
 
     const response = await fetch(`/loadout-configuration/${loadoutId}`);

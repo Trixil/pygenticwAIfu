@@ -21,3 +21,5 @@ scrolling all the way down on the homepage, showing loadout cards and agent card
 the loadout image creator should be more purple-themed, using the css colors.
 show "saved config" toast
 tokens counter does not show "tokens" label
+new chat pane has lame fonts for the character and loadout
+new chat pane has lame look of the  button

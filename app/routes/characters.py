@@ -2,6 +2,7 @@ import glob
 from pathlib import Path
 import shutil
 
+from uuid import uuid4
 from fastapi import APIRouter, File, Form, Request, UploadFile
 from fastapi.responses import HTMLResponse
 
@@ -19,40 +20,61 @@ def createCharacter(
     description: str = Form(...),
     scenario: str = Form(...)
 ):
-
-    print("bruh")
+    print("not validated uwu")
     if not file_io.validateFilename(characterName):
         return {"validFilename": False}
-    
-    print("bruh")
-    characterFile = CHARACTER_DEFINITIONS_DIR / (characterName + ".json")
-    print("bruh")
-    print("bruh")
-    imageFileDest = CHARACTER_IMAGES_DIR / characterImage.filename
+    print("validated uwu")
+
+    CHARACTER_DEFINITIONS_DIR.mkdir(parents=True, exist_ok=True)
+    CHARACTER_IMAGES_DIR.mkdir(parents=True, exist_ok=True)
+
+    print(characterImage.filename, flush=True)
+    characterID = uuid4().hex
+
+    imageExt = Path(characterImage.filename).suffix
+    imageFilename = f"{characterID}{imageExt}"
+
+    characterFile = CHARACTER_DEFINITIONS_DIR / f"{characterID}.json"
+    print(str(characterFile))
+    imageFileDest = CHARACTER_IMAGES_DIR / imageFilename
+    print(str(imageFileDest))
 
     with imageFileDest.open("wb") as buffer:
         shutil.copyfileobj(characterImage.file, buffer)
-    
+
+    print("copied  theoretically")
     newCharacter = definitions.character(
         charName=characterName,
+        charId=characterID,
         charNickname=nickname,
         charDesc=description,
         charScenario=scenario,
-        charFile=str(Path("data") / "characters" / "definitions" / f"{characterName}.json"),
-        charImageFile=str(Path("data") / "characters" / "images" / characterImage.filename)
+        charFile=str(Path("data") / "characters" / "definitions" / f"{characterID}.json"),
+        charImageFile=str(Path("data") / "characters" / "images" / imageFilename)
     )
 
     file_io.saveChar(newCharacter, characterFile)
-    print("bruh")
-    return {"validFilename": True}
+
+    return {
+        "validFilename": True,
+        "characterFile": str(newCharacter.charFile),
+        "characterImageFile": str(newCharacter.charImageFile),
+        "characterImageFilename": imageFilename,
+        "characterImageUrl": f"/character-images/{imageFilename}",
+        "characterID": characterID
+    }
+
 
 @router.post("/add-character-card", response_class=HTMLResponse)
 def addCharacter(characterName: str = Form(...),
-                 characterImage: UploadFile = File(...)) -> HTMLResponse:
+                 characterID: str = Form(...)) -> HTMLResponse:
     
+    characterCard = file_io.loadChar(charID=characterID)
+    characterImageFile = Path(characterCard.charImageFile).name
+
     charHtml = f"""
-        <div class="character-card">
-            <img src="/character-images/{characterImage.filename}" alt="Character Image" class="character-image"/>
+        <div data-character-id="{characterCard.charId}" class="character-card">
+            <img src="/character-images/{characterImageFile}" alt="Character Image" class="character-image"/>
               <button class="character-edit-button" aria-label="Edit character">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M4 20h4l10.5-10.5-4-4L4 16v4zM15.5 4.5l4 4 1.2-1.2a1.4 1.4 0 0 0 0-2l-2-2a1.4 1.4 0 0 0-2 0l-1.2 1.2z" />
@@ -68,15 +90,15 @@ def addCharacter(characterName: str = Form(...),
 async def renderChatCardOfCharacter(request: Request):
 
     data = await request.json()
-    characterName = data["characterId"]
-    characterCard = file_io.loadChar(str(CHARACTER_DEFINITIONS_DIR / (characterName + ".json")))
+    characterID = data["characterId"]
+    characterCard = file_io.loadChar(charID=characterID)
     characterImageName = str(Path(characterCard.charImageFile).name)
 
     cardHtml = f"""
-        <div class="selected-chat-card" data-chat-card-id={characterName}>
+        <div class="selected-chat-card" data-chat-card-id={characterID}>
             <img src="/character-images/{characterImageName}"
                 class="selected-chat-card-image">
-            <span class="selected-chat-text">{characterName}</span>
+            <span class="selected-chat-text">{characterCard.charName}</span>
         </div>
     """
 
@@ -92,9 +114,10 @@ def renderCharacterCards() -> HTMLResponse:
         characterCard = file_io.loadChar(characterCardFile)
         image_name = Path(characterCard.charImageFile.strip('"')).name
 
+        print(characterCard)
         # the problem is that these character cards need to be formatted appropriately with the  right html and css
         charHtml = f"""
-        <div data-character-id="{characterCard.charName}" class="character-card">
+        <div data-character-id="{characterCard.charId}" class="character-card">
             <img src="/character-images/{image_name}" alt="Character Image" class="character-image"/>
               <button class="character-edit-button" aria-label="Edit character">
                 <svg viewBox="0 0 24 24" aria-hidden="true">

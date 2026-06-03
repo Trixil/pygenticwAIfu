@@ -9,8 +9,10 @@ from ..models import definitions
 # this function is ass
 def validateFilename(filename):
     forbidden = '<>:"\\|?*'
+    print(filename)
     if any(symbol in filename for symbol in forbidden):
         raise ValueError(f"WHY DID YOU NAME IT THAT REEEEEEEEEEEEEEEEE the filename is {filename}")
+    return True
 
 def saveChat(chatDict, chatFile=None, chatID=None):
     #validateFilename(chatFile)
