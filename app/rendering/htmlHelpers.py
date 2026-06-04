@@ -1,5 +1,14 @@
 from uuid import uuid4
 
+def buildChatCard(charImageFile: str, charName: str, chatID: str):
+    return f"""
+    <span class="chat-card" data-chat-id="{chatID}">
+        <img src="/character-images/{charImageFile}" class="chat-card-image">
+        <div class="chat-card-text">
+            <header>{charName}</header>
+        </div>
+    </span>"""
+
 def buildMessageHTML(role: str, content: str):
     if role == "user":
         classString = "user"

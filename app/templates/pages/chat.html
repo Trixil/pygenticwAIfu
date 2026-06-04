@@ -4,6 +4,7 @@
     <script src="/assets/js/chats/sendChat.js" defer></script>
     <script src="/assets/js/ui/addCharacterToChat.js" defer></script>
     <script src="/assets/js/chats/editMessage.js" defer></script>
+    <script src="/assets/js/chats/chatTidbits.js" defer></script>
     <div class="convo-page">
         <div class="layout">
              <div class="left">
@@ -28,7 +29,13 @@
             <div class="middle">
                 <div class="convo-pane">
                     <div class="convo-head">
-                        <header id="convo-title">Chat title</header>
+                        <div class="convo-title-group">
+                            <header id="convo-title">{{CHAT_TITLE}}</header>
+
+                            <button class="convo-title-edit-button" type="button" aria-label="Edit conversation title">
+                                <img class="convo-title-edit-icon" src="/assets/icons/pencil.svg" alt="">
+                            </button>
+                        </div>
                         <div class="convo-head-imgs">
                             <button class="convo-head-add" type="button" aria-label="Add character" onclick="addCharacterToChat()">
                                 <svg class="convo-head-add-icon" viewBox="0 0 24 24" aria-hidden="true">

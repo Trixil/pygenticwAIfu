@@ -63,7 +63,7 @@ body {
 }
 
 #convo-title {
-  padding: 22px 30px 14px;
+  padding: 22px 0px 14px 30px;
   font-family: "Gowun Batang", serif;
   font-weight: 700;
   font-size: 3rem;
@@ -78,6 +78,12 @@ body {
     0 0.5px 0 rgba(255, 255, 255, 0.95),
     0 -0.5px 0 rgba(255, 255, 255, 0.95);
 }
+#convo-title:focus {
+    outline: none;
+    border: none;
+    caret-color: white;
+}
+
 .convo-head-sub {
   display: flex;
   align-items: center;
@@ -203,7 +209,7 @@ body {
   margin-right: 20px;
   /*background-color: rgba(0, 0, 0, 0.4);*/
   border: 2px solid rgba(0, 0, 0, 1);
-  background-color: rgba(122, 164, 255, 0.1);
+  background-color: rgb(163 192 255);
 }
 .character-chat-bubble {
   align-self: flex-start;
@@ -216,7 +222,8 @@ body {
 .character-message, .user-message {
   font-family: "Gowun Batang", sans-serif;
   font-weight: 700;
-  margin: 0;
+  margin: 1rem;
+  font-size: 1.25rem;
 }
 
 .character-message {
@@ -434,4 +441,63 @@ body {
   font-weight: 700;
   margin: 0;
   color: rgb(0, 0, 0);
+}
+
+.convo-title-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+
+    white-space: nowrap;
+}
+
+.convo-title-group #convo-title {
+    margin: 0;
+    white-space: nowrap;
+}
+
+.convo-title-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+.convo-title-edit-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 42px;
+    height: 42px;
+    padding: 0;
+
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    flex: 0 0 auto;
+
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms ease;
+}
+
+.convo-title-group:hover .convo-title-edit-button,
+.convo-title-edit-button:hover,
+.convo-title-edit-button:focus {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.convo-title-edit-icon {
+    display: block;
+    width: 28px;
+    height: 28px;
+}
+
+#convo-title[contenteditable="true"] + .convo-title-edit-button {
+    opacity: 1;
+    pointer-events: auto;
 }

@@ -36,6 +36,27 @@ messageCards = []
 
 finalMessage = None
 
+
+@router.get("/chat-cards", response_class=HTMLResponse)
+def renderChatCards() -> HTMLResponse:
+
+    fullChatCardHTML = ''
+
+    chatCardFiles = glob.glob(str(CHATS_DIR / "*.json"))
+    for chatCardFile in chatCardFiles:
+        chatCard = file_io.loadChat(chatFile=chatCardFile)
+        chatID = chatCard.chatID
+
+        characterCard = file_io.loadChar(charID=chatCard.chatCharacters[0])
+        image_name = Path(characterCard.charImageFile).name
+        chatName = chatCard.chatName
+
+        chatHtml = htmlHelpers.buildChatCard(image_name, chatName, chatID)
+        fullChatCardHTML += chatHtml
+    
+    return HTMLResponse(content=fullChatCardHTML)
+
+
 @router.post("/start-new-chat")
 async def startNewChat(request: Request):
     data = await request.json()
@@ -61,20 +82,22 @@ async def startNewChat(request: Request):
     return {"chatID": chatID}
 
 @router.post("/api/save-message")
-async def saveMessage(chatMessageInput: str = Form(...), 
-                    chatId: str = Form(...),
-                    role: str = Form(...),
-                    messageId: str = Form(...)):
+async def saveMessage(request: Request):
+    data = await request.json()
+
+    content = data["content"]
+    chatId = data["chatId"]
+    role = data["role"]
+    messageId = data["messageId"]
     
     chatFile = str(CHATS_DIR / f"{chatId}.json")
     chatCard = file_io.loadChat(chatFile=chatFile)
-    chatMessages = chatCard.messages
     
     # /#/# USER NAME NOT IMPLEMENTED YET
     newMessage = definitions.message.model_validate({
         "role": role,
         "sender": "Himothy NOT IMPLEMENTED YET",
-        "content": chatMessageInput,
+        "content": content,
         "messageId": messageId
     })
     
@@ -83,10 +106,16 @@ async def saveMessage(chatMessageInput: str = Form(...),
     file_io.saveChat(chatCard.model_dump(), chatFile)
 
 
+
 @router.post("/render-new-message", response_class=HTMLResponse)
-def renderNewMessage(chatMessageInput: str = Form(...),
-                    role: str = Form(...)):
-    messageHTML = htmlHelpers.buildMessageHTML(role, chatMessageInput)
+async def renderNewMessage(request: Request):
+    data = await request.json()
+
+    role = data["role"]
+    content = data["content"]
+
+    messageHTML = htmlHelpers.buildMessageHTML(role, content)
+
     return HTMLResponse(content=messageHTML)
 
 @router.post("/render-convo-head-image", response_class=HTMLResponse)
@@ -112,6 +141,16 @@ async def continueConvoWithCharacters(request: Request):
 
     file_io.saveChat(chatCard.model_dump(), chatFile)
 
+@router.post("/save-chat-title")
+async def saveChatTitle(request: Request):
+    data = await request.json()
+    chatID = data["chatId"]
+    chatTitle = data["chatTitle"]
+
+    chatCard = file_io.loadChat(chatID=chatID)
+    chatCard.chatName = chatTitle;
+    file_io.saveChat(chatCard.model_dump(), chatID=chatID)
+
 @router.post("/save-edited-user-message")
 async def saveEditedUserMessage(request: Request):
     data = await request.json()
@@ -136,11 +175,10 @@ async def saveEditedUserMessage(request: Request):
     file_io.saveChat(chatCard.model_dump(), chatID=chatID)
 
 @router.post("/generate-assistant-message", response_class=HTMLResponse)
-async def generateAssistantMessage(chatMessageInput: str = Form(...), 
-                    chatId: str = Form(...),
-                    role: str = Form(...),
-                    messageId: str = Form(...)):
-        
+async def generateAssistantMessage(request: Request):
+    data = await request.json()
+
+    chatId = data["chatId"]
     global characterInfo
     global characterScenario
     global characterInfoSection
@@ -179,20 +217,24 @@ async def generateAssistantMessage(chatMessageInput: str = Form(...),
             ---------- CHARACTER DESCRIPTION: {character.charName} ---------- 
             {character.charDesc}"""
         
-        characterScenario += f"""
-            ---------- SCENARIO FOR CHARACTER: {character.charName} ---------- 
-            {character.charScenario}"""
+    # #/#/ NOT IMPLEMENTED YET: character-specific scenario
+    # characterScenario += f"""
+    #     ---------- SCENARIO FOR CHARACTER: {character.charName} ---------- 
+    #     {character.charScenario}"""
+
+    character = file_io.loadChar(charID=recursiveChatCard.chatCharacters[0])
+    characterScenario += f"""
+        ---------- SCENARIO ---------- 
+        {character.charScenario}"""
     
     messageCards = recursiveChatCard.messages
 
     characterInfoSection = htmlHelpers.buildCharacterInfoSection(characterInfo)
     characterScenarioSection = htmlHelpers.buildScenarioInfoSection(characterScenario)
 
-    await runGeneration(startingAgents, events)
-    if finalMessage != None:
-        return HTMLResponse(content=finalMessage)
-    else:
-        return HTMLResponse(content="ERROR: Did not receive final message.")
+    generationOutcome = await runGeneration(startingAgents, events)
+    if generationOutcome["success"]:
+        return HTMLResponse(content=generationOutcome["message"])
 
 async def runGeneration(startingAgents, events):
     global outputTable
@@ -332,14 +374,16 @@ async def generateLLMMessage(agent, events):
         masterInput += characterScenarioSection
 
     if agent.carryOver:
-        agentOutputsFile = str(CHATS_DIR / "agentOutputs" / f"{recursiveChatCard.chatID}")
-        with open(agentOutputsFile, "r", encoding="utf-8") as f:
-            agentOutputs = json.load(f)
+        agentOutputsFile = CHATS_DIR / "agentOutputs" / f"{recursiveChatCard.chatID}.json"
+        if agentOutputsFile.exists():
+            with open(agentOutputsFile, "r", encoding="utf-8") as f:
+                agentOutputs = json.load(f)
 
-        carryOver = agentOutputs.get(agent.agentId, [])
+            carryOver = agentOutputs.get(agent.agentId, [])
 
-        if carryOver != []:
-            masterInput += htmlHelpers.buildCarryoverSection(carryOver)
+            if carryOver:
+                masterInput += htmlHelpers.buildCarryoverSection(carryOver)
+
 
     openrouterMessages = [
         {
@@ -350,23 +394,25 @@ async def generateLLMMessage(agent, events):
 
     pastMessageContent = ""
 
+    print("agent.pastMessageCount")
+    print(agent.pastMessageCount)
+    print("messageCards")
+    print(messageCards)
     if agent.pastMessageCount > 0:
-        for messageNumber in range(
-            len(messageCards) - 1,
-            max(len(messageCards) - agent.pastMessageCount - 1, 0),
-            -1
-        ):
-            role = "User" if messageCards[messageNumber].role == "user" else "Narrator"
-            content = messageCards[messageNumber].content
-            pastMessageContent += f"\n{role}: {content}"
+        recentMessages = messageCards[-agent.pastMessageCount:]
 
+        for messageCard in recentMessages:
+            role = "User" if messageCard.role == "user" else "Narrator"
+            content = messageCard.content
+            pastMessageContent += f"\n\n# {role}: {content}\n\n"
+        
         openrouterMessages.append(
             {
                 "role": "user",
                 "content": htmlHelpers.buildMessageLogSection(pastMessageContent)
             }
         )
-
+    
     writeOpenRouterMessagesDebug(openrouterMessages, agent)
 
     client = AsyncOpenAI(
@@ -390,10 +436,28 @@ async def generateLLMMessage(agent, events):
                 f"Agent {agent.agentName} returned an empty message."
             )
         
+        writeAgentOutputDebug(assistant_message, agent)
+
         print(assistant_message)
         if agent.children == []:
             finalMessage = assistant_message
 
+        agentOutputsDir = CHATS_DIR / "agentOutputs"
+        agentOutputsDir.mkdir(parents=True, exist_ok=True)
+
+        agentOutputsFile = agentOutputsDir / f"{recursiveChatCard.chatID}.json"
+
+        if agentOutputsFile.exists():
+            with open(agentOutputsFile, "r", encoding="utf-8") as f:
+                agentOutputs = json.load(f)
+        else:
+            agentOutputs = {}
+
+        agentOutputs[agent.agentId] = assistant_message
+
+        with open(agentOutputsFile, "w", encoding="utf-8") as f:
+            json.dump(agentOutputs, f, ensure_ascii=False, indent=2)
+        
         return assistant_message
 
     except BadRequestError as e:
@@ -416,7 +480,7 @@ class AgentGenerationError(Exception):
 
 def writeOpenRouterMessagesDebug(openrouterMessages, agent):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    filePath = CHATS_DIR / "debugoutputs.txt"
+    filePath = CHATS_DIR / "debuginputs.txt"
 
     with open(filePath, "a", encoding="utf-8") as file:
         file.write("\n")
@@ -432,6 +496,25 @@ def writeOpenRouterMessagesDebug(openrouterMessages, agent):
 
     return filePath
 
+def writeAgentOutputDebug(assistant_message, agent):
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    filePath = CHATS_DIR / "debugoutputs.txt"
+
+    with open(filePath, "a", encoding="utf-8") as file:
+        file.write("\n")
+        file.write("=" * 80)
+        file.write("\n")
+        file.write(f"Datetime: {timestamp}\n")
+        file.write(f"Agent ID: {agent.agentId}\n")
+        file.write(f"Agent Name: {agent.agentName}\n")
+        file.write("Debug Type: Agent Output\n")
+        file.write("=" * 80)
+        file.write("\n\n")
+
+        file.write(assistant_message)
+        file.write("\n\n")
+
+    return filePath
 
 
 

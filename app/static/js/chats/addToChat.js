@@ -1,5 +1,11 @@
 const selectedCharacterIds = new Set();
 
+document.querySelectorAll("[data-chat-id]").forEach(chatCard => {
+    chatCard.addEventListener("click", () => {
+        window.location.href = `/chat/${chatCard.dataset.chatId}`;
+    });
+});
+
 function addCharacterToNewChat() {
     console.log("addCharacterToNewChat() called");
 

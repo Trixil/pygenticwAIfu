@@ -1,44 +1,81 @@
-const chatBar = document.querySelector(".chat-input-bar")
+const chatBar = document.querySelector(".chat-input-bar");
+
+async function postJSON(url, data) {
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    });
+
+    if (!response.ok) {
+        throw new Error(await response.text());
+    }
+
+    return response;
+}
 
 chatBar.addEventListener("submit", async function (event) {
     event.preventDefault();
 
     const chatId = window.location.pathname.split("/").filter(Boolean).pop();
+    const chatBubbles = document.querySelector(".chat-bubbles");
 
-    console.log("bruhreally?? the chatid is", chatId)
-    const formData = new FormData(chatBar);
-    formData.append("chatId", chatId);
-    formData.append("role", "user");
-    
-    // /#/#/ USER NAME NOT IMPLEMENTED YET \#\#\
-    // formData.append("sender", username);
-    
-    console.log("before render");
-    const renderResponse = await fetch("/render-new-message", {
-        method: "POST",
-        body: formData
+    const messageInput = chatBar.querySelector("[name='chatMessageInput']");
+    const userMessage = messageInput.value;
+
+    const userRenderResponse = await postJSON("/render-new-message", {
+        chatId: chatId,
+        role: "user",
+        content: userMessage
     });
-    
-    const newMessageHTML = await renderResponse.text();
-    document.querySelector(".chat-bubbles").insertAdjacentHTML("beforeend", newMessageHTML);
-    
+
+    const userMessageHTML = await userRenderResponse.text();
+    chatBubbles.insertAdjacentHTML("beforeend", userMessageHTML);
+
     const userBubbles = document.querySelectorAll(".user-chat-bubble");
     const lastUserBubble = userBubbles[userBubbles.length - 1];
-    
-    
-    const messageBubble = lastUserBubble.closest("[data-message-id]");
-    const messageId = messageBubble.dataset.messageId;
-    formData.append("messageId", messageId);
-    
-    console.log("before save");
-    const saveResponse = await fetch("/api/save-message", {
-        method: "POST",
-        body: formData
+
+    const userMessageBubble = lastUserBubble.closest("[data-message-id]");
+    const userMessageId = userMessageBubble.dataset.messageId;
+
+    await postJSON("/api/save-message", {
+        chatId: chatId,
+        messageId: userMessageId,
+        role: "user",
+        content: userMessage
     });
 
-    const llmResponse = await fetch("/generate-assistant-message", {
-        method: "POST",
-        body: formData
+    const llmResponse = await postJSON("/generate-assistant-message", {
+        chatId: chatId,
+        messageId: userMessageId,
+        content: userMessage
     });
-    
-})
+
+    const assistantMessage = await llmResponse.text();
+
+    const assistantRenderResponse = await postJSON("/render-new-message", {
+        chatId: chatId,
+        role: "assistant",
+        content: assistantMessage
+    });
+
+    const assistantMessageHTML = await assistantRenderResponse.text();
+    chatBubbles.insertAdjacentHTML("beforeend", assistantMessageHTML);
+
+    const assistantBubbles = document.querySelectorAll(".character-chat-bubble");
+    const lastAssistantBubble = assistantBubbles[assistantBubbles.length - 1];
+
+    const assistantMessageBubble = lastAssistantBubble.closest("[data-message-id]");
+    const assistantMessageId = assistantMessageBubble.dataset.messageId;
+
+    await postJSON("/api/save-message", {
+        chatId: chatId,
+        messageId: assistantMessageId,
+        role: "assistant",
+        content: assistantMessage
+    });
+
+    messageInput.value = "";
+});

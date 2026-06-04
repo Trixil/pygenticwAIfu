@@ -137,38 +137,19 @@ function registerLoadoutPaneControls(editorPane, agentId, agent) {
     const instructionsTextarea = editorPane.querySelector(".loadout-editor-instructions-textarea");
 
     instructionsTextarea.addEventListener("input", function () {
-        config.agentInstructions = instructionsTextarea.value;
-                        agent.querySelector(".token-bubble")
-                    .querySelector(".agent-card__meta-text")
-                    .textContent = `~${Math.ceil(instructionsTextarea.value.length / 4)}`;
-    });
+        const instructions = instructionsTextarea.value;
 
-    let instructionsIntervalId = null;
+        editorState.allConfigsById[agentId]
+            .agentConfiguration
+            .agentInstructions = instructions;
 
-    instructionsTextarea.addEventListener("focus", function () {
-        if (instructionsIntervalId !== null) return;
-
-        instructionsIntervalId = setInterval(function () {
-            const instructions = instructionsTextarea.value;
-
-            if (instructions.length < 250) {
-                agent.querySelector(".agent-card__instructions").textContent = instructions;
-                agent.querySelector(".token-bubble")
-                    .querySelector(".agent-card__meta-text")
-                    .textContent = `~${Math.ceil(instructions.length / 4)}`;
-
-                editorState.allConfigsById[agentId]
-                    .agentConfiguration
-                    .agentInstructions = instructions;
-            }
-        }, 250);
-    });
-
-    instructionsTextarea.addEventListener("blur", function () {
-        if (instructionsIntervalId !== null) {
-            clearInterval(instructionsIntervalId);
-            instructionsIntervalId = null;
+        if (instructions.length < 250) {
+            agent.querySelector(".agent-card__instructions").textContent = instructions;
         }
+
+        agent.querySelector(".token-bubble")
+            .querySelector(".agent-card__meta-text")
+            .textContent = `~${Math.ceil(instructions.length / 4)}`;
     });
 
     // ---------- LLM settings ----------
@@ -363,6 +344,53 @@ async function showAgentPane(agent) {
     // showAgentPane js frontend adds it as a sibling to the end of the loadout-editor view
     // immediately applies style.transformX(-100%) to it
 
+function getCenterInSvg(element, svg) {
+    const rect = element.getBoundingClientRect();
+    const svgRect = svg.getBoundingClientRect();
+
+    return {
+        x: rect.left + rect.width / 2 - svgRect.left,
+        y: rect.top + rect.height / 2 - svgRect.top
+    };
+}
+
+function updateConnectedLines(agent, svg) {
+    const agentId = agent.dataset.agentId;
+
+    const connectedLines = svg.querySelectorAll(
+        `line[data-agent-start="${agentId}"], line[data-agent-end="${agentId}"]`
+    );
+
+    connectedLines.forEach(function (line) {
+        const startAgentId = line.dataset.agentStart;
+        const endAgentId = line.dataset.agentEnd;
+
+        const startAgent = document.querySelector(
+            `.agent-card[data-agent-id="${startAgentId}"]`
+        );
+
+        const endAgent = document.querySelector(
+            `.agent-card[data-agent-id="${endAgentId}"]`
+        );
+
+        const startOutput = startAgent?.querySelector(".agent-port--out");
+        const endInput = endAgent?.querySelector(".agent-port--in");
+
+        if (startOutput) {
+            const start = getCenterInSvg(startOutput, svg);
+
+            line.setAttribute("x1", start.x);
+            line.setAttribute("y1", start.y);
+        }
+
+        if (endInput) {
+            const end = getCenterInSvg(endInput, svg);
+
+            line.setAttribute("x2", end.x);
+            line.setAttribute("y2", end.y);
+        }
+    });
+}
 
 function registerAgent(agent) {
     const agentId = agent.dataset.agentId;
@@ -455,6 +483,28 @@ function registerAgent(agent) {
 
     characterInput.addEventListener("pointerdown", function (event) {
         event.stopPropagation();
+    });
+
+    agent.addEventListener("pointermove", function (moveEvent) {
+        if (!editorState.isDraggingAgent) return;
+        if (editorState.draggedAgent !== agent) return;
+
+        const parentRect = agent.offsetParent.getBoundingClientRect();
+
+        agent.style.left = `${moveEvent.clientX - parentRect.left - editorState.xOffset}px`;
+        agent.style.top = `${moveEvent.clientY - parentRect.top - editorState.yOffset}px`;
+
+        updateConnectedLines(agent, svgList);
+    });
+
+
+    agent.addEventListener("pointerup", function (upEvent) {
+        if (!editorState.isDraggingAgent) return;
+
+        editorState.isDraggingAgent = false;
+        editorState.draggedAgent = null;
+
+        agent.releasePointerCapture(upEvent.pointerId);
     });
 
     agent.addEventListener("pointerdown", function (downEvent) {
@@ -637,6 +687,7 @@ function syncAgentLayoutToEditorState() {
 }
 
 async function startLoadoutEditor() {
+    console.log("burh it started")
     const saveButton = document.querySelector(".loadout-save-button");
 
     const allAgents = [...document.querySelectorAll("[data-agent-id]")];
@@ -682,10 +733,15 @@ async function startLoadoutEditor() {
     });
 
     async function saveLoadoutConfiguration() {
+
+        debugger;
+        console.log("saveloadoutconfiguration")
         const loadoutEditor = document.querySelector(".loadout-editor");
         const loadoutId = loadoutEditor.dataset.loadoutId;
         const loadoutName = document.querySelector(".loadout-config-header").innerText;
-
+        
+        console.log(editorState.allConfigsById)
+        
         syncAgentLayoutToEditorState();
 
             const payload = Object.fromEntries(

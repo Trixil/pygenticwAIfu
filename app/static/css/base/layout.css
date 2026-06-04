@@ -42,6 +42,9 @@
   transition: opacity 250ms ease;
 }
 
+.loadout-config-header {
+  pointer-events: none;
+}
 
 #chats-header {
   padding: 22px 30px 16px;
@@ -76,11 +79,13 @@
 #character-cards-button {
   align-self: flex-start;
   margin-left: 30px;
+  z-index: 10;
 }
 
 #loadout-cards-button {
   align-self: flex-end;
   margin-right: 30px;
+  z-index: 10;
 }
 
 .pane-tab-button {
@@ -185,6 +190,7 @@
     white-space: nowrap;
 
     margin: 0;
+    pointer-events: none;
 }
 
 .loadout-title-edit-button {
@@ -200,15 +206,16 @@
     background: transparent;
     cursor: pointer;
     flex: 0 0 auto;
+    opacity: 0; 
+    pointer-events: none;
+      
 }
 
 .loadout-title-edit-icon {
     display: block;
     width: 28px;
     height: 28px;
-    opacity: 0;
     transition: opacity 500ms ease;
-
 }
 
 .loadout-title-edit-button:hover {
@@ -220,8 +227,9 @@
 }
 
 .layout.config-expand-widen .loadout-config-header,
-.layout.config-expand-widen .loadout-title-edit-icon {
+.layout.config-expand-widen .loadout-title-edit-button {
   opacity: 1;
+  pointer-events: auto;
 }
 
 .layout.config-expand-widen #character-cards-button,

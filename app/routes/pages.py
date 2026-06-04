@@ -8,6 +8,7 @@ from ..core.paths import CHARACTER_IMAGES_DIR, CHATS_DIR, PAGES_DIR
 from ..rendering import htmlHelpers
 from ..routes.characters import renderCharacterCards
 from ..routes.loadouts import renderLoadoutCards
+from ..routes.chats import renderChatCards
 from ..storage import file_io
 
 router = APIRouter()
@@ -19,6 +20,8 @@ def mainpage():
     landing_html = landing_html.replace("{{CHARACTER_CARDS}}", character_cards_html)
     loadout_cards_html = renderLoadoutCards().body.decode("utf-8")
     landing_html = landing_html.replace("{{LOADOUT_CARDS}}", loadout_cards_html)
+    chat_cards_html = renderChatCards().body.decode("utf-8")
+    landing_html = landing_html.replace("{{CHAT_CARDS}}", chat_cards_html)
     return HTMLResponse(content=landing_html)
 
 @router.get("/chat")
@@ -62,7 +65,15 @@ async def serveNewChat(chatID: str):
 
     characterCardsHTML = renderCharacterCards().body.decode("utf-8")
 
+    if chatCard.chatName:
+        chatTitle = chatCard.chatName
+    else:
+        chatCardFiles = glob.glob(str(CHATS_DIR / "*.json"))
+        newChatNumber = str(len(chatCardFiles) + 1)
+        chatTitle = f"Untitled chat {newChatNumber}"
+    
     chatPage = (PAGES_DIR / "chat.html").read_text(encoding="utf-8")
+    chatPage = chatPage.replace("{{CHAT_TITLE}}", chatTitle)
     chatPage = chatPage.replace("{{CONVO_HEAD_CHARACTERS}}", convoHeadImgHTML)
     chatPage = chatPage.replace("{{PIPELINE_BUBBLE}}", pipelineBubbleHTML)
     chatPage = chatPage.replace("{{CONVO_MESSAGES}}", messageHTML)

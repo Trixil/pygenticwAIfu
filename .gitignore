@@ -17,9 +17,13 @@ app/data/characters/images/*
 !app/data/characters/images/Mutsuki.png
 !app/data/characters/images/Nino.png
 
+app/data/chats/debugoutputs.txt
+app/data/chats/debuginputs.txt
+
 # Chat data
 app/data/chats/*.json
 !app/data/chats/Chat 1.json
+app/data/chats/agentOutputs/*
 
 # Optional generated/experimental junk
 scratch.py

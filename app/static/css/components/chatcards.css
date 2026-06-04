@@ -24,7 +24,7 @@
     height: 100%;
 }
 
-.new-chat-card:hover {
+.chat-card:hover {
     border-color: rgba(255, 255, 255, 0.75);
     background: rgba(20, 20, 60, 0.5);
 }
@@ -66,6 +66,7 @@
     align-items: center;
     border: 2px solid rgba(255, 255, 255, 0.24);
     width: 100%;
+    cursor: pointer;
 }
 
 .chat-card-image {

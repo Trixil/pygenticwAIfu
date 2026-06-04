@@ -331,7 +331,8 @@
 }
 
 .agent-card__name {
-  margin: 0 0 calc(80px * var(--agent-scale));
+  margin: 0 auto calc(80px * var(--agent-scale));
+  width: fit-content;
   text-align: center;
   color: #f4f7ff;
   font-size: var(--name-size);

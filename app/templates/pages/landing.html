@@ -20,12 +20,7 @@
                                 <span class="new-chat-label">New Chat</span>
                             </span>
                         </button>
-                        <span class="chat-card">
-                            <img src="/character-images/Nino.png" class="chat-card-image">
-                            <div class="chat-card-text">
-                                <header>bruh</header>
-                            </div>
-                        </span>
+                        {{CHAT_CARDS}}
                     </div>
                     <div class="new-chat-pane hidden">
                         <button class="undo-new-chat chat-card" onclick="showActiveChatPane(); removeSelected()">
@@ -103,13 +98,13 @@
                     <button id="character-cards-button" class="pane-tab-button" onclick="showPane('character-cards')">
                         <header class="pane-tab-header">Characters</header>
                     </button>
-                        <div class="loadout-title-group">
-                            <header class="loadout-config-header">Loadout Configuration</header>
+                    <div class="loadout-title-group">
+                        <header class="loadout-config-header">Loadout Configuration</header>
 
-                            <button class="loadout-title-edit-button" type="button" aria-label="Edit loadout title">
-                                <img class="loadout-title-edit-icon" src="/assets/icons/pencil.svg" alt="">
-                            </button>
-                        </div>
+                        <button class="loadout-title-edit-button" type="button" aria-label="Edit loadout title">
+                            <img class="loadout-title-edit-icon" src="/assets/icons/pencil.svg" alt="">
+                        </button>
+                    </div>
                     <button id="loadout-cards-button" class="pane-tab-button" onclick="showPane('loadout-cards')">
                         <header class="pane-tab-header">Loadouts</header>
                     </button>
