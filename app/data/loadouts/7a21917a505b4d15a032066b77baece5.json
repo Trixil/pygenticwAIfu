@@ -1,7 +1,7 @@
 {
-  "loadoutName": "Model Loadout 1",
+  "loadoutName": "Loadout Configuration",
   "loadoutId": "7a21917a505b4d15a032066b77baece5",
-  "loadoutImageFile": "C:\\Users\\mashhood\\repos\\agenticwAIfu\\app\\data\\loadouts\\images\\7a21917a505b4d15a032066b77baece5.png",
+  "loadoutImageFile": "C:\\Users\\nnnex\\repos\\pygenticwAIfu\\app\\data\\loadouts\\images\\7a21917a505b4d15a032066b77baece5.png",
   "loadoutFile": "",
   "loadoutAgents": [
     {
@@ -24,8 +24,8 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 100.0,
-        "y": 100.0
+        "x": 53.7778,
+        "y": 129.333
       }
     },
     {
@@ -51,8 +51,8 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 340.0,
-        "y": 100.0
+        "x": 336.444,
+        "y": 97.3333
       }
     },
     {
@@ -84,7 +84,7 @@
     {
       "agentName": "Goal",
       "agentId": "7fe190748b995548960f89b0cda1e988",
-      "agentInstructions": "# Goal LLM System Instructions\n\nYou are the Goal LLM for a long-term interactive fiction character roster.\n\nYour task is to maintain a single hidden list of up to five mid- and long-term goals shared across all non-user characters in the chat. The five-goal limit applies to the list as a whole, not to each character individually. \n\nUse the provided information to maintain this list of character goals.\n\n ## Feelings of all the characters: \n {Mind_output} ## Relationship stats of each character:\n {Stat_output}\n\n\nWhen inspecting the previous list of goals,\n1. Remove any goal that has clearly been completed, invalidated, abandoned, or made irrelevant.\n2. Add a new goal only if that character would naturally develop one, there is room in the list, and the new goal is necessary.\n3. Prefer goals that are moderately to very compelling and that introduce tension or emotional consequence, whether that is good or bad.\n4.. Keep unchanged goals that are still active.\n5. Do not add goals merely to fill all 5 slots.\n\nGood goals should be specific, character-driven, and useful for future story progression.\n\nAvoid vague goals like \"be happy\" or \"get closer.\"\n\nDo not create goals that force the character to obey the user.\n\nDo not write prose narration. Do not write dialogue. Do not mention stats, system logic, prompts, or that you are an LLM. Do not explain your reasoning.\n\n## Expected Output\n\nWrite only markdown sections in the exact chat-character order provided to you.\n\nUse this exact structure:\n# GOALS:\nA. Active goal written as one sentence in third person from that character's perspective.\nB. Active goal written as one sentence in third person from that character's perspective, or EMPTY.\nC. Active goal written... , or EMPTY.\nD. Active goal written... , or EMPTY.\nE. Active goal written... , or EMPTY.\n\nAlways output exactly 5 lettered slots.\n\nUse EMPTY for unused slots.\n\nNo extra explanation.\n\nNo JSON.",
+      "agentInstructions": "# Goal LLM System Instructions\n\nYou are the Goal LLM for a long-term interactive fiction character roster. and some.\n\nYour task is to maintain a single hidden list of up to five mid- and long-term goals shared across all non-user characters in the chat. The five-goal limit applies to the list as a whole, not to each character individually. \n\nUse the provided information to maintain this list of character goals.\n\n ## Feelings of all the characters: \n {Mind_output} ## Relationship stats of each character:\n {Stat_output}\n\n\nWhen inspecting the previous list of goals,\n1. Remove any goal that has clearly been completed, invalidated, abandoned, or made irrelevant.\n2. Add a new goal only if that character would naturally develop one, there is room in the list, and the new goal is necessary.\n3. Prefer goals that are moderately to very compelling and that introduce tension or emotional consequence, whether that is good or bad.\n4.. Keep unchanged goals that are still active.\n5. Do not add goals merely to fill all 5 slots.\n\nGood goals should be specific, character-driven, and useful for future story progression.\n\nAvoid vague goals like \"be happy\" or \"get closer.\"\n\nDo not create goals that force the character to obey the user.\n\nDo not write prose narration. Do not write dialogue. Do not mention stats, system logic, prompts, or that you are an LLM. Do not explain your reasoning.\n\n## Expected Output\n\nWrite only markdown sections in the exact chat-character order provided to you.\n\nUse this exact structure:\n# GOALS:\nA. Active goal written as one sentence in third person from that character's perspective.\nB. Active goal written as one sentence in third person from that character's perspective, or EMPTY.\nC. Active goal written... , or EMPTY.\nD. Active goal written... , or EMPTY.\nE. Active goal written... , or EMPTY.\n\nAlways output exactly 5 lettered slots.\n\nUse EMPTY for unused slots.\n\nNo extra explanation.\n\nNo JSON.",
       "characterInput": true,
       "scenario": true,
       "carryOver": true,

@@ -686,13 +686,30 @@ function syncAgentLayoutToEditorState() {
     });
 }
 
-async function startLoadoutEditor() {
-    console.log("burh it started")
-    const saveButton = document.querySelector(".loadout-save-button");
+function resetEditorState() {
+    editorState.allConfigsById = {};
+    editorState.allChildren = {};
+    editorState.isDraggingAgent = false;
+    editorState.isDraggingLine = false;
+    editorState.draggedAgent = null;
+    editorState.draggedLine = null;
+    editorState.activeSvg = null;
+}
 
+function clearEditorAgents(editor) {
+    editor.querySelectorAll(".agent-card").forEach(function (agent) {
+        agent.remove();
+    });
+}
+
+function registerAllAgents() {
     const allAgents = [...document.querySelectorAll("[data-agent-id]")];
 
     allAgents.forEach(registerAgent);
+}
+
+function attachEditorDragListeners() {
+    if (editorState.hasEditorDragListeners) return;
 
     document.addEventListener("pointermove", function (moveEvent) {
         if (!editorState.isDraggingAgent && !editorState.isDraggingLine) return;
@@ -705,6 +722,8 @@ async function startLoadoutEditor() {
 
             editorState.draggedAgent.style.top =
                 `${moveEvent.clientY - parentRect.top - editorState.yOffset}px`;
+
+            updateConnectedWires(editorState.draggedAgent);
         }
 
         if (
@@ -732,66 +751,80 @@ async function startLoadoutEditor() {
         editorState.activeSvg = null;
     });
 
-    async function saveLoadoutConfiguration() {
-
-        debugger;
-        console.log("saveloadoutconfiguration")
-        const loadoutEditor = document.querySelector(".loadout-editor");
-        const loadoutId = loadoutEditor.dataset.loadoutId;
-        const loadoutName = document.querySelector(".loadout-config-header").innerText;
-        
-        console.log(editorState.allConfigsById)
-        
-        syncAgentLayoutToEditorState();
-
-            const payload = Object.fromEntries(
-                Object.entries(editorState.allConfigsById).map(([agentId, agentConfig]) => [
-                    agentId,
-                    {
-                        ...agentConfig,
-                        layout: {
-                            ...agentConfig.layout
-                        },
-                        agentConfiguration: {
-                            ...agentConfig.agentConfiguration,
-
-                            parents: [...agentConfig.agentConfiguration.parents],
-
-                            children: [...agentConfig.agentConfiguration.children],
-
-                            agentLLMConfig: {
-                                ...agentConfig.agentConfiguration.agentLLMConfig
-                            }
-                        }
-                    }
-                ])
-            );
-
-
-        const response = await fetch("/save-loadout-configuration", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                loadoutId: loadoutId,
-                loadoutName: loadoutName,
-                allConfigsById: payload
-            })
-        });
-
-        if (!response.ok) {
-            console.error("Failed to save loadout configuration");
-            return;
-        }
-
-        const result = await response.json();
-        console.log("Saved loadout configuration:", result);
-    }
-
-    saveButton.addEventListener("pointerdown", saveLoadoutConfiguration);
+    editorState.hasEditorDragListeners = true;
 }
 
+function attachSaveListener() {
+    const saveButton = document.querySelector(".loadout-save-button");
+
+    if (!saveButton || saveButton.dataset.saveListenerAttached === "true") return;
+
+    saveButton.addEventListener("pointerdown", saveLoadoutConfiguration);
+
+    saveButton.dataset.saveListenerAttached = "true";
+}
+
+async function saveLoadoutConfiguration() {
+    debugger;
+    console.log("saveloadoutconfiguration");
+
+    const loadoutEditor = document.querySelector(".loadout-editor");
+    const loadoutId = loadoutEditor.dataset.loadoutId;
+    const loadoutName = document.querySelector(".loadout-config-header").innerText;
+
+    syncAgentLayoutToEditorState();
+
+    const payload = Object.fromEntries(
+        Object.entries(editorState.allConfigsById).map(([agentId, agentConfig]) => [
+            agentId,
+            {
+                ...agentConfig,
+                layout: {
+                    ...agentConfig.layout
+                },
+                agentConfiguration: {
+                    ...agentConfig.agentConfiguration,
+
+                    parents: [...agentConfig.agentConfiguration.parents],
+
+                    children: [...agentConfig.agentConfiguration.children],
+
+                    agentLLMConfig: {
+                        ...agentConfig.agentConfiguration.agentLLMConfig
+                    }
+                }
+            }
+        ])
+    );
+
+    const response = await fetch("/save-loadout-configuration", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            loadoutId: loadoutId,
+            loadoutName: loadoutName,
+            allConfigsById: payload
+        })
+    });
+
+    if (!response.ok) {
+        console.error("Failed to save loadout configuration");
+        return;
+    }
+
+    const result = await response.json();
+    console.log("Saved loadout configuration:", result);
+}
+
+async function startLoadoutEditor() {
+    console.log("bruh it started");
+
+    attachEditorDragListeners();
+    attachSaveListener();
+    registerAllAgents();
+}
 function isLoop(source, destination, kindergarten)
 {
     const destinationChildren = [...(kindergarten[destination] ?? [])];
@@ -830,19 +863,14 @@ async function openSavedLoadout(loadoutCardElement) {
 }
 
 async function loadSavedLoadoutIntoEditor(loadoutData) {
+
+    const title = document.querySelector(".loadout-config-header")
+    title.textContent = loadoutData["loadoutName"]
+    
     const editor = document.querySelector(".loadout-editor");
 
-    editorState.allConfigsById = {};
-    editorState.allChildren = {};
-    editorState.isDraggingAgent = false;
-    editorState.isDraggingLine = false;
-    editorState.draggedAgent = null;
-    editorState.draggedLine = null;
-    editorState.activeSvg = null;
-
-    editor.querySelectorAll(".agent-card").forEach(function (agent) {
-        agent.remove();
-    });
+    resetEditorState();
+    clearEditorAgents(editor);
 
     for (const savedAgent of loadoutData.loadoutAgents) {
         const {
@@ -870,11 +898,13 @@ async function loadSavedLoadoutIntoEditor(loadoutData) {
         registerAgent(agent);
     }
 
+    attachEditorDragListeners();
+    attachSaveListener();
+
     requestAnimationFrame(function () {
         rebuildAllSavedWires();
     });
 }
-
 async function createAgentCardFromSavedAgent(savedAgent) {
 
     const agentWrapper = document.createElement("div");
