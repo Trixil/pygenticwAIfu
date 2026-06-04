@@ -1,0 +1,27 @@
+{
+  "chatName": "",
+  "chatID": 6,
+  "chatFile": "data/chats/6.json",
+  "chatAgentLoadout": "7a21917a505b4d15a032066b77baece5",
+  "chatCharacters": [
+    "5129a2f1f90a4b4eadd65dca45c26b92",
+    "91504240b8954da3b4aa283e9fbd2bff",
+    "a90f8b83ca6d440cbb6a745e56b15587",
+    "c0d6df6443034423a0fa70b50d15c479",
+    "d6fbb9694d5f40fe80cd2c9ff6c04784"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "sender": "Himothy NOT IMPLEMENTED YET",
+      "content": "I stand idly outside of the heavy wooden apartment doors. The air conditioning felt almost chilly, but reminded me of the the endless luxury of this apartment complex. A rich man approached me complaining about his daughters' poor performance, and so he offered me to tutor them. Really, I am retarded as hell. \"Ohhh mah gawd... i am so cooked crodie...\" But at least I get to see some girls with big ol' titties OMEGALUL. I shake my head. I ring the doorbell. I wait for my fate.",
+      "messageId": "0a89ba99eeaf41e79f7f47b9132f5df2"
+    },
+    {
+      "role": "assistant",
+      "sender": "Himothy NOT IMPLEMENTED YET",
+      "content": "The elevator doors slid open with a soft chime directly into the Nakano penthouse, revealing polished floors half-hidden under a sprawl of open textbooks, loose worksheets, and a trail of empty snack wrappers that led toward the living room. The air smelled faintly of buttered popcorn and citrus cleaner, the late afternoon sun pouring in through the wide windows and splashing gold across the mess. Voices overlapped somewhere ahead\u2014bickering, muffled, familiar to each other in a way that made any outsider feel very, very new.\n\nOn the far side of the living room, Ichika lay draped across the longest sofa like she\u2019d grown there, one leg dangling over the edge, her yellow cardigan tied carelessly around her waist. She tilted her head as the new tutor stepped in, a slow, assessing smile curving her lips. \u201cAh, you must be our savior,\u201d she said lightly, as if testing how the word sat on him. \u201cOr are you more of a \u2018barely-on-time transfer student who just remembered there was a test today\u2019 type?\u201d Her tone was playful, but her eyes watched his expression closely, measuring every flicker.\n\nItsuki sat upright at the low table, back straight, red vest perfectly in place despite the chaos around her. Her open notebook was already divided into neat sections, pens lined at attention. She closed a textbook with a quiet thump and rose to give a polite bow. \u201cThank you for coming,\u201d she said, voice formal but not cold. \u201cSince we\u2019re starting mid-semester, I\u2019d like to hear your study plan. For the whole term, if possible. Goals, methods, and how you intend to track our progress.\u201d She clutched her notebook to her chest afterward, as though ready to record his answer verbatim.\n\nMiku lingered near the armchair, half in shadow, her large headphones resting around her neck. She\u2019d turned down the volume on whatever she\u2019d been listening to, the screen of her phone gone dark in her hand. Her gaze flicked to him, then away, then back again, quietly scanning his face. She didn\u2019t say anything at first, just nudged a history textbook with her foot so it was closer to the table and opened it to a dog-eared page. When she finally spoke, it was barely above a murmur. \u201cWe\u2019re\u2026 pretty far behind,\u201d she added, more to the floor than to him.\n\nNino stood near the kitchen counter, arms crossed, butterfly ribbons perfectly aligned in her pink hair like a warning sign. She didn\u2019t bother to hide the way her eyes swept him from head to toe, sharp and unimpressed. \u201cSo this is the guy they picked?\u201d she scoffed. \u201cYou don\u2019t look like a genius. Or a teacher.\u201d She picked up a crumpled worksheet, waving it like evidence. \u201cLet me guess, you\u2019re one of those \u2018online tutoring experts\u2019 with a flashy profile and nothing behind it? Because if you\u2019re a fake, we don\u2019t have time to waste on you.\u201d\n\nYotsuba practically bounced into his personal space before the echo of Nino\u2019s words had faded, her big green ribbon bobbing with each step. \u201cWelcome, welcome!\u201d she beamed, hands clasped behind her back as she rocked on her heels. \u201cYou made it all the way up here without getting lost, right? That\u2019s already pretty impressive!\u201d She spun toward the table, scooping up stray pencils as she went. \u201cLet\u2019s all sit down and do a warm-up quiz! Like\u2026 um\u2026 a mini test so you can see how bad we are, and we can see how awesome you are!\u201d She looked back at him with open, hopeful eyes, clearly expecting him to grab hold of that idea and make it work.\n\nThe room\u2019s attention closed in on him as the elevator doors slid shut behind his back with a definitive click. Ichika\u2019s soft, amused gaze, Itsuki\u2019s earnest scrutiny, Miku\u2019s silent watchfulness, Nino\u2019s open hostility, and Yotsuba\u2019s eager encouragement all converged, waiting. Books lay open on the table like a gauntlet. Whatever he said or did next would be his first real test.",
+      "messageId": "bbe5b7ad02c1484aa2b2603bcee64c4e"
+    }
+  ]
+}

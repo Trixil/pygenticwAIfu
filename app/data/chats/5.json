@@ -1,0 +1,27 @@
+{
+  "chatName": "rizz adventure",
+  "chatID": 5,
+  "chatFile": "data/chats/5.json",
+  "chatAgentLoadout": "7a21917a505b4d15a032066b77baece5",
+  "chatCharacters": [
+    "c0d6df6443034423a0fa70b50d15c479",
+    "91504240b8954da3b4aa283e9fbd2bff",
+    "a90f8b83ca6d440cbb6a745e56b15587",
+    "5129a2f1f90a4b4eadd65dca45c26b92",
+    "d6fbb9694d5f40fe80cd2c9ff6c04784"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "sender": "Himothy NOT IMPLEMENTED YET",
+      "content": "I stand idly outside of the heavy wooden apartment doors. The air conditioning felt almost chilly, but reminded me of the the endless luxury of this apartment complex. A rich man approached me complaining about his daughters' poor performance, and so he offered me to tutor them. Really, I am retarded as hell. \"Ohhh mah gawd... i am so cooked crodie...\" But at least I get to see some girls with big ol' titties OMEGALUL. I shake my head. I ring the doorbell. I wait for my fate.",
+      "messageId": "9661d3538de84ba7bcf496da4a81f2cf"
+    },
+    {
+      "role": "assistant",
+      "sender": "Himothy NOT IMPLEMENTED YET",
+      "content": "The late-afternoon sun poured in through the wall of windows, washing the Nakano penthouse in soft gold and catching on every stray paper spread across the massive dining table. Open textbooks lay stacked on top of each other, loose worksheets curled at the corners, and a half-eaten bag of chips sat perilously close to someone\u2019s math notebook. The five identical faces around the room wore five very different expressions as their new tutor took the empty seat at the head of the table.\n\nNino sat closest, arms folded tight over her chest, one leg crossed over the other. Her bright pink hair framed a face that was all sharp lines and narrowed blue eyes. Without bothering with introductions, she slid a worksheet across the table with a flick of her fingers. \u201cSo, \u2018sensei,\u2019\u201d she said, the last word edged with skepticism, \u201cthis was on our quiz last week. Everyone here missed it.\u201d Her manicured nail tapped near a dense algebra problem full of fractions and exponents. \u201cIf you\u2019re as \u2018capable\u2019 as you said, it should be easy, right? No notes, no calculator.\u201d She leaned back, watching his face like a hawk waiting for the slightest flinch.\n\nItsuki sat on the opposite side, posture straight, grading report half-hidden beneath her hands. Her cheeks were faintly pink, whether from embarrassment or resolve was hard to tell. She cleared her throat, trying to smooth over Nino\u2019s tone without actually scolding her. \u201cW-We did struggle with that one,\u201d she admitted carefully. \u201cBut\u2026 if you can explain it clearly, that would help us a lot.\u201d Her eyes stayed on the problem, but they flicked up now and then, measuring him, as if willing this arrangement to be worth the humiliation of that crumpled report in front of her.\n\nMiku sat a little removed from the center of the table, headphones resting around her neck, history textbook closed in front of her even though math was on the table. She watched from beneath the soft curtain of her bangs, fingers worrying at the edge of a page. When Nino pushed the sheet over, Miku\u2019s gaze drifted briefly to the tutor\u2019s hand, waiting for how quickly he would reach for a pen, if he\u2019d hesitate. She didn\u2019t say anything, but her chair inched the slightest bit closer to the table, as if proximity alone might help her understand whatever explanation was coming.\n\nOn the nearby sofa, Ichika had chosen not to sit at the table at all. She lounged sideways against a cushion, blazer loose, yellow sweater tied around her waist, one arm draped over the backrest. From there she had a perfect view of the whole scene. \u201cOh, you\u2019re starting with that one?\u201d she chimed in, her tone feather-light. \u201cThat question made our last cram-school tutor run away, you know.\u201d The smile curling her lips said she was joking, but her eyes were bright with interest. \u201cNo pressure or anything. Just\u2026 think of it as your big debut,\u201d she added, resting her chin in her hand, curious to see how he\u2019d dance.\n\nYotsuba bounced on the far side of the table, practically vibrating in her chair, green ribbon bobbing with every movement. \u201cNino, you\u2019re being super intense right from the start,\u201d she said, though there was no real reproach in her voice. She leaned forward, eyes sparkling as she looked between the worksheet and the tutor. \u201cBut, um, if you can show us how to do it, that\u2019d be amazing! I stared at that problem for, like, twenty minutes and just drew a bunny in the corner instead.\u201d She pointed sheepishly at a doodle on the margin, then grinned. \u201cLet\u2019s go, tutor-san! Show us what you can do!\u201d The room grew quiet around that challenge, the afternoon air suddenly heavier as four skeptical, hopeful, and amused sets of blue eyes fixed on him, waiting for his first move.",
+      "messageId": "d111de911b394c69ba0fc9da30d7733c"
+    }
+  ]
+}

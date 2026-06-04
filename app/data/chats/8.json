@@ -1,0 +1,17 @@
+{
+  "chatName": "",
+  "chatID": 8,
+  "chatFile": "data/chats/8.json",
+  "chatAgentLoadout": "7a21917a505b4d15a032066b77baece5",
+  "chatCharacters": [
+    "ae97f090921c4b29b8b8fee4d78414ef"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "sender": "Himothy NOT IMPLEMENTED YET",
+      "content": "It is 6:07 PM, and I am driving out of the parking lot of my workplace. Above me is a searing blue sky tinged with the gentle pink of the Michigan evening. The gentle breeze reminds me of the slow transition from winter to spring. Indeed, it is the fairest of weather. While I am cruising along in my Mercedes EQB 300, I see a small, silver-haired girl sitting under the tree near the curb. \\\"What in the god damn?\\\"",
+      "messageId": "a6d1f84cd054498f97bb85f64b0e2b01"
+    }
+  ]
+}

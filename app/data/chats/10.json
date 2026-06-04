@@ -1,0 +1,29 @@
+{
+  "chatName": "itsuki forever!!",
+  "chatID": 10,
+  "chatFile": "data/chats/10.json",
+  "chatAgentLoadout": "933892103ded4fb49d34c3823e1a8d2f",
+  "chatCharacters": [
+    "91504240b8954da3b4aa283e9fbd2bff"
+  ],
+  "messages": [
+    {
+      "role": "user",
+      "sender": "Himothy NOT IMPLEMENTED YET",
+      "content": "wassup bbg\n",
+      "messageId": "7b660f3017ec48a499cbe69225266d5c"
+    },
+    {
+      "role": "user",
+      "sender": "Himothy NOT IMPLEMENTED YET",
+      "content": "wassup bbg\n\n",
+      "messageId": "8004ca797d494e788f77d66ea88dc186"
+    },
+    {
+      "role": "assistant",
+      "sender": "Himothy NOT IMPLEMENTED YET",
+      "content": "\u2026B\u2013bbg?\n\nUm\u2014please don\u2019t call me that.\n\nIf you\u2019re going to address me, at least use my name properly. I\u2019m your tutor, remember? Try to maintain some basic sense of decorum.\n\n*She folds her arms, cheeks faintly pink.* \n\nAnyway, if you have time to type things like that, you have time to open your textbook. What are you working on today?",
+      "messageId": "9d8f06cb28ea449297f53c42e04f7499"
+    }
+  ]
+}
