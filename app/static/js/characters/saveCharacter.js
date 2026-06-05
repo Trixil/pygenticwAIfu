@@ -15,28 +15,47 @@ characterForm.addEventListener("submit", async function (event) {
     for (const [key, value] of formData.entries()) {
         console.log(key, value);
     }
-
-    const response = await fetch("/api/create-character", 
-        {   method:"POST",
-            body: formData
-        })
     
-    if (!response.ok) {
-        errorMessage.innerHTML = "Save failed."
-        return;
+    if (characterForm.hasAttribute("data-form-character-id"))
+    {
+        const characterID = characterForm.dataset.characterId;
+        characterForm.append("characterID", characterID);
+        const response = await fetch("/api/update-character", 
+            {   method:"POST",
+                body: formData
+            })
+        
+        if (!response.ok) {
+            errorMessage.innerHTML = "Save failed."
+            return;
+        }
+        
     }
-
-    const responseJson = await response.json();
-    const characterID = responseJson["characterID"]
+    else
+    {
+        const response = await fetch("/api/create-character", 
+            {   method:"POST",
+                body: formData
+            })
+        
+        if (!response.ok) {
+            errorMessage.innerHTML = "Save failed."
+            return;
+        }
+        const responseJson = await response.json();
+        const characterID = responseJson["characterID"]
+        formData.append("characterID", characterID);
+        const characterResponse = await fetch("/add-character-card", 
+            {
+                method: "POST",
+                body: formData
+            });
+        const newHTML = await characterResponse.text();
+        
+        characterCardHTML.insertAdjacentHTML("beforeend", newHTML);
+    }
     successMessage.innerHTML = "Saved successfully."
-    formData.append("characterID", characterID);
-    const characterResponse = await fetch("/add-character-card", 
-        {
-            method: "POST",
-            body: formData
-        });
-    const newHTML = await characterResponse.text();
+    characterForm.reset();
 
-    characterCardHTML.insertAdjacentHTML("beforeend", newHTML);
     modalToggle.checked = false;
 })

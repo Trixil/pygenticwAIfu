@@ -1,7 +1,8 @@
 import glob
-from pathlib import Path
 import shutil
+import os
 
+from pathlib import Path
 from uuid import uuid4
 from fastapi import APIRouter, File, Form, Request, UploadFile
 from fastapi.responses import HTMLResponse
@@ -64,6 +65,55 @@ def createCharacter(
         "characterID": characterID
     }
 
+@router.post("/api/update-character")
+def updateCharacter(
+    characterName: str = Form(...),
+    characterImage: UploadFile = File(...),
+    nickname: str = Form(...),
+    description: str = Form(...),
+    scenario: str = Form(...),
+    characterID: str = Form(...)
+):
+    if not file_io.validateFilename(characterName):
+        return {"validFilename": False}
+
+    characterCard = file_io.loadChar(charID=characterID)
+    oldImageFilepath = characterCard.charImageFile
+
+    if os.path.exists(oldImageFilepath):
+        os.remove(oldImageFilepath)
+    
+    CHARACTER_DEFINITIONS_DIR.mkdir(parents=True, exist_ok=True)
+    CHARACTER_IMAGES_DIR.mkdir(parents=True, exist_ok=True)
+
+    imageExt = Path(characterImage.filename).suffix
+    imageFilename = f"{characterID}{imageExt}"
+
+    characterFile = CHARACTER_DEFINITIONS_DIR / f"{characterID}.json"
+    print(str(characterFile))
+    imageFileDest = CHARACTER_IMAGES_DIR / imageFilename
+    print(str(imageFileDest))
+
+    with imageFileDest.open("wb") as buffer:
+        shutil.copyfileobj(characterImage.file, buffer)
+
+    print("copied  theoretically")
+    updatedCharacter = definitions.character(
+        charName=characterName,
+        charId=characterID,
+        charNickname=nickname,
+        charDesc=description,
+        charScenario=scenario,
+        charFile=str(Path("data") / "characters" / "definitions" / f"{characterID}.json"),
+        charImageFile=str(Path("data") / "characters" / "images" / imageFilename)
+    )
+
+    file_io.saveChar(updatedCharacter, characterFile)
+
+    return {
+        "validFilename": True
+    }
+
 
 @router.post("/add-character-card", response_class=HTMLResponse)
 def addCharacter(characterName: str = Form(...),
@@ -86,6 +136,28 @@ def addCharacter(characterName: str = Form(...),
 
     return HTMLResponse(content=charHtml)
 
+@router.post("/populate-character-pane")
+async def populateCharacterPane(request: Request):
+    data = await request.json()
+    characterId = data["characterId"]
+    
+    characterCard = file_io.loadChar(charID=characterId)
+    name = characterCard.charName
+    nickname = characterCard.charNickname
+    scenario = characterCard.charScenario
+    description = characterCard.charDesc
+    exampleDialogue = characterCard.charExampleDialogue
+    imageFile = characterCard.charImageFile
+
+    return({
+        "name": name,
+        "nickname": nickname,
+        "scenario": scenario,
+        "description": description,
+        "exampleDialogue": exampleDialogue,
+        "imageFile": imageFile
+    })
+
 @router.post("/select-character-for-chat")
 async def renderChatCardOfCharacter(request: Request):
 
@@ -104,7 +176,7 @@ async def renderChatCardOfCharacter(request: Request):
 
     return {"cardHtml": cardHtml}
 
-@router.get("/character-cards", response_class=HTMLResponse)
+@router.get("/render-character-cards", response_class=HTMLResponse)
 def renderCharacterCards() -> HTMLResponse:
 
     fullCharacterCardHTML = ''
@@ -119,7 +191,7 @@ def renderCharacterCards() -> HTMLResponse:
         charHtml = f"""
         <div data-character-id="{characterCard.charId}" class="character-card">
             <img src="/character-images/{image_name}" alt="Character Image" class="character-image"/>
-              <button class="character-edit-button" aria-label="Edit character">
+              <button class="character-edit-button" aria-label="Edit character" onclick="populateCharacterPane(this.closest("[data-character-id]"));">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M4 20h4l10.5-10.5-4-4L4 16v4zM15.5 4.5l4 4 1.2-1.2a1.4 1.4 0 0 0 0-2l-2-2a1.4 1.4 0 0 0-2 0l-1.2 1.2z" />
                 </svg>

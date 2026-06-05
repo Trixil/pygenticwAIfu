@@ -53,6 +53,8 @@
   transform: translateY(-4px);
   pointer-events: none;
   transition: opacity 160ms ease, transform 160ms ease, background 160ms ease;
+  cursor: pointer;
+  
 }
 
 .character-edit-button svg {
