@@ -1,10 +1,18 @@
 clicking on Agent loadout brings it to selected-card class or somehting and it glows
+DONE
+
 new character card is selectable upon reacing the new chat screen
 saving chat id by number is dangerous and can overwrite previous chats. use a randomly generated hash
+DONE
+
 dashed lines around tiny convo head images
 you can visit chats/1/2/3/4/5 in the url
+DONE
+
 clicking the + new card button permanently puts it on "selected for chat" i think. CHECK THIS
 the expansion of the pipeline config does not quite match the width of the "layout" flex container that contains left, middle, and right
+DEPRECATED
+
 the svgs are too close to the borders on the agent box
 the cards can be clicked from the loadout editor screen
 the connector lines in the editor lie under the input for the agent
@@ -12,6 +20,8 @@ if the user clicks on the input form in the agent pane, the instructins preview 
 make buttons fill the width of the line above in the loadout pane
 compressed character images
 lines do not move with the agents
+DONE
+
 title on agent should be larger and centered
 make agent card title much narrower horizontally
 DONE
@@ -23,7 +33,11 @@ scrolling all the way down on the homepage, showing loadout cards and agent card
 the loadout image creator should be more purple-themed, using the css colors.
 show "saved config" toast
 tokens counter does not show "tokens" label
+DONE
+
 new chat pane has lame fonts for the character and loadout
+DONE
+
 new chat pane has lame look of the  button
 new character form needs to be cleared
 the token count is inaccurate; it does not account for and cannot account for the input {}s
