@@ -1,0 +1,118 @@
+.delete-loadout-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(8, 2, 24, 0.62);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    transition:
+        opacity 220ms ease,
+        visibility 0s linear 220ms;
+}
+
+.delete-loadout-modal-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+
+    transition:
+        opacity 220ms ease,
+        visibility 0s linear 0s;
+}
+
+.delete-loadout-modal {
+    width: min(34rem, calc(100vw - 2rem));
+    padding: 2.4rem 3rem 2.2rem;
+
+    border-radius: 1.1rem;
+    border: 0.1rem solid rgba(226, 196, 255, 0.75);
+
+    background: rgba(24, 14, 49, 0.98);
+
+    box-shadow: 0 1.2rem 3rem rgba(0, 0, 0, 0.45);
+
+    text-align: center;
+
+    font-family: "Manrope", sans-serif;
+
+    transform: translateY(0.6rem) scale(0.98);
+    transition: transform 220ms ease;
+}
+
+.delete-loadout-modal-overlay.is-open .delete-loadout-modal {
+    transform: translateY(0) scale(1);
+}
+
+.delete-loadout-modal__title {
+    margin: 0 0 1.2rem;
+
+    color: #f7f2ff;
+    font-size: 1.9rem;
+    font-weight: 800;
+    line-height: 1.15;
+}
+
+.delete-loadout-modal__message {
+    max-width: 26rem;
+    margin: 0 auto 2rem;
+
+    color: rgba(247, 242, 255, 0.9);
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.45;
+}
+
+.delete-loadout-modal__actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.delete-loadout-modal__button {
+    min-width: 8.5rem;
+    padding: 0.85rem 1.4rem;
+
+    border-radius: 0.45rem;
+    border: 0.1rem solid transparent;
+
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+
+    cursor: pointer;
+    transition:
+        background-color 160ms ease,
+        border-color 160ms ease,
+        transform 160ms ease;
+}
+
+.delete-loadout-modal__button:hover {
+    transform: translateY(-0.08rem);
+}
+
+.delete-loadout-modal__button--cancel {
+    background: rgba(82, 52, 137, 0.55);
+    border-color: rgba(206, 171, 255, 0.45);
+}
+
+.delete-loadout-modal__button--cancel:hover {
+    background: rgba(100, 67, 164, 0.72);
+    border-color: rgba(226, 196, 255, 0.7);
+}
+
+.delete-loadout-modal__button--delete {
+    background: #d80a45;
+    border-color: rgba(255, 122, 158, 0.65);
+}
+
+.delete-loadout-modal__button--delete:hover {
+    background: #ef1b5a;
+    border-color: rgba(255, 166, 190, 0.9);
+}

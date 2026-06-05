@@ -54,16 +54,17 @@ body {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid rgba(255,255,255,0.25);
-
+  border-bottom: 2px solid rgba(255,255,255,0.42);
+  
   gap: 20px;
+  padding: 0 30px 2px;
 
   flex: 0 0 auto;
 
 }
 
 #convo-title {
-  padding: 22px 0px 14px 30px;
+  padding: 22px 0px 14px 0px;
   font-family: "Gowun Batang", serif;
   font-weight: 700;
   font-size: 3rem;
@@ -100,33 +101,115 @@ body {
   gap: 10px;
 
   height: var(--pipeline-height);
+  flex-shrink: 0;
 }
 
 .convo-head-img {
   width: var(--pipeline-height);
   height: var(--pipeline-height);
+  flex: 0 0 var(--pipeline-height);
 
   object-fit: cover;
+  object-position: center 20%;
+
   border-radius: 12px;
   border: 2px dashed rgba(255, 255, 255, 0.45);
 }
 
 .pipeline-bubble {
-  --pipeline-height: 45px;
+    --pipeline-height: 45px;
 
-  display: flex;
-  flex-direction: column;
+    position: relative;
 
-  height: var(--pipeline-height);
-  min-width: 190px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
 
-  overflow: hidden;
-  border-radius: 14px;
+    height: var(--pipeline-height);
+    min-width: 190px;
+    padding-left: 30px;
+}
 
-  background: rgba(18, 20, 55, 0.55);
-  border: 1px solid rgba(210, 215, 255, 0.35);
+/* Main loadout button */
+.loadout-configuration-button,
+.loadout-selection-x {
+    position: absolute;
+    inset: 0;
 
-  box-shadow: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: 100%;
+    padding: 0 16px;
+
+    border-radius: 14px;
+    border: 1px solid rgba(210, 215, 255, 0.35);
+
+    background: rgba(30, 35, 82, 0.92);
+    color: white;
+
+    box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.14),
+        0 5px 12px rgba(0, 0, 0, 0.28),
+        0 10px 24px rgba(0, 0, 0, 0.22);
+
+    cursor: pointer;
+
+    transition:
+        opacity 180ms ease,
+        transform 220ms ease;
+}
+
+.loadout-configuration-button {
+    font-family: "Manrope", sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    white-space: nowrap;
+
+    opacity: 1;
+    pointer-events: auto;
+    transform: scaleX(1);
+}
+
+.loadout-selection-x {
+    opacity: 0;
+    pointer-events: none;
+    transform: scaleX(0.92);
+}
+
+.loadout-selection-x .convo-head-x-icon {
+    width: 24px;
+    height: 24px;
+
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.4;
+    stroke-linecap: round;
+}
+
+/* Active state */
+.pipeline-bubble.is-selecting-loadout .loadout-configuration-button {
+    opacity: 0;
+    pointer-events: none;
+    transform: scaleX(0.92);
+}
+
+.pipeline-bubble.is-selecting-loadout .loadout-selection-x {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scaleX(1);
+}
+
+.loadout-configuration-button:hover {
+    background: rgba(38, 44, 98, 0.96);
+    border-color: rgba(220, 230, 255, 0.48);
+}
+
+.loadout-configuration-button:active {
+    transform: translateY(1px);
 }
 
 .pipeline-current {
@@ -163,8 +246,10 @@ body {
 .pipeline-action-button {
   flex: 1;
 
-  padding: 10px 14px;
-
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 16px;
+  padding-right: 0;
   border: none;
   background: rgba(255, 255, 255, 0.035);
   color: white;
@@ -335,6 +420,28 @@ body {
   pointer-events: auto;
 }
 
+.chat-loadout-picker {
+  position: absolute;
+  top: 80px;
+  right: 0;
+  z-index: 20;
+
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+
+  transform: translateX(110%);
+  opacity: 0;
+  pointer-events: none;
+
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.chat-loadout-picker.open {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .convo-head-add {
   width: var(--pipeline-height);
   height: var(--pipeline-height);
@@ -348,7 +455,7 @@ body {
   box-sizing: border-box;
 
   border-radius: 12px;
-  border: 2px dashed rgba(255, 255, 255, 0.45);
+  border: 2px solid rgba(255, 255, 255, 0.45);
   background: transparent;
 
   appearance: none;
@@ -500,4 +607,12 @@ body {
 #convo-title[contenteditable="true"] + .convo-title-edit-button {
     opacity: 1;
     pointer-events: auto;
+}
+
+.convo-head-add,
+.loadout-configuration-button {
+    box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.14),
+        0 5px 12px rgba(0, 0, 0, 0.28),
+        0 10px 24px rgba(0, 0, 0, 0.22);
 }

@@ -51,19 +51,13 @@ async def serveNewChat(chatID: str):
     convoHeadImgHTML += """
     </div>"""
 
-    pipelineBubbleHTML = f"""
-    <div class="pipeline-current">
-        <span class="pipeline-label">Current loadout</span>
-        <span class="pipeline-name">{chatCard.chatAgentLoadout}</span>
-    </div>
-
-    <div class="pipeline-actions">
-        <button class="pipeline-action-button">Edit</button>
-        <button class="pipeline-action-button">Change</button>
-    </div>
-    """
+    loadoutCard = file_io.loadLoadout(loadoutID=chatCard.chatAgentLoadout)
+    loadoutName = loadoutCard.loadoutName
+    loadoutID = loadoutCard.loadoutId
 
     characterCardsHTML = renderCharacterCards().body.decode("utf-8")
+    loadoutCardsHTML = renderLoadoutCards().body.decode("utf-8")
+    chatCardsHTML = renderChatCards().body.decode("utf-8")
 
     if chatCard.chatName:
         chatTitle = chatCard.chatName
@@ -75,8 +69,11 @@ async def serveNewChat(chatID: str):
     chatPage = (PAGES_DIR / "chat.html").read_text(encoding="utf-8")
     chatPage = chatPage.replace("{{CHAT_TITLE}}", chatTitle)
     chatPage = chatPage.replace("{{CONVO_HEAD_CHARACTERS}}", convoHeadImgHTML)
-    chatPage = chatPage.replace("{{PIPELINE_BUBBLE}}", pipelineBubbleHTML)
+    chatPage = chatPage.replace("{{LOADOUT_NAME}}", loadoutName)
+    chatPage = chatPage.replace("{{LOADOUT_ID}}", loadoutID)
     chatPage = chatPage.replace("{{CONVO_MESSAGES}}", messageHTML)
     chatPage = chatPage.replace("{{CHARACTER_CARDS}}", characterCardsHTML)
+    chatPage = chatPage.replace("{{LOADOUT_CARDS}}", loadoutCardsHTML)
+    chatPage = chatPage.replace("{{CHAT_CARDS}}", chatCardsHTML)
 
     return HTMLResponse(content=chatPage)

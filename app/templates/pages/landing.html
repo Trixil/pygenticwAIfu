@@ -7,6 +7,7 @@
     <script src="/assets/js/chats/newChatPane.js" defer></script>
     <script src="/assets/js/chats/addToChat.js" defer></script>
     <script src="/assets/js/ui/loadoutEditor.js" defer></script>
+    <script src="/assets/js/ui/popups.js" defer></script>
     <input id="new-character-modal-toggle" class="modal-toggle" type="checkbox" />
     <div class="landing-page">
         <div class="layout">
@@ -51,7 +52,7 @@
                             <header class="choose-loadout-instruction">
                                 2. Choose agent loadout.
                             </header>
-                            <div class="loadout-card empty-loadout-card">
+                            <div class="chat-card empty-loadout-card">
                                 <span class="empty-loadout-card-content">
                                     <svg
                                         class="pipeline-diagram"
@@ -206,6 +207,28 @@
                 </div>
             </div>
             <div class="right">inshallah there will be a right sidebar here</div>
+        </div>
+    </div>
+    <div class="delete-loadout-modal-overlay" id="deleteLoadoutModal" aria-hidden="true">
+        <div class="delete-loadout-modal" role="dialog" aria-modal="true" aria-labelledby="deleteLoadoutTitle">
+            <h2 id="deleteLoadoutTitle" class="delete-loadout-modal__title">
+                Delete Loadout?
+            </h2>
+
+            <p class="delete-loadout-modal__message">
+                Are you sure you want to delete this loadout configuration?
+                This action cannot be undone.
+            </p>
+
+            <div class="delete-loadout-modal__actions">
+                <button type="button" class="delete-loadout-modal__button delete-loadout-modal__button--cancel">
+                    Cancel
+                </button>
+
+                <button type="button" class="delete-loadout-modal__button delete-loadout-modal__button--delete">
+                    Delete
+                </button>
+            </div>
         </div>
     </div>
     <div id="toast-container" class="toast-container"></div>

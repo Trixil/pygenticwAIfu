@@ -1,7 +1,7 @@
 {
   "loadoutName": "Loadout Configuration",
   "loadoutId": "7a21917a505b4d15a032066b77baece5",
-  "loadoutImageFile": "C:\\Users\\nnnex\\repos\\pygenticwAIfu\\app\\data\\loadouts\\images\\7a21917a505b4d15a032066b77baece5.png",
+  "loadoutImageFile": "C:\\Users\\mashhood\\repos\\agenticwAIfu\\app\\data\\loadouts\\images\\7a21917a505b4d15a032066b77baece5.png",
   "loadoutFile": "",
   "loadoutAgents": [
     {
@@ -24,8 +24,8 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 53.7778,
-        "y": 129.333
+        "x": 34.7656,
+        "y": 175.328
       }
     },
     {
@@ -51,8 +51,8 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 336.444,
-        "y": 97.3333
+        "x": 336.438,
+        "y": 454.328
       }
     },
     {
@@ -77,8 +77,8 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 580.0,
-        "y": 100.0
+        "x": 411.0,
+        "y": -14.0
       }
     },
     {
@@ -104,8 +104,8 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 820.0,
-        "y": 100.0
+        "x": 795.0,
+        "y": 538.0
       }
     },
     {
@@ -130,8 +130,8 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 1060.0,
-        "y": 100.0
+        "x": 866.0,
+        "y": -43.0
       }
     },
     {
@@ -156,8 +156,8 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 1300.0,
-        "y": 100.0
+        "x": 1359.0,
+        "y": 206.0
       }
     }
   ]

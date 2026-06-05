@@ -1,6 +1,6 @@
 #chat-cards {
     display: grid;
-    padding: 0 10px 10px;
+    padding: 0 15px 10px;
     position: relative;
 }
 
@@ -181,6 +181,7 @@ button.undo-new-chat {
     border: 2px dashed rgba(255, 255, 255, 0.45);
     background: rgba(20, 20, 60, 0.35);
     width: 100%;
+    cursor: default;
 }
 
 .empty-chat-card-content {
@@ -276,6 +277,7 @@ button.undo-new-chat {
     border: 2px dashed rgba(255, 255, 255, 0.45);
     background: rgba(20, 20, 60, 0.35);
     width: 100%;
+    cursor: default;
 }
 
 .empty-loadout-card-content {

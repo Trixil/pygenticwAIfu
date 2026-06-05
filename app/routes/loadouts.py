@@ -1,5 +1,7 @@
 import numpy
 import glob
+import os
+
 from pathlib import Path
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
@@ -107,6 +109,16 @@ async def saveLoadoutConfiguration(request: Request):
     )
 
     return {"status": "saved"}
+
+@router.post("/delete-loadout")
+async def deleteLoadout(request: Request):
+    data = await request.json()
+    loadoutID = data["loadoutID"]
+
+    loadoutFile = str(LOADOUTS_DIR / f"{loadoutID}.json")
+    if os.path.exists(loadoutFile):
+        os.remove(loadoutFile)
+    return
 
 @router.post("/render-agent-pane", response_class=HTMLResponse)
 async def renderAgentPane(request: Request):

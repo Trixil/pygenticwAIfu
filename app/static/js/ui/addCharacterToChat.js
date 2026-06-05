@@ -83,7 +83,7 @@ async function continueConvoWithCharacters()
         })
 
         const responseBody = await response.text();
-
+        
         document.querySelector(".convo-head-x").classList.toggle("hidden", true);
         document.querySelector(".convo-head-add").classList.toggle("hidden", false);
         

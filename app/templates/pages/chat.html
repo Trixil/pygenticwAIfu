@@ -3,6 +3,8 @@
 <body>
     <script src="/assets/js/chats/sendChat.js" defer></script>
     <script src="/assets/js/ui/addCharacterToChat.js" defer></script>
+    <script src="/assets/js/ui/selectLoadoutInChat.js" defer></script>
+    <script src="/assets/js/ui/toast.js" defer></script>
     <script src="/assets/js/chats/editMessage.js" defer></script>
     <script src="/assets/js/chats/chatTidbits.js" defer></script>
     <div class="convo-page">
@@ -11,18 +13,7 @@
                 <header id="chats-header">Chats</header>
                 <div id="chat-cards">
                     <div class="active-chat-pane">
-                        <button class="chat-card new-chat-card" type="button" aria-label="New chat">
-                            <span class="new-chat-card-content">
-                                <span class="new-chat-plus" aria-hidden="true">+</span>
-                                <span class="new-chat-label">New Chat</span>
-                            </span>
-                        </button>
-                        <span class="chat-card">
-                            <img src="/character-images/Nino.png" class="chat-card-image">
-                            <div class="chat-card-text">
-                                <header>bruh</header>
-                            </div>
-                        </span>
+                        {{CHAT_CARDS}}
                     </div>
                 </div>
             </div>
@@ -49,8 +40,16 @@
                             </button>
                             {{CONVO_HEAD_CHARACTERS}}
                         </div>
-                        <div class="pipeline-bubble">
-                            {{PIPELINE_BUBBLE}}
+                        <div class="pipeline-bubble" data-bubble-loadout-id="{{LOADOUT_ID}}">
+                            <button class="loadout-configuration-button" type="button" onclick="openLoadoutSelection()">
+                                {{LOADOUT_NAME}}
+                            </button>
+
+                            <button class="loadout-selection-x" type="button" aria-label="Close loadout selection" onclick="closeLoadoutSelection()">
+                                <svg class="convo-head-x-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M6 6l12 12M18 6L6 18" />
+                                </svg>
+                            </button>
                         </div>
                     </div>
                     <div class="chat-window">
@@ -75,6 +74,9 @@
                 </div>
                 <div id="character-cards" class="chat-character-picker">
                     {{CHARACTER_CARDS}}
+                </div>
+                <div id="loadout-cards" class="chat-loadout-picker">
+                    {{LOADOUT_CARDS}}
                 </div>
             </div>
             <div class="right">inshallah there will be a right sidebar here</div>

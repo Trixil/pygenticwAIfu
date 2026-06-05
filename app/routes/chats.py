@@ -12,6 +12,7 @@ from fastapi import APIRouter, Form
 from fastapi.responses import HTMLResponse
 from fastapi import Request
 from enum import Enum
+from uuid import uuid4
 
 from ..core.paths import CHATS_DIR, CHARACTER_IMAGES_DIR, TEMPLATES_DIR
 from ..models import definitions
@@ -67,7 +68,7 @@ async def startNewChat(request: Request):
         str(CHATS_DIR / "*.json")
     )
 
-    chatID = len(chatFiles) + 1
+    chatID = uuid4().hex
 
     chatDict = {
         "chatName": "",
@@ -138,6 +139,20 @@ async def continueConvoWithCharacters(request: Request):
     chatFile = str(CHATS_DIR / f"{chatID}.json")
     chatCard = file_io.loadChat(chatFile=chatFile)
     chatCard.chatCharacters = selectedCharacterIDs
+
+    file_io.saveChat(chatCard.model_dump(), chatFile)
+
+@router.post("/continue-convo-with-loadout")
+async def continueConvoWithCharacters(request: Request):
+
+    data = await request.json()
+    selectedLoadoutId = data["selectedLoadoutId"]
+    chatID = data["chatId"]
+
+    chatFile = str(CHATS_DIR / f"{chatID}.json")
+    chatCard = file_io.loadChat(chatFile=chatFile)
+    print(chatCard)
+    chatCard.chatAgentLoadout = selectedLoadoutId
 
     file_io.saveChat(chatCard.model_dump(), chatFile)
 

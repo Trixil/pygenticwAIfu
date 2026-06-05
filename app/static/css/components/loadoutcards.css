@@ -1,6 +1,6 @@
 #loadout-cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   padding: 30px;
 }
@@ -14,6 +14,7 @@
   border: 2px solid rgba(255, 255, 255, 0.25);
   border-radius: 12px;
   background-color: lightgray;
+  cursor: pointer;
 }
 
 .loadout-image {

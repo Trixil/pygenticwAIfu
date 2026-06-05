@@ -149,7 +149,7 @@ function registerLoadoutPaneControls(editorPane, agentId, agent) {
 
         agent.querySelector(".token-bubble")
             .querySelector(".agent-card__meta-text")
-            .textContent = `~${Math.ceil(instructions.length / 4)}`;
+            .textContent = `~${Math.ceil(instructions.length / 4)} tokens`;
     });
 
     // ---------- LLM settings ----------
@@ -715,15 +715,37 @@ function attachEditorDragListeners() {
         if (!editorState.isDraggingAgent && !editorState.isDraggingLine) return;
 
         if (editorState.isDraggingAgent && editorState.draggedAgent) {
-            const parentRect = editorState.draggedAgent.offsetParent.getBoundingClientRect();
+            const draggedAgent = editorState.draggedAgent;
 
-            editorState.draggedAgent.style.left =
+            const parentRect = draggedAgent.offsetParent.getBoundingClientRect();
+
+            draggedAgent.style.left =
                 `${moveEvent.clientX - parentRect.left - editorState.xOffset}px`;
 
-            editorState.draggedAgent.style.top =
+            draggedAgent.style.top =
                 `${moveEvent.clientY - parentRect.top - editorState.yOffset}px`;
 
-            updateConnectedWires(editorState.draggedAgent);
+            const draggedSvgLayer = draggedAgent.querySelector(".wire-layer");
+
+            updateConnectedLines(draggedAgent, draggedSvgLayer);
+
+            const draggedAgentId = draggedAgent.dataset.agentId;
+            const draggedAgentConfig = editorState.allConfigsById[draggedAgentId];
+
+            const draggedAgentParents =
+                draggedAgentConfig.agentConfiguration.parents || [];
+
+            draggedAgentParents.forEach(function (parentAgentId) {
+                const parentAgentElement = document.querySelector(
+                    `.agent-card[data-agent-id="${parentAgentId}"]`
+                );
+
+                if (!parentAgentElement) return;
+
+                const parentSvgLayer = parentAgentElement.querySelector(".wire-layer");
+
+                updateConnectedLines(parentAgentElement, parentSvgLayer);
+            });
         }
 
         if (
@@ -900,7 +922,7 @@ async function loadSavedLoadoutIntoEditor(loadoutData) {
 
     attachEditorDragListeners();
     attachSaveListener();
-
+    
     requestAnimationFrame(function () {
         rebuildAllSavedWires();
     });
