@@ -61,7 +61,7 @@ class message(BaseModel):
 
 class chat(BaseModel):
     chatName: str = ""
-    chatID: int = 0
+    chatID: str = ""
     chatFile: str = ""
     chatAgentLoadout: str = ""
     chatCharacters: list[str] = Field(default_factory=list)

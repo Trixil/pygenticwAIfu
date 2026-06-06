@@ -8,21 +8,17 @@ __pycache__/
 .venv/
 venv/
 
-# Character data
-!app/data/characters/definitions/Mutsuki.json
-!app/data/characters/definitions/Nino.json
-
-!app/data/characters/images/Mutsuki.png
-!app/data/characters/images/Nino.png
-
 app/data/chats/debugoutputs.txt
 app/data/chats/debuginputs.txt
 
 # Chat data
-app/data/chats/
 !app/data/chats/Chat 1.json
 app/data/chats/debugoutputs.txt
 app/data/chats/debuginputs.txt
+app/data/chats/*.json
+!app/data/chats/7.json
+app/data/chats/agentOutputs/*.json:
+!app/data/chats/agentOutputs/7.json
 
 # Optional generated/experimental junk
 scratch.py
