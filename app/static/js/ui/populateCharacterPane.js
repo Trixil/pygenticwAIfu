@@ -1,4 +1,11 @@
 async function populateCharacterPane(characterCard) {
+    document.querySelector(".new-character-actions")
+        .querySelector(".new-character-primary")
+        .textContent = "Update Character";
+    
+    document.querySelector(".new-character-modal")
+        .querySelector("#new-character-title")
+        .textContent = "Update Character";
     const characterId = characterCard.dataset.characterId;
 
     const response = await fetch("/populate-character-pane", {
@@ -6,6 +13,11 @@ async function populateCharacterPane(characterCard) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ characterId })
     });
+
+    if (!response.ok) {
+        console.error("Failed to populate character pane.");
+        return;
+    }
 
     const responseJson = await response.json();
 
@@ -16,30 +28,23 @@ async function populateCharacterPane(characterCard) {
     const exampleDialogue = responseJson["exampleDialogue"];
     const imageFile = responseJson["imageFile"];
 
-    document.querySelector('textarea[name="name"]').value = name;
-    document.querySelector('textarea[name="nickname"]').value = nickname;
+    const characterForm = document.querySelector(".new-character-form");
+
+    document.querySelector('input[name="characterName"]').value = name;
+    document.querySelector('input[name="nickname"]').value = nickname;
     document.querySelector('textarea[name="scenario"]').value = scenario;
     document.querySelector('textarea[name="description"]').value = description;
     document.querySelector('textarea[name="exampleDialogue"]').value = exampleDialogue;
 
+    const fileInput = document.querySelector('input[name="characterImage"]');
+    fileInput.value = "";
+
     if (imageFile) {
-        const imageResponse = await fetch(imageFile);
-        const blob = await imageResponse.blob();
-
-        const actualFilename = imageFile.split("/").pop();
-
-        const file = new File([blob], actualFilename, {
-            type: blob.type
-        });
-
-        const dataTransfer = new DataTransfer();
-        dataTransfer.items.add(file);
-
-        const fileInput = document.querySelector('input[name="characterImage"]');
-        fileInput.files = dataTransfer.files;
-
-        fileInput.dispatchEvent(new Event("change", { bubbles: true }));
+        const actualFilename = imageFile.split(/[\\/]/).pop();
+        characterForm.setAttribute("data-existing-image-file", actualFilename);
+    } else {
+        characterForm.removeAttribute("data-existing-image-file");
     }
 
-    document.querySelector(".new-character-form").setAttribute("data-form-character-id", characterId);
+    characterForm.setAttribute("data-form-character-id", characterId);
 }

@@ -35,6 +35,11 @@ const editorState = {
     yOffset: 0
 };
 
+function autoGrowTextarea(textarea) {
+    textarea.style.height = "auto";
+    textarea.style.height = `${textarea.scrollHeight}px`;
+}
+
 function registerPaneNameEditor(editorPane, agentId, agent) {
     const nameInput = editorPane.querySelector(".loadout-editor-pane-name-input");
     const overviewName = agent.querySelector(".agent-card__name");
@@ -146,12 +151,15 @@ function registerLoadoutPaneControls(editorPane, agentId, agent) {
         if (instructions.length < 250) {
             agent.querySelector(".agent-card__instructions").textContent = instructions;
         }
-
+        
         agent.querySelector(".token-bubble")
-            .querySelector(".agent-card__meta-text")
-            .textContent = `~${Math.ceil(instructions.length / 4)} tokens`;
+        .querySelector(".agent-card__meta-text")
+        .textContent = `~${Math.ceil(instructions.length / 4)} tokens`;
+        
+        autoGrowTextarea(instructionsTextarea);
     });
 
+    autoGrowTextarea(instructionsTextarea);
     // ---------- LLM settings ----------
     const modelNameInput = editorPane.querySelector("#loadout-model-name");
     const temperatureInput = editorPane.querySelector("#loadout-temperature");

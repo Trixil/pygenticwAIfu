@@ -36,11 +36,11 @@
 .agent-card {
   --agent-scale: 0.28;
 
-  --agent-width: calc(920px * var(--agent-scale));
+  --agent-width: calc(1020px * var(--agent-scale));
 
-  --agent-padding-x: calc(40px * var(--agent-scale));
-  --agent-padding-top: calc(54px * var(--agent-scale));
-  --agent-padding-bottom: calc(56px * var(--agent-scale));
+  --agent-padding-x: calc(80px * var(--agent-scale));
+  --agent-padding-top: calc(70px * var(--agent-scale));
+  --agent-padding-bottom: calc(70px * var(--agent-scale));
 
   --agent-radius: calc(34px * var(--agent-scale));
 
@@ -401,7 +401,7 @@
   gap: calc(22px * var(--agent-scale));
 
   min-height: calc(70px * var(--agent-scale));
-  padding: 0 calc(28px * var(--agent-scale));
+  padding: 0 calc(37px * var(--agent-scale));
 
   border: var(--control-border-width) solid rgba(172, 187, 216, 0.28);
   border-radius: calc(18px * var(--agent-scale));
@@ -420,7 +420,9 @@
   font-weight: 500;
   line-height: 1;
   letter-spacing: -0.04em;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 @media (max-width: 900px) {
