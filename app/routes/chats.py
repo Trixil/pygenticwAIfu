@@ -506,7 +506,7 @@ def writeOpenRouterMessagesDebug(openrouterMessages, agent):
         file.write("=" * 80)
         file.write("\n\n")
 
-        file.write(json.dumps(openrouterMessages, indent=2, ensure_ascii=False))
+        file.write(json.dumps(openrouterMessages[0], indent=2, ensure_ascii=False))
         file.write("\n\n")
 
     return filePath
