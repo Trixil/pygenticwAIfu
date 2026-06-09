@@ -188,7 +188,7 @@
                         <span class="loadout-editor-section-title">Carry Over Last Generation</span>
 
                         <span class="loadout-editor-section-description">
-                            Expose the previously generated output from this agent to itself.
+                            Reuse a previously generated output.
                         </span>
                     </span>
 
@@ -197,6 +197,23 @@
                         class="loadout-editor-checkbox"
                         type="checkbox"
                         {{USE_CARRYOVER}}
+                    >
+                </label>
+
+                <label class="loadout-editor-field-row" for="loadout-carryover-agent-name">
+                    <span class="loadout-editor-field-text">
+                        <span class="loadout-editor-section-description">
+                            Choose which agent's previous output should be reused. Useful if you want to reuse this agent's output after it was "filtered" by another. **NOTE: TEMPORARILY, MUST BE AN EXACT CASE-SENSITIVE AGENT NAME** look buddy these things take time teehee
+                        </span>
+                    </span>
+
+                    <input
+                        id="loadout-carryover-agent-name"
+                        class="loadout-editor-text-input loadout-editor-carryover-agent-input"
+                        type="text"
+                        value="{{CARRYOVER_AGENT_NAME}}"
+                        placeholder="{{AGENT_NAME}}"
+                        disabled
                     >
                 </label>
             </section>

@@ -88,6 +88,8 @@ async def saveLoadoutConfiguration(request: Request):
             "characterInput": agentConfig["characterInput"],
             "scenario": agentConfig["scenario"],
             "carryOver": agentConfig["carryOver"],
+            "carryOverAgentId": agentConfig["carryOverAgentId"],
+            "carryOverAgentName": agentConfig["carryOverAgentName"],
             "pastMessageCount": agentConfig["pastMessageCount"],
             "parents": agentConfig["parents"],
             "children": agentConfig["children"],
@@ -143,8 +145,10 @@ async def renderAgentPane(request: Request):
     useCharacterInput = "checked" if agentConfig["characterInput"] else ""
     useScenario = "checked" if agentConfig["scenario"] else ""
     useCarryOver = "checked" if agentConfig["carryOver"] else ""
+
     agentPaneHTML = agentPaneHTML.replace("{{USE_CHARACTER_CARDS}}", useCharacterInput)
     agentPaneHTML = agentPaneHTML.replace("{{USE_CARRYOVER}}", useCarryOver)
+    agentPaneHTML = agentPaneHTML.replace("{{CARRYOVER_AGENT_NAME}}", agentConfig["carryOverAgentName"])
     agentPaneHTML = agentPaneHTML.replace("{{USE_SCENARIO}}", useScenario)
     
     inputHTML = ""

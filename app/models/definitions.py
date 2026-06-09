@@ -39,6 +39,8 @@ class agent(BaseModel):
     characterInput: bool = False
     scenario: bool = False
     carryOver: bool = False
+    carryOverAgentId: str = ""
+    carryOverAgentName: str = ""
     pastMessageCount: int = Field(default_factory=int)
     parents: list[str] = Field(default_factory=list)
     children: list[str] = Field(default_factory=list)

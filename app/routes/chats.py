@@ -37,6 +37,10 @@ messageCards = []
 
 finalMessage = None
 
+client = AsyncOpenAI(
+    base_url="https://openrouter.ai/api/v1",
+    api_key=os.getenv("OPENROUTER_API_KEY"),
+)
 
 @router.get("/chat-cards", response_class=HTMLResponse)
 def renderChatCards() -> HTMLResponse:
@@ -301,7 +305,7 @@ def getAgentByID(selectedAgentID):
         if agent.agentId == selectedAgentID:
             return agent
     
-    raise ValueError("Agent not found")
+    raise ValueError("Agent ID not found")
 
 def getAgentSlugByID(selectedAgentID):
     global allAgentCards
@@ -311,7 +315,16 @@ def getAgentSlugByID(selectedAgentID):
             selectedAgent = getAgentByID(selectedAgentID)
             return selectedAgent.agentName.replace(" ", "")
     
-    raise ValueError("Agent not found")
+    raise ValueError("Agent slug not found")
+
+def getAgentIDByName(selectedAgentName):
+    global allAgentCards
+
+    for agent in allAgentCards:
+        if agent.agentName == selectedAgentName:
+            return agent.agentId
+    
+    raise ValueError("Agent name not found")
 
 async def waiter(key, events):
     await events[key].wait()
@@ -394,7 +407,7 @@ async def generateLLMMessage(agent, events):
             with open(agentOutputsFile, "r", encoding="utf-8") as f:
                 agentOutputs = json.load(f)
 
-            carryOver = agentOutputs.get(agent.agentId, [])
+            carryOver = agentOutputs.get(agent.carryOverAgent, [])
 
             if carryOver:
                 masterInput += htmlHelpers.buildCarryoverSection(carryOver)
@@ -429,11 +442,6 @@ async def generateLLMMessage(agent, events):
         )
     
     writeOpenRouterMessagesDebug(openrouterMessages, agent)
-
-    client = AsyncOpenAI(
-        base_url="https://openrouter.ai/api/v1",
-        api_key=os.getenv("OPENROUTER_API_KEY"),
-    )
 
     try:
         completion = await client.chat.completions.create(

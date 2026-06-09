@@ -88,6 +88,11 @@ function registerPaneNameEditor(editorPane, agentId, agent) {
 
         const oldName = editorState.allConfigsById[agentId].agentName;
         editorState.allConfigsById[agentId].agentName = newName;
+        if (editorState.allConfigsById[agentId].agentCarryOverName == "")
+        {
+            editorState.allConfigsById[agentId].agentCarryOverName = newName;
+        }
+        
         overviewName.textContent = newName;
 
         nameInput.value = newName;
@@ -254,6 +259,40 @@ function registerLoadoutPaneControls(editorPane, agentId, agent) {
             "agent-card__button--checked",
             carryOverCheckbox.checked
         );
+    });
+
+    const carryoverCheckbox = editorPane.querySelector("#loadout-use-carryover");
+    const carryoverAgentInput = editorPane.querySelector("#loadout-carryover-agent-name");
+
+    carryoverAgentInput.disabled = !carryoverCheckbox.checked;
+
+    carryoverCheckbox.addEventListener("change", function () {
+        carryoverAgentInput.disabled = !carryoverCheckbox.checked;
+    });
+
+    function validateCarryoverAgentName() {
+        const carryoverAgentName = carryoverAgentInput.value.trim();
+
+        if (!carryoverCheckbox.checked) {
+            return true;
+        }
+
+        const matchingConfig = Object.values(editorState.allConfigsById).find(function (thisConfig) {
+            return thisConfig.agentName === carryoverAgentName;
+        });
+
+        if (!matchingConfig) {
+            showToast("Agent name not found.");
+            return false;
+        }
+
+        config.carryOverAgentId = matchingConfig.agentConfiguration.agentId;
+
+        return true;
+    }
+
+    carryoverAgentInput.addEventListener("blur", function () {
+        validateCarryoverAgentName();
     });
 
     registerPaneNameEditor(editorPane, agentId, agent);
@@ -666,6 +705,8 @@ function createDefaultAgentConfig(agentId) {
             characterInput: false,
             scenario: false,
             carryOver: false,
+            carryOverAgentId: "",
+            carryOverAgentName: "",
             pastMessageCount: 0,
             parents: [],
             children: [],
