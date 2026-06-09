@@ -742,3 +742,13 @@
     cursor: text;
     caret-color: white;
 }
+
+.loadout-editor-pane--body,
+.loadout-editor-instructions-textarea,
+.loadout-editor-filter-textarea {
+    overflow-anchor: none;
+}
+
+.loadout-editor-instructions-textarea {
+    overflow-anchor: none;
+}

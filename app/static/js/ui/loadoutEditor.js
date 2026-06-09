@@ -36,8 +36,17 @@ const editorState = {
 };
 
 function autoGrowTextarea(textarea) {
+    const scrollParent = textarea.closest(".loadout-editor-pane--body");
+
+    const oldScrollTop = scrollParent ? scrollParent.scrollTop : 0;
+
     textarea.style.height = "auto";
     textarea.style.height = `${textarea.scrollHeight}px`;
+
+    if (scrollParent) {
+        scrollParent.scrollTop = oldScrollTop;
+    }
+
 }
 
 function registerPaneNameEditor(editorPane, agentId, agent) {
@@ -287,6 +296,9 @@ function registerLoadoutPaneControls(editorPane, agentId, agent) {
         }
 
         config.carryOverAgentId = matchingConfig.agentConfiguration.agentId;
+        config.carryOverAgentName = matchingConfig.agentName;
+        console.log("config.carryOverAgentName is");
+        console.log(config.carryOverAgentName);
 
         return true;
     }
@@ -691,6 +703,11 @@ function registerAgent(agent) {
             editorState.activeSvg = null;
         }
     });
+
+    if (editorState.allConfigsById[agentId].carryOverAgentName === "")
+    {
+        editorState.allConfigsById[agentId].agentConfiguration.carryOverAgentName = editorState.allConfigsById[agentId].agentName;
+    }
 
 }
 

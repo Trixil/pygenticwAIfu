@@ -401,13 +401,19 @@ async def generateLLMMessage(agent, events):
     if agent.scenario:
         masterInput += characterScenarioSection
 
+    print("for agent")
+    print(agent.agentName)
+    print("has carryover")
+    print(agent.carryOver)
     if agent.carryOver:
         agentOutputsFile = CHATS_DIR / "agentOutputs" / f"{recursiveChatCard.chatID}.json"
         if agentOutputsFile.exists():
             with open(agentOutputsFile, "r", encoding="utf-8") as f:
                 agentOutputs = json.load(f)
 
-            carryOver = agentOutputs.get(agent.carryOverAgent, [])
+            print("with carryoveragentid")
+            print(agent.carryOverAgentId)
+            carryOver = agentOutputs.get(agent.carryOverAgentId, [])
 
             if carryOver:
                 masterInput += htmlHelpers.buildCarryoverSection(carryOver)
@@ -460,6 +466,7 @@ async def generateLLMMessage(agent, events):
             )
         
         writeAgentOutputDebug(assistant_message, agent)
+        writeSingleAgentOutput(assistant_message, agent)
 
         print(assistant_message)
         if agent.children == []:
@@ -531,6 +538,23 @@ def writeAgentOutputDebug(assistant_message, agent):
         file.write(f"Agent ID: {agent.agentId}\n")
         file.write(f"Agent Name: {agent.agentName}\n")
         file.write("Debug Type: Agent Output\n")
+        file.write("=" * 80)
+        file.write("\n\n")
+
+        file.write(assistant_message)
+        file.write("\n\n")
+
+    return filePath
+
+def writeSingleAgentOutput(assistant_message, agent):
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    filePath = CHATS_DIR / f"{agent.agentName}.txt"
+
+    with open(filePath, "a", encoding="utf-8") as file:
+        file.write("\n")
+        file.write("=" * 80)
+        file.write("\n")
+        file.write(f"Datetime: {timestamp}\n")
         file.write("=" * 80)
         file.write("\n\n")
 
