@@ -510,7 +510,9 @@ class AgentGenerationError(Exception):
 
 def writeOpenRouterMessagesDebug(openrouterMessages, agent):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    filePath = CHATS_DIR / "debuginputs.txt"
+    filePath = CHATS_DIR / "agentOutputs"/ f"{recursiveChatCard.chatID}" / "debuginputs.txt"
+
+    os.makedirs(os.path.dirname(filePath), exist_ok=True)
 
     with open(filePath, "a", encoding="utf-8") as file:
         file.write("\n")
@@ -528,7 +530,9 @@ def writeOpenRouterMessagesDebug(openrouterMessages, agent):
 
 def writeAgentOutputDebug(assistant_message, agent):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    filePath = CHATS_DIR / "debugoutputs.txt"
+    filePath = CHATS_DIR / "agentOutputs"/ f"{recursiveChatCard.chatID}" / "debugoutputs.txt"
+
+    os.makedirs(os.path.dirname(filePath), exist_ok=True)
 
     with open(filePath, "a", encoding="utf-8") as file:
         file.write("\n")
@@ -548,7 +552,9 @@ def writeAgentOutputDebug(assistant_message, agent):
 
 def writeSingleAgentOutput(assistant_message, agent):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    filePath = CHATS_DIR / f"{agent.agentName}.txt"
+    filePath = CHATS_DIR / "agentOutputs"/ f"{recursiveChatCard.chatID}" / f"{agent.agentName}.txt"
+
+    os.makedirs(os.path.dirname(filePath), exist_ok=True)
 
     with open(filePath, "a", encoding="utf-8") as file:
         file.write("\n")
