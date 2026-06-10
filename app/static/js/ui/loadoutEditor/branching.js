@@ -1,0 +1,5 @@
+// upon selecting the branching option in the outputs tab, the in tab is hidden and another in tab is shown on the top of the agent with id "branch-in". one out tab is shown on the right with id "right-out" and  one out  tab is shown on the left "left-out". 
+// the user enters a desired output under the form saying "Required output to execute LEFT branch" and under that the value  under "Instructions passed to LEFT branch". the same  for the right.
+// entering the required output saves it to agentConfig.requiredLeftOutput, and the latter is saved to agentConfig.leftInstructions. same for right. both are empty by default.
+// connecting another agent via the LEFT and RIGHT out branches does not add them to the children of the branching agent. rather, it adds them to agentConfig.leftAgent and agentConfig.rightAgent. but it does add them to the parents of the leaf agents.
+// in the python chats.py, when the agent is evaluated, the output will be compared to the agentConfig.requiredLeftOutput and agentConfig.requiredRightOutput. it will add the agentConfig.leftAgent/rightAgent to its children.

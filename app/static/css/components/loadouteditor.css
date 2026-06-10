@@ -143,12 +143,26 @@
   border-radius: 0 10px 10px 0;
 }
 
-.agent-port--out {
+.agent-port--out,
+.agent-port--out-top,
+.agent-port--out-bottom {
   right: 0;
   color: black;
   background: #9d18ff;
   border-right: none;
   border-radius: 10px 0 0 10px;
+}
+
+.agent-port--out {
+  top: 50%;
+}
+
+.agent-port--out-top {
+  top: 25%;
+}
+
+.agent-port--out-bottom {
+  top: 75%;
 }
 
 .agent-card__inputs {
@@ -752,3 +766,4 @@
 .loadout-editor-instructions-textarea {
     overflow-anchor: none;
 }
+

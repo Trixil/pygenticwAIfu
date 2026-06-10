@@ -15,6 +15,7 @@
             <div class="loadout-editor-pane--tab" data-tab="llm">LLM</div>
             <div class="loadout-editor-pane--tab" data-tab="messages">Messages</div>
             <div class="loadout-editor-pane--tab" data-tab="inputs">Inputs</div>
+            <div class="loadout-editor-pane--tab" data-tab="outputs">Outputs</div>
             <div class="loadout-editor-pane--tab" data-tab="other">Other</div>
         </div>
     </div>
@@ -218,7 +219,92 @@
                 </label>
             </section>
         </section>
+        <section class="loadout-tab-panel" data-panel="outputs">
+            <section class="loadout-editor-section loadout-editor-inputs-section">
+                <label class="loadout-editor-checkbox-row" for="loadout-use-branch">
+                    <span class="loadout-editor-checkbox-text">
+                        <span class="loadout-editor-section-title">Use If/Else Branches</span>
 
+                        <span class="loadout-editor-section-description">
+                            Trigger a different agent depending on the output.
+                        </span>
+                    </span>
+
+                    <input
+                        id="loadout-use-branch"
+                        class="loadout-editor-checkbox"
+                        type="checkbox"
+                        {{USE_BRANCH}}
+                    >
+                </label>
+                <label class="loadout-editor-field-row" for="loadout-upper-branch-trigger">
+                    <span class="loadout-editor-field-text">
+                        <span class="loadout-editor-section-description">
+                            The required output from this agent that triggers sending an output to the upper branch.
+                        </span>
+                    </span>
+
+                    <input
+                        id="loadout-upper-branch-trigger"
+                        class="loadout-editor-text-input loadout-editor-upper-branch-trigger"
+                        type="text"
+                        value="{{UPPER_BRANCH_TRIGGER}}"
+                        placeholder=""
+                        disabled
+                    >
+                </label>
+
+                <label class="loadout-editor-field-row" for="loadout-upper-branch-trigger">
+                    <span class="loadout-editor-field-text">
+                        <span class="loadout-editor-section-description">
+                            The output sent along the upper branch upon being triggered.
+                        </span>
+                    </span>
+
+                    <input
+                        id="loadout-upper-branch-instructions"
+                        class="loadout-editor-text-input loadout-editor-upper-branch-instructions"
+                        type="text"
+                        value="{{UPPER_BRANCH_INSTRUCTIONS}}"
+                        placeholder=""
+                        disabled
+                    >
+                </label>
+                <label class="loadout-editor-field-row" for="loadout-lower-branch-trigger">
+                    <span class="loadout-editor-field-text">
+                        <span class="loadout-editor-section-description">
+                            The required output from this agent that triggers sending an output along the lower branch.
+                        </span>
+                    </span>
+
+                    <input
+                        id="loadout-lower-branch-trigger"
+                        class="loadout-editor-text-input loadout-editor-lower-branch-trigger"
+                        type="text"
+                        value="{{LOWER_BRANCH_TRIGGER}}"
+                        placeholder=""
+                        disabled
+                    >
+                </label>
+
+                <label class="loadout-editor-field-row" for="loadout-lower-branch-trigger">
+                    <span class="loadout-editor-field-text">
+                        <span class="loadout-editor-section-description">
+                            The output sent along the lower branch upon being triggered.
+                        </span>
+                    </span>
+
+                    <input
+                        id="loadout-lower-branch-instructions"
+                        class="loadout-editor-text-input loadout-editor-lower-branch-instructions"
+                        type="text"
+                        value="{{LOWER_BRANCH_INSTRUCTIONS}}"
+                        placeholder=""
+                        disabled
+                    >
+                </label>
+            </section>
+        </section>
         <section class="loadout-tab-panel" data-panel="other">
             Other content
         </section>

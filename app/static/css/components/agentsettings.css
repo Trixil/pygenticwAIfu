@@ -213,6 +213,7 @@
 .loadout-editor-pane[data-active-tab="llm"] [data-panel="llm"],
 .loadout-editor-pane[data-active-tab="messages"] [data-panel="messages"],
 .loadout-editor-pane[data-active-tab="inputs"] [data-panel="inputs"],
+.loadout-editor-pane[data-active-tab="outputs"] [data-panel="outputs"],
 .loadout-editor-pane[data-active-tab="other"] [data-panel="other"] {
     display: flex;
     flex-direction: column;
