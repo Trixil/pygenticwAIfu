@@ -318,7 +318,9 @@
     cursor: pointer;
 }
 
-.loadout-editor-carryover-agent-input {
+.loadout-editor-carryover-agent-input,
+.loadout-editor-upper-branch-trigger,
+.loadout-editor-lower-branch-trigger {
     width: 100%;
     box-sizing: border-box;
 
@@ -338,12 +340,16 @@
     outline: none;
 }
 
-.loadout-editor-carryover-agent-input:focus {
+.loadout-editor-carryover-agent-input:focus,
+.loadout-editor-upper-branch-trigger:focus,
+.loadout-editor-lower-branch-trigger:focus {
     border-color: rgba(170, 210, 255, 0.9);
     box-shadow: 0 0 0 2px rgba(90, 140, 255, 0.18);
 }
 
-.loadout-editor-carryover-agent-input:disabled {
+.loadout-editor-carryover-agent-input:disabled,
+.loadout-editor-upper-branch-trigger:disabled,
+.loadout-editor-lower-branch-trigger:disabled {
     cursor: not-allowed;
 
     border-color: rgba(255, 255, 255, 0.18);
@@ -353,11 +359,15 @@
     opacity: 1;
 }
 
-.loadout-editor-carryover-agent-input::placeholder {
+.loadout-editor-carryover-agent-input::placeholder,
+.loadout-editor-upper-branch-trigger::placeholder, 
+.loadout-editor-lower-branch-trigger::placeholder {
     color: rgba(255, 255, 255, 0.35);
 }
 
-.loadout-editor-carryover-agent-input:disabled::placeholder {
+.loadout-editor-carryover-agent-input:disabled::placeholder,
+.loadout-editor-upper-branch-trigger:disabled::placeholder,
+.loadout-editor-lower-branch-trigger:disabled::placeholder {
     color: rgba(255, 255, 255, 0.22);
 }
 
@@ -440,4 +450,36 @@
 
 .loadout-editor-pane-name-input::selection {
     background: rgba(130, 170, 255, 0.35);
+}
+
+.loadout-editor-upper-branch-instructions,
+.loadout-editor-lower-branch-instructions {
+    width: 100%;
+    flex: 1 1 auto;
+    min-height: 6rem;
+
+    box-sizing: border-box;
+
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    border-radius: 12px;
+
+    background-color: rgba(4, 2, 30, 0.45);
+    color: white;
+
+    padding: 1rem;
+
+    font-family: "Manrope", sans-serif;
+    font-size: 1rem;
+    line-height: 1.45;
+
+    outline: none;
+
+    resize: none;
+    overflow: hidden;
+}
+
+.loadout-editor-upper-branch-instructions:focus,
+.loadout-editor-lower-branch-instructions:focus {
+    border-color: rgba(170, 210, 255, 0.9);
+    box-shadow: 0 0 0 2px rgba(90, 140, 255, 0.18);
 }

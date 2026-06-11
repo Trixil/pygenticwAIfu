@@ -20,11 +20,28 @@
             const startAgent = document.querySelector(
                 `.agent-card[data-agent-id="${line.dataset.agentStart}"]`
             );
+
             const endAgent = document.querySelector(
                 `.agent-card[data-agent-id="${line.dataset.agentEnd}"]`
             );
-            const startOutput = startAgent?.querySelector(".agent-port--out");
-            const endInput = endAgent?.querySelector(".agent-port--in");
+
+            if (!startAgent || !endAgent) {
+                return;
+            }
+
+            const branch = line.dataset.whichBranch || "normal";
+
+            let startOutput;
+
+            if (branch === "upper") {
+                startOutput = startAgent.querySelector(".agent-port--out-upper");
+            } else if (branch === "lower") {
+                startOutput = startAgent.querySelector(".agent-port--out-lower");
+            } else {
+                startOutput = startAgent.querySelector(".agent-port--out");
+            }
+
+            const endInput = endAgent.querySelector(".agent-port--in");
 
             if (startOutput) {
                 const start = getCenterInSvg(startOutput, svg);
@@ -80,6 +97,8 @@
         }
 
         const agentOutput = agent.querySelector(".agent-port--out");
+        const agentUpperOutput = agent.querySelector(".agent-port--out-upper");
+        const agentLowerOutput = agent.querySelector(".agent-port--out-lower");
         const agentInput = agent.querySelector(".agent-port--in");
         const svgLayer = agent.querySelector(".wire-layer");
         const carryOverButton = agent.querySelector(".agent-carryover");
@@ -128,15 +147,34 @@
         });
 
         agent.addEventListener("pointerdown", function (downEvent) {
-            const outRect = agentOutput.getBoundingClientRect();
-            const clickedOutput =
-                downEvent.clientX >= outRect.left &&
-                downEvent.clientX <= outRect.right &&
-                downEvent.clientY >= outRect.top &&
-                downEvent.clientY <= outRect.bottom;
+            if (!config.agentBranch)
+            {
+                const outRect = agentOutput.getBoundingClientRect();
+                const clickedOutput =
+                    downEvent.clientX >= outRect.left &&
+                    downEvent.clientX <= outRect.right &&
+                    downEvent.clientY >= outRect.top &&
+                    downEvent.clientY <= outRect.bottom;
+                    if (clickedOutput) return;
+            } else
+            {
+                const upperRect = agentUpperOutput.getBoundingClientRect();
+                const clickedOutput =
+                    downEvent.clientX >= upperRect.left &&
+                    downEvent.clientX <= upperRect.right &&
+                    downEvent.clientY >= upperRect.top &&
+                    downEvent.clientY <= upperRect.bottom;
+                if (clickedOutput) return;
 
-            if (clickedOutput) return;
+                const lowerRect = agentLowerOutput.getBoundingClientRect();
+                const clickedOutput =
+                    downEvent.clientX >= lowerRect.left &&
+                    downEvent.clientX <= lowerRect.right &&
+                    downEvent.clientY >= lowerRect.top &&
+                    downEvent.clientY <= lowerRect.bottom;
+                if (clickedOutput) return;
 
+            }
             state.isDraggingAgent = true;
             state.draggedAgent = agent;
 
@@ -164,27 +202,39 @@
             });
         });
 
-        agentOutput.addEventListener("pointerdown", function (downEvent) {
-            downEvent.stopPropagation();
+        function attachOutputPortDrag(agentOutput, startPort) {
+            if (!agentOutput) {
+                return;
+            }
 
-            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-            const svgRect = svgLayer.getBoundingClientRect();
-            const outRect = agentOutput.getBoundingClientRect();
+            agentOutput.addEventListener("pointerdown", function (downEvent) {
+                downEvent.stopPropagation();
 
-            state.draggedLine = line;
-            state.activeSvg = svgLayer;
-            state.isDraggingLine = true;
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                const svgRect = svgLayer.getBoundingClientRect();
+                const outRect = agentOutput.getBoundingClientRect();
 
-            line.setAttribute("x1", outRect.left + outRect.width / 2 - svgRect.left);
-            line.setAttribute("y1", outRect.top + outRect.height / 2 - svgRect.top);
-            line.setAttribute("x2", downEvent.clientX - svgRect.left);
-            line.setAttribute("y2", downEvent.clientY - svgRect.top);
-            line.setAttribute("stroke", "white");
-            line.setAttribute("stroke-width", "2");
-            line.setAttribute("data-agent-start", agentId);
+                state.draggedLine = line;
+                state.activeSvg = svgLayer;
+                state.isDraggingLine = true;
 
-            svgLayer.appendChild(line);
-        });
+                line.setAttribute("x1", outRect.left + outRect.width / 2 - svgRect.left);
+                line.setAttribute("y1", outRect.top + outRect.height / 2 - svgRect.top);
+                line.setAttribute("x2", downEvent.clientX - svgRect.left);
+                line.setAttribute("y2", downEvent.clientY - svgRect.top);
+                line.setAttribute("stroke", "white");
+                line.setAttribute("stroke-width", "2");
+
+                line.setAttribute("data-agent-start", agentId);
+                line.setAttribute("data-start-port", startPort);
+
+                svgLayer.appendChild(line);
+            });
+        }
+
+        attachOutputPortDrag(agentOutput, "normal");
+        attachOutputPortDrag(agentUpperOutput, "upper");
+        attachOutputPortDrag(agentLowerOutput, "lower");
 
         agentInput.addEventListener("pointerup", function () {
             if (!state.isDraggingLine || !state.draggedLine || !state.activeSvg) {
@@ -192,6 +242,7 @@
             }
 
             const startAgentId = state.draggedLine.getAttribute("data-agent-start");
+            const startPort = state.draggedLine.getAttribute("data-start-port");
             const endAgentId = agentId;
 
             if (
@@ -218,6 +269,7 @@
             connectorLine.setAttribute("stroke", "white");
             connectorLine.setAttribute("stroke-width", "2");
             connectorLine.setAttribute("data-agent-start", startAgentId);
+            connectorLine.setAttribute("data-start-port", startPort);
             connectorLine.setAttribute("data-agent-end", endAgentId);
 
             state.activeSvg.appendChild(connectorLine);
@@ -228,8 +280,11 @@
                 LoadoutEditor.ensureAgentConfig(startAgentId).agentConfiguration.children;
             const endParents = LoadoutEditor.ensureAgentConfig(endAgentId).agentConfiguration.parents;
 
-            if (!startChildren.includes(endAgentId)) {
-                startChildren.push(endAgentId);
+            if (!LoadoutEditor.ensureAgentConfig(startAgentId).agentConfiguration.agentBranch)
+            {
+                if (!startChildren.includes(endAgentId)) {
+                    startChildren.push(endAgentId);
+                }
             }
 
             if (!endParents.includes(startAgentId)) {
@@ -301,30 +356,55 @@
         state.hasEditorDragListeners = true;
     }
 
-    function drawSavedWire(startAgentId, endAgentId) {
+    function drawSavedWire(startAgentId, endAgentId, startPort) {
         const startAgent = LoadoutEditor.getAgentElement(startAgentId);
         const endAgent = LoadoutEditor.getAgentElement(endAgentId);
 
         if (!startAgent || !endAgent) return;
 
-        const startOutput = startAgent.querySelector(".agent-port--out");
         const endInput = endAgent.querySelector(".agent-port--in");
+        
         const svg = startAgent.querySelector(".wire-layer");
-
-        if (!startOutput || !endInput || !svg) return;
-
+        
         const svgRect = svg.getBoundingClientRect();
-        const outRect = startOutput.getBoundingClientRect();
         const inRect = endInput.getBoundingClientRect();
-
+        
         const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        line.setAttribute("x1", outRect.left + outRect.width / 2 - svgRect.left);
-        line.setAttribute("y1", outRect.top + outRect.height / 2 - svgRect.top);
+        if (startPort === "normal")
+        {
+            const startOutput = startAgent.querySelector(".agent-port--out");
+            if (!startOutput || !endInput || !svg) return;
+            
+            const outRect = startOutput.getBoundingClientRect();
+            line.setAttribute("x1", outRect.left + outRect.width / 2 - svgRect.left);
+            line.setAttribute("y1", outRect.top + outRect.height / 2 - svgRect.top);
+        }
+        else if (startPort === "upper")
+        {
+            const upperPort = startAgent.querySelector(".agent-port--out-upper");
+            if (!upperPort || !endInput || !svg) return;
+
+            const outRect = upperPort.getBoundingClientRect();
+            line.setAttribute("x1", outRect.left + outRect.width / 2 - svgRect.left);
+            line.setAttribute("y1", outRect.top + outRect.height / 2 - svgRect.top);
+
+        }
+        else if (startPort === "lower")
+        {
+            const lowerPort = startAgent.querySelector(".agent-port--out-upper");
+            if (!lowerPort || !endInput || !svg) return;
+
+            const outRect = lowerPort.getBoundingClientRect();
+            line.setAttribute("x1", outRect.left + outRect.width / 2 - svgRect.left);
+            line.setAttribute("y1", outRect.top + outRect.height / 2 - svgRect.top);
+        }
+        
         line.setAttribute("x2", inRect.left + inRect.width / 2 - svgRect.left);
         line.setAttribute("y2", inRect.top + inRect.height / 2 - svgRect.top);
         line.setAttribute("stroke", "white");
         line.setAttribute("stroke-width", "2");
         line.setAttribute("data-agent-start", startAgentId);
+        line.setAttribute("data-start-port", startPort);
         line.setAttribute("data-agent-end", endAgentId);
 
         svg.appendChild(line);
@@ -339,10 +419,21 @@
             [startAgentId, agentConfigWrapper]
         ) {
             const childIds = agentConfigWrapper.agentConfiguration.children || [];
-
+            
             childIds.forEach(function (endAgentId) {
-                drawSavedWire(startAgentId, endAgentId);
+                drawSavedWire(startAgentId, endAgentId, "normal");
             });
+            
+            const upperChildIds = agentConfigWrapper.agentConfiguration.upperChildren || [];
+            upperChildIds.forEach(function (endAgentId) {
+                drawSavedWire(startAgentId, endAgentId, "upper");
+            });
+            
+            const lowerChildIds = agentConfigWrapper.agentConfiguration.lowerChildren || [];
+            lowerChildIds.forEach(function (endAgentId) {
+                drawSavedWire(startAgentId, endAgentId, "lower");
+            });
+
         });
     }
 

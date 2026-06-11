@@ -205,6 +205,42 @@
 
         carryoverAgentInput.addEventListener("blur", validateCarryoverAgentName);
 
+        const branchAgentCheckbox = editorPane.querySelector("#loadout-use-branch");
+        const branchAgentUpperTrigger = editorPane.querySelector("#loadout-upper-branch-trigger");
+        const branchAgentUpperInstructions = editorPane.querySelector("#loadout-upper-branch-instructions");
+        const branchAgentLowerTrigger = editorPane.querySelector("#loadout-lower-branch-trigger");
+        const branchAgentLowerInstructions = editorPane.querySelector("#loadout-lower-branch-instructions");
+
+        branchAgentCheckbox.addEventListener("change", function () {
+            const useBranch = branchAgentCheckbox.checked;
+            LoadoutEditor.setAgentToggle(agentId, "branchAgent", branchAgentCheckbox.checked);
+            branchAgentUpperTrigger.closest(".loadout-editor-section")
+            .classList.toggle("hidden", !useBranch);
+            branchAgentUpperInstructions.closest(".loadout-editor-section")
+            .classList.toggle("hidden", !useBranch);
+            branchAgentLowerTrigger.closest(".loadout-editor-section")
+            .classList.toggle("hidden", !useBranch);
+            branchAgentLowerInstructions.closest(".loadout-editor-section")
+            .classList.toggle("hidden", !useBranch);
+
+            agent.querySelector(".agent-port--out-upper").classList.toggle("hidden", !useBranch)
+            agent.querySelector(".agent-port--out-lower").classList.toggle("hidden", !useBranch)
+            agent.querySelector(".agent-port--out").classList.toggle("hidden", useBranch)
+        });
+
+        branchAgentUpperTrigger.addEventListener("input", function () {
+            config.branchAgentUpperTrigger = branchAgentUpperTrigger.value.trim();
+        });
+        branchAgentUpperInstructions.addEventListener("input", function () {
+            config.branchAgentUpperInstructions = branchAgentUpperInstructions.value.trim();
+        });
+        branchAgentLowerTrigger.addEventListener("input", function () {
+            config.branchAgentLowerTrigger = branchAgentLowerTrigger.value.trim();
+        });
+        branchAgentUpperInstructions.addEventListener("input", function () {
+            config.branchAgentLowerInstructions = branchAgentLowerInstructions.value.trim();
+        });
+        
         registerPaneNameEditor(editorPane, agentId, agent);
     }
 

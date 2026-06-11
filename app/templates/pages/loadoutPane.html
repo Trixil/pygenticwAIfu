@@ -214,7 +214,6 @@
                         type="text"
                         value="{{CARRYOVER_AGENT_NAME}}"
                         placeholder="{{AGENT_NAME}}"
-                        disabled
                     >
                 </label>
             </section>
@@ -237,6 +236,8 @@
                         {{USE_BRANCH}}
                     >
                 </label>
+            </section>
+            <section class="loadout-editor-section loadout-editor-inputs-section hidden">
                 <label class="loadout-editor-field-row" for="loadout-upper-branch-trigger">
                     <span class="loadout-editor-field-text">
                         <span class="loadout-editor-section-description">
@@ -250,10 +251,10 @@
                         type="text"
                         value="{{UPPER_BRANCH_TRIGGER}}"
                         placeholder=""
-                        disabled
                     >
                 </label>
-
+            </section>
+            <section class="loadout-editor-section loadout-editor-inputs-section hidden">
                 <label class="loadout-editor-field-row" for="loadout-upper-branch-trigger">
                     <span class="loadout-editor-field-text">
                         <span class="loadout-editor-section-description">
@@ -267,13 +268,14 @@
                         type="text"
                         value="{{UPPER_BRANCH_INSTRUCTIONS}}"
                         placeholder=""
-                        disabled
                     >
                 </label>
+            </section>
+            <section class="loadout-editor-section loadout-editor-inputs-section hidden">
                 <label class="loadout-editor-field-row" for="loadout-lower-branch-trigger">
                     <span class="loadout-editor-field-text">
                         <span class="loadout-editor-section-description">
-                            The required output from this agent that triggers sending an output along the lower branch.
+                            The required output from this agent that triggers sending an output to the lower branch.
                         </span>
                     </span>
 
@@ -283,10 +285,10 @@
                         type="text"
                         value="{{LOWER_BRANCH_TRIGGER}}"
                         placeholder=""
-                        disabled
                     >
                 </label>
-
+            </section>
+            <section class="loadout-editor-section loadout-editor-inputs-section hidden">
                 <label class="loadout-editor-field-row" for="loadout-lower-branch-trigger">
                     <span class="loadout-editor-field-text">
                         <span class="loadout-editor-section-description">
@@ -300,7 +302,6 @@
                         type="text"
                         value="{{LOWER_BRANCH_INSTRUCTIONS}}"
                         placeholder=""
-                        disabled
                     >
                 </label>
             </section>
