@@ -226,6 +226,8 @@
             agent.querySelector(".agent-port--out-upper").classList.toggle("hidden", !useBranch)
             agent.querySelector(".agent-port--out-lower").classList.toggle("hidden", !useBranch)
             agent.querySelector(".agent-port--out").classList.toggle("hidden", useBranch)
+
+            config.agentBranch = useBranch;
         });
 
         branchAgentUpperTrigger.addEventListener("input", function () {

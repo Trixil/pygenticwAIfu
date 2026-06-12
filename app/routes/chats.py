@@ -25,6 +25,11 @@ load_dotenv()
 router = APIRouter()
 outputTable = {}
 statusTable = {}
+activationTable = {}
+branchOutputs = {
+    "upper": {},
+    "lower": {},
+}
 allAgentCards = {}
 messages = []
 
@@ -155,7 +160,6 @@ async def continueConvoWithCharacters(request: Request):
 
     chatFile = str(CHATS_DIR / f"{chatID}.json")
     chatCard = file_io.loadChat(chatFile=chatFile)
-    print(chatCard)
     chatCard.chatAgentLoadout = selectedLoadoutId
 
     file_io.saveChat(chatCard.model_dump(), chatFile)
@@ -178,17 +182,10 @@ async def saveEditedUserMessage(request: Request):
     messageID = data["messageId"]
 
     chatCard = file_io.loadChat(chatID=chatID)
-
-    print("newMessageContent" + newMessageContent)
-    print("chatID" + chatID)
-    print("messageID" + messageID)
     
     for msg in chatCard.messages:
-        print("msg is " + msg.content)
         if msg.messageId == messageID:
-            print("oldmessage is " + msg.content)
             msg.content = newMessageContent
-            print("newmessage is " + msg.content)
             break
 
     file_io.saveChat(chatCard.model_dump(), chatID=chatID)
@@ -206,6 +203,7 @@ async def generateAssistantMessage(request: Request):
     global allAgentCards
     global recursiveChatCard
     global outputTable
+    global activationTable
 
     chatCard = file_io.loadChat(chatID=chatId)
     recursiveChatCard = chatCard
@@ -217,13 +215,18 @@ async def generateAssistantMessage(request: Request):
     allAgentCards = agents
     startingAgents: list[definitions.agent] = []
     events = {}
+    print("agents is")
+    print(agents)
+    breakpoint()
     for agent in agents:
-        outputTable[agent.agentId] = ""
-        events[agent.agentId] = asyncio.Event()
-        statusTable[agent.agentId] = AgentStatus.WAITING
+        agentId = agent.agentId
+        outputTable[agentId] = ""
+        events[agentId] = asyncio.Event()
+        statusTable[agentId] = AgentStatus.WAITING
+        activationTable[agentId] = True
         if agent.parents == []:
             startingAgents.append(agent)
-    
+    print(activationTable)
     if startingAgents == {}:
         raise ValueError("where the parent at crodie")
     
@@ -335,41 +338,96 @@ async def waitForParents(tasks):
 async def recursiveGenerate(agent, events):
     global statusTable
     global outputTable
+    global branchOutputs
+    global activationTable
 
-    statusTable[agent.agentId] = AgentStatus.RUNNING
+    agentId = agent.agentId
+    statusTable[agentId] = AgentStatus.RUNNING
 
-    waitingParentIds = []
+    print("activationTable")
+    print(activationTable)
+    breakpoint()
+    if (all(not activationTable[parentId] for parentId in agent.parents) and agent.parents) or not activationTable[agentId]:
+        activationTable[agentId] = False
+        outputTable[agentId] = ""
+    else:
+        waitingParentIds = []
 
-    for parentId in agent.parents:
-        if statusTable[parentId] != AgentStatus.DONE:
-            waitingParentIds.append(parentId)
+        for parentId in agent.parents:
+            if statusTable[parentId] != AgentStatus.DONE:
+                waitingParentIds.append(parentId)
 
-    await asyncio.gather(
-        *(events[parentId].wait() for parentId in waitingParentIds)
-    )
+        await asyncio.gather(
+            *(events[parentId].wait() for parentId in waitingParentIds)
+        )
+        message = await generateLLMMessage(agent, events)
+        outputTable[agentId] = message
 
-    message = await generateLLMMessage(agent, events)
-
-    outputTable[agent.agentId] = message
-    statusTable[agent.agentId] = AgentStatus.DONE
-    events[agent.agentId].set()
+    statusTable[agentId] = AgentStatus.DONE
+    events[agentId].set()
 
     waitingChildren: list[definitions.agent] = []
 
-    print("agentId is ")
-    print(agent.agentId)
-    print(agent.agentName)
+    if not agent.agentBranch:
+        for childId in agent.children:
 
-    for childId in agent.children:
-        print("childId is " + childId)
+            if statusTable[childId] == AgentStatus.WAITING:
+                waitingChildren.append(getAgentByID(childId))
 
-        if statusTable[childId] == AgentStatus.WAITING:
-            waitingChildren.append(getAgentByID(childId))
+        if waitingChildren:
+            await asyncio.gather(
+                *(recursiveGenerate(child, events) for child in waitingChildren)
+            )
+    else:
+        output = outputTable[agentId]
 
-    if waitingChildren:
-        await asyncio.gather(
-            *(recursiveGenerate(child, events) for child in waitingChildren)
-        )
+        branch_children = []
+        useLower = False
+        useUpper = False
+
+        if activationTable[agentId]:
+            if output == agent.agentBranchUpperTrigger or "" == agent.agentBranchUpperTrigger:
+                branch_children.extend(agent.upperChildren)
+                branchOutputs["upper"][agentId] = agent.agentBranchUpperInstructions
+                useUpper = True
+
+            if output == agent.agentBranchLowerTrigger or "" == agent.agentBranchLowerTrigger:
+                branch_children.extend(agent.lowerChildren)
+                branchOutputs["lower"][agentId] = agent.agentBranchLowerInstructions
+                useLower = True
+
+            
+            activationTable = activationTable.update({
+                childAgentId: False
+                for childAgentId in agent.lowerChildren
+                if not useLower and len(getAgentByID(childAgentId).parents) == 1
+            })
+
+            activationTable = activationTable.update({
+                childAgentId: False
+                for childAgentId in agent.upperChildren
+                if not useUpper and len(getAgentByID(childAgentId).parents) == 1
+            })
+
+        else:
+            branch_children.extend(agent.upperChildren)
+            branch_children.extend(agent.lowerChildren)
+        
+            activationTable = activationTable.update({
+                childAgentId: False
+                for childAgentId in branch_children
+                if len(getAgentByID(childAgentId).parents) == 1
+            })
+        
+        for child_id in branch_children:
+
+            if statusTable[child_id] == AgentStatus.WAITING:
+                waitingChildren.append(getAgentByID(child_id))
+
+        if waitingChildren:
+            await asyncio.gather(
+                *(recursiveGenerate(child, events) for child in waitingChildren)
+            )
 
 class AgentStatus(Enum):
     WAITING = "waiting"
@@ -381,18 +439,37 @@ async def generateLLMMessage(agent, events):
     global characterScenarioSection
     global recursiveChatCard
     global outputTable
+    global branchOutputs
 
     masterInput = ""
 
     instructionSet = agent.agentInstructions
+    agentId = agent.agentId
 
     for parentId in agent.parents:
+        parentCard = getAgentByID(parentId)
         parentSlug = getAgentSlugByID(parentId)
-        instructionSet = instructionSet.replace(
-            f"{{{parentSlug}_output}}",
-            outputTable[parentId]
-        )
+
+        parentOutput = None
+
+        if not parentCard.agentBranch:
+            parentOutput = outputTable[parentId]
+
+        elif agentId in parentCard.upperChildren:
+            parentOutput = branchOutputs["upper"][parentId]
+
+        elif agentId in parentCard.lowerChildren:
+            parentOutput = branchOutputs["lower"][parentId]
+
+        else:
+            raise ValueError("Child agent ID not found in upper or lower children of parent branching agent.")
         
+        if parentOutput is not None:
+            instructionSet = instructionSet.replace(
+                f"{{{parentSlug}_output}}",
+                parentOutput
+            )
+    
     masterInput += htmlHelpers.buildInstructionSection(instructionSet)
 
     if agent.characterInput:
@@ -401,18 +478,12 @@ async def generateLLMMessage(agent, events):
     if agent.scenario:
         masterInput += characterScenarioSection
 
-    print("for agent")
-    print(agent.agentName)
-    print("has carryover")
-    print(agent.carryOver)
     if agent.carryOver:
         agentOutputsFile = CHATS_DIR / "agentOutputs" / f"{recursiveChatCard.chatID}.json"
         if agentOutputsFile.exists():
             with open(agentOutputsFile, "r", encoding="utf-8") as f:
                 agentOutputs = json.load(f)
 
-            print("with carryoveragentid")
-            print(agent.carryOverAgentId)
             carryOver = agentOutputs.get(agent.carryOverAgentId, [])
 
             if carryOver:
@@ -428,10 +499,6 @@ async def generateLLMMessage(agent, events):
 
     pastMessageContent = ""
 
-    print("agent.pastMessageCount")
-    print(agent.pastMessageCount)
-    print("messageCards")
-    print(messageCards)
     if agent.pastMessageCount > 0:
         recentMessages = messageCards[-agent.pastMessageCount:]
 
@@ -483,7 +550,7 @@ async def generateLLMMessage(agent, events):
         else:
             agentOutputs = {}
 
-        agentOutputs[agent.agentId] = assistant_message
+        agentOutputs[agentId] = assistant_message
 
         with open(agentOutputsFile, "w", encoding="utf-8") as f:
             json.dump(agentOutputs, f, ensure_ascii=False, indent=2)

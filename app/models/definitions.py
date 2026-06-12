@@ -41,9 +41,16 @@ class agent(BaseModel):
     carryOver: bool = False
     carryOverAgentId: str = ""
     carryOverAgentName: str = ""
+    agentBranch: bool = False
+    agentBranchUpperTrigger: str = ""
+    agentBranchUpperInstructions: str = ""
+    agentBranchLowerTrigger: str = ""
+    agentBranchLowerInstructions: str = ""
     pastMessageCount: int = Field(default_factory=int)
     parents: list[str] = Field(default_factory=list)
     children: list[str] = Field(default_factory=list)
+    upperChildren: list[str] = Field(default_factory=list)
+    lowerChildren: list[str] = Field(default_factory=list)
     agentLLMConfig: LLMConfig = Field(default_factory=LLMConfig)
     layout: agentLayout = Field(default_factory=agentLayout)
 

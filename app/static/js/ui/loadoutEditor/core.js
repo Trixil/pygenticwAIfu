@@ -5,6 +5,8 @@
     const editorState = LoadoutEditor.state || {
         allConfigsById: {},
         allChildren: {},
+        allUpperChildren: {},
+        allLowerChildren: {},
         isDraggingAgent: false,
         isDraggingLine: false,
         draggedAgent: null,
@@ -84,6 +86,8 @@
                 pastMessageCount: 0,
                 parents: [],
                 children: [],
+                upperChildren: [],
+                lowerChildren: [],
                 agentLLMConfig: {
                     LLMName: "gpt-4.1",
                     temp: 1,
@@ -116,9 +120,16 @@
             carryOver: Boolean(sourceConfig.carryOver),
             carryOverAgentId: sourceConfig.carryOverAgentId || "",
             carryOverAgentName: sourceConfig.carryOverAgentName || "",
+            agentBranch: sourceConfig.agentBranch,
+            agentBranchUpperTrigger: sourceConfig.agentBranchUpperTrigger,
+            agentBranchUpperInstructions: sourceConfig.agentBranchUpperInstructions,
+            agentBranchLowerTrigger: sourceConfig.agentBranchLowerTrigger,
+            agentBranchLowerInstructions: sourceConfig.agentBranchLowerInstructions,
             pastMessageCount: normalizePastMessageCount(sourceConfig.pastMessageCount),
             parents: [...(sourceConfig.parents || [])],
             children: [...(sourceConfig.children || [])],
+            upperChildren: [...(sourceConfig.upperChildren || [])],
+            lowerChildren: [...(sourceConfig.lowerChildren || [])],
             agentLLMConfig: {
                 ...normalized.agentConfiguration.agentLLMConfig,
                 ...(sourceConfig.agentLLMConfig || {})
@@ -137,12 +148,33 @@
     }
 
     function ensureChildrenSet(agentId) {
-        if (!editorState.allChildren[agentId]) {
+        if (!editorState.allChildren[agentId] || !ensureAgentConfig(agentId).agentBranch)  {
             const config = ensureAgentConfig(agentId);
             editorState.allChildren[agentId] = new Set(config.agentConfiguration.children || []);
         }
-
+        
         return editorState.allChildren[agentId];
+    }
+
+    function ensureBranchChildrenSet(agentId) {
+        const config = ensureAgentConfig(agentId);
+
+        if (!editorState.allUpperChildren[agentId]) {
+            editorState.allUpperChildren[agentId] = new Set(
+                config.agentConfiguration.upperChildren || []
+            );
+        }
+
+        if (!editorState.allLowerChildren[agentId]) {
+            editorState.allLowerChildren[agentId] = new Set(
+                config.agentConfiguration.lowerChildren || []
+            );
+        }
+
+        return {
+            upperChildren: editorState.allUpperChildren[agentId],
+            lowerChildren: editorState.allLowerChildren[agentId]
+        };
     }
 
     function normalizePastMessageCount(value) {
@@ -308,6 +340,7 @@
         defaultAgentPosition,
         ensureAgentConfig,
         ensureChildrenSet,
+        ensureBranchChildrenSet,
         generateId,
         getAgentElement,
         getCharacterCardsElement,

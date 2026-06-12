@@ -81,6 +81,8 @@ async def saveLoadoutConfiguration(request: Request):
             "y": 0
         })
 
+        print(agentConfig)
+        
         agentDict = {
             "agentName": agentName,
             "agentId": agentID,
@@ -90,9 +92,16 @@ async def saveLoadoutConfiguration(request: Request):
             "carryOver": agentConfig["carryOver"],
             "carryOverAgentId": agentConfig["carryOverAgentId"],
             "carryOverAgentName": agentConfig["carryOverAgentName"],
+            "agentBranch": agentConfig["agentBranch"],
+            "agentBranchUpperTrigger": agentConfig["agentBranchUpperTrigger"],
+            "agentBranchUpperInstructions": agentConfig["agentBranchUpperInstructions"],
+            "agentBranchLowerTrigger": agentConfig["agentBranchLowerTrigger"],
+            "agentBranchLowerInstructions": agentConfig["agentBranchLowerInstructions"],
             "pastMessageCount": agentConfig["pastMessageCount"],
             "parents": agentConfig["parents"],
             "children": agentConfig["children"],
+            "upperChildren": agentConfig["upperChildren"],
+            "lowerChildren": agentConfig["lowerChildren"],
             "agentLLMConfig": agentConfig["agentLLMConfig"],
             "layout": layout
         }
@@ -151,6 +160,16 @@ async def renderAgentPane(request: Request):
     agentPaneHTML = agentPaneHTML.replace("{{CARRYOVER_AGENT_NAME}}", agentConfig["carryOverAgentName"])
     agentPaneHTML = agentPaneHTML.replace("{{USE_SCENARIO}}", useScenario)
     
+    useBranch = "checked" if agentConfig["agentBranch"] else ""
+    agentPaneHTML = agentPaneHTML.replace("{{USE_BRANCH}}", useBranch)
+    agentPaneHTML = agentPaneHTML.replace("{{UPPER_BRANCH_TRIGGER}}", agentConfig["agentBranchUpperTrigger"])
+    agentPaneHTML = agentPaneHTML.replace("{{UPPER_BRANCH_INSTRUCTIONS}}", agentConfig["agentBranchUpperInstructions"])
+    agentPaneHTML = agentPaneHTML.replace("{{LOWER_BRANCH_TRIGGER}}", agentConfig["agentBranchLowerTrigger"])
+    agentPaneHTML = agentPaneHTML.replace("{{LOWER_BRANCH_INSTRUCTIONS}}", agentConfig["agentBranchLowerInstructions"])
+
+    hideBranchSection = "" if agentConfig["agentBranch"] else "hidden"
+    agentPaneHTML = agentPaneHTML.replace("{{HIDE_BRANCH_SECTION}}", hideBranchSection)
+    
     inputHTML = ""
     for inputId in agentConfig["parents"]:
         inputName = agentNamesByID[inputId]
@@ -192,6 +211,16 @@ async def renderAgentCard(request: Request):
     agentCardHTML = agentCardHTML.replace("{{USE_CARRYOVER}}", useCarryOver)
     agentCardHTML = agentCardHTML.replace("{{USE_SCENARIO}}", useScenario)
     
+    if agentConfig["agentBranch"]:
+        hideRegularPort = "hidden"
+        hideBranchPort = ""
+    else:
+        hideRegularPort = ""
+        hideBranchPort = "hidden"
+    
+    agentCardHTML = agentCardHTML.replace("{{HIDE_REGULAR_PORT}}", hideRegularPort)
+    agentCardHTML = agentCardHTML.replace("{{HIDE_BRANCH_PORT}}", hideBranchPort)
+
     return HTMLResponse(content=agentCardHTML)
 
 @router.get("/loadout-configuration/{loadout_id}")

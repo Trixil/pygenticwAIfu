@@ -144,8 +144,8 @@
 }
 
 .agent-port--out,
-.agent-port--out-top,
-.agent-port--out-bottom {
+.agent-port--out-upper,
+.agent-port--out-lower {
   right: 0;
   color: black;
   background: #9d18ff;
@@ -157,11 +157,11 @@
   top: 50%;
 }
 
-.agent-port--out-top {
+.agent-port--out-upper {
   top: 25%;
 }
 
-.agent-port--out-bottom {
+.agent-port--out-lower {
   top: 75%;
 }
 

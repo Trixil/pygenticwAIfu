@@ -15,6 +15,8 @@
                             ...agentConfig.agentConfiguration,
                             parents: [...(agentConfig.agentConfiguration.parents || [])],
                             children: [...(agentConfig.agentConfiguration.children || [])],
+                            upperChildren: [...(agentConfig.agentConfiguration.upperChildren || [])],
+                            lowerChildren: [...(agentConfig.agentConfiguration.lowerChildren || [])],
                             agentLLMConfig: {
                                 ...agentConfig.agentConfiguration.agentLLMConfig
                             }

@@ -29,13 +29,13 @@
                 return;
             }
 
-            const branch = line.dataset.whichBranch || "normal";
+            const startPort = line.dataset.startPort || "normal";
 
             let startOutput;
 
-            if (branch === "upper") {
+            if (startPort === "upper") {
                 startOutput = startAgent.querySelector(".agent-port--out-upper");
-            } else if (branch === "lower") {
+            } else if (startPort === "lower") {
                 startOutput = startAgent.querySelector(".agent-port--out-lower");
             } else {
                 startOutput = startAgent.querySelector(".agent-port--out");
@@ -159,7 +159,7 @@
             } else
             {
                 const upperRect = agentUpperOutput.getBoundingClientRect();
-                const clickedOutput =
+                let clickedOutput =
                     downEvent.clientX >= upperRect.left &&
                     downEvent.clientX <= upperRect.right &&
                     downEvent.clientY >= upperRect.top &&
@@ -167,7 +167,7 @@
                 if (clickedOutput) return;
 
                 const lowerRect = agentLowerOutput.getBoundingClientRect();
-                const clickedOutput =
+                clickedOutput =
                     downEvent.clientX >= lowerRect.left &&
                     downEvent.clientX <= lowerRect.right &&
                     downEvent.clientY >= lowerRect.top &&
@@ -274,14 +274,28 @@
 
             state.activeSvg.appendChild(connectorLine);
 
-            LoadoutEditor.ensureChildrenSet(startAgentId).add(endAgentId);
+            if (!LoadoutEditor.ensureAgentConfig(startAgentId).agentConfiguration.agentBranch) {
+                LoadoutEditor.ensureChildrenSet(startAgentId).add(endAgentId);
+            } else {
+                const { upperChildren, lowerChildren } = LoadoutEditor.ensureBranchChildrenSet(startAgentId);
+                if (startPort === "upper")
+                {
+                    upperChildren.add(endAgentId);
+                    LoadoutEditor.ensureAgentConfig(startAgentId).agentConfiguration.upperChildren.push(endAgentId);
+                }
+                else if (startPort === "lower")
+                {
+                    lowerChildren.add(endAgentId);
+                    LoadoutEditor.ensureAgentConfig(startAgentId).agentConfiguration.lowerChildren.push(endAgentId);
+                }
+            }
 
-            const startChildren =
-                LoadoutEditor.ensureAgentConfig(startAgentId).agentConfiguration.children;
             const endParents = LoadoutEditor.ensureAgentConfig(endAgentId).agentConfiguration.parents;
-
+            
             if (!LoadoutEditor.ensureAgentConfig(startAgentId).agentConfiguration.agentBranch)
             {
+                const startChildren =
+                    LoadoutEditor.ensureAgentConfig(startAgentId).agentConfiguration.children;
                 if (!startChildren.includes(endAgentId)) {
                     startChildren.push(endAgentId);
                 }
