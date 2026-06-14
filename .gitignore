@@ -10,6 +10,8 @@ venv/
 
 app/data/chats/debugoutputs.txt
 app/data/chats/debuginputs.txt
+app/data/chats/agentOutputs
+app/data/chats/agentOutputs/*.txt
 
 # Chat data
 !app/data/chats/Chat 1.json
