@@ -283,7 +283,7 @@ async def runGeneration(startingAgents, events):
 
     finalAgents = [
         agent for agent in allAgentCards
-        if agent.children == []
+        if agent.children == [] and agent.upperChildren == [] and agent.lowerChildren == []
     ]
 
     if len(finalAgents) != 1:
@@ -387,43 +387,47 @@ async def recursiveGenerate(agent, events):
 
         if activationTable[agentId]:
             if output == agent.agentBranchUpperTrigger or "" == agent.agentBranchUpperTrigger:
-                branch_children.extend(agent.upperChildren)
+                #branch_children.extend(agent.upperChildren)
                 branchOutputs["upper"][agentId] = agent.agentBranchUpperInstructions
                 useUpper = True
 
             if output == agent.agentBranchLowerTrigger or "" == agent.agentBranchLowerTrigger:
-                branch_children.extend(agent.lowerChildren)
+                #branch_children.extend(agent.lowerChildren)
                 branchOutputs["lower"][agentId] = agent.agentBranchLowerInstructions
                 useLower = True
 
-            
-            activationTable = activationTable.update({
+            breakpoint()
+            activationTable.update({
                 childAgentId: False
                 for childAgentId in agent.lowerChildren
                 if not useLower and len(getAgentByID(childAgentId).parents) == 1
             })
 
-            activationTable = activationTable.update({
+            activationTable.update({
                 childAgentId: False
                 for childAgentId in agent.upperChildren
                 if not useUpper and len(getAgentByID(childAgentId).parents) == 1
             })
 
         else:
-            branch_children.extend(agent.upperChildren)
-            branch_children.extend(agent.lowerChildren)
+            #branch_children.extend(agent.upperChildren)
+            #branch_children.extend(agent.lowerChildren)
         
-            activationTable = activationTable.update({
+            activationTable.update({
                 childAgentId: False
                 for childAgentId in branch_children
                 if len(getAgentByID(childAgentId).parents) == 1
             })
+        
+        branch_children.extend(agent.upperChildren)
+        branch_children.extend(agent.lowerChildren)
         
         for child_id in branch_children:
 
             if statusTable[child_id] == AgentStatus.WAITING:
                 waitingChildren.append(getAgentByID(child_id))
 
+        breakpoint()
         if waitingChildren:
             await asyncio.gather(
                 *(recursiveGenerate(child, events) for child in waitingChildren)
