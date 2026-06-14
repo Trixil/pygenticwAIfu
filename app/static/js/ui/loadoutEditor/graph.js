@@ -405,7 +405,7 @@
         }
         else if (startPort === "lower")
         {
-            const lowerPort = startAgent.querySelector(".agent-port--out-upper");
+            const lowerPort = startAgent.querySelector(".agent-port--out-lower");
             if (!lowerPort || !endInput || !svg) return;
 
             const outRect = lowerPort.getBoundingClientRect();
