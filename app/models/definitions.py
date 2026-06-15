@@ -18,6 +18,14 @@ class LLMConfig(BaseModel):
     maxTokens: int = 0
     topP: float = 1
 
+class lorebookEntry(BaseModel):
+    
+class lorebook(BaseModel):
+    name: str = ""
+    id: str = Field(default_factory=lambda: uuid4().hex)
+    desc: str = ""
+    entries: list[lorebookEntry] = Field(default_factory=list)
+    
 class character(BaseModel):
     charName: str = ""
     charId: str = Field(default_factory=lambda: uuid4().hex)
@@ -46,6 +54,7 @@ class agent(BaseModel):
     agentBranchUpperInstructions: str = ""
     agentBranchLowerTrigger: str = ""
     agentBranchLowerInstructions: str = ""
+    writeLorebook: bool = False
     pastMessageCount: int = Field(default_factory=int)
     parents: list[str] = Field(default_factory=list)
     children: list[str] = Field(default_factory=list)

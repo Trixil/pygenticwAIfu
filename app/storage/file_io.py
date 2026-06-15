@@ -63,6 +63,30 @@ def loadChar(charFile=None, charID=None) -> definitions.character:
 
     return definitions.character.model_validate(character)
 
+def saveLorebook(lorebookObject, lorebookFile):
+
+    imageFileSrc = Path(lorebookObject.charImageFile)
+    if not imageFileSrc.is_absolute():
+        imageFileSrc = APP_DIR / imageFileSrc
+    imageFileDest = CHARACTER_IMAGES_DIR / imageFileSrc.name
+
+    if imageFileSrc.resolve() != imageFileDest.resolve():
+        shutil.copyfile(imageFileSrc, imageFileDest)
+    with open(lorebookFile, "w", encoding="utf-8") as f:
+        json.dump(lorebookObject.model_dump(), f, indent=2)
+
+def loadLorebook(lorebookFile=None, lorebookID=None) -> definitions.lorebook:
+
+    if lorebookID is not None and lorebookFile is None:
+        lorebookFile = str(CHARACTER_DEFINITIONS_DIR / f"{lorebookID}.json")
+    elif lorebookFile is not None and lorebookID is not None:
+        raise ValueError("pick one crodie")
+
+    with open(lorebookFile, "r", encoding="utf-8") as file:
+        lorebook = json.load(file)
+
+    return definitions.lorebook.model_validate(lorebook)
+
 def saveLoadout(loadoutDict, loadoutFile):
     #loadoutFile = validateFilename(loadoutFile)
     with open(loadoutFile, "w", encoding="utf-8") as f:

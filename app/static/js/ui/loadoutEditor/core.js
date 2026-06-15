@@ -83,6 +83,7 @@
                 agentBranchUpperInstructions: "",
                 agentBranchLowerTrigger: "",
                 agentBranchLowerInstructions: "",
+                writeLorebook: false,
                 pastMessageCount: 0,
                 parents: [],
                 children: [],

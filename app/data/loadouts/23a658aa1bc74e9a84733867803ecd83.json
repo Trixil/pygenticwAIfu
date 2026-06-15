@@ -1,0 +1,72 @@
+{
+  "loadoutName": "world testing",
+  "loadoutId": "23a658aa1bc74e9a84733867803ecd83",
+  "loadoutImageFile": "C:\\Users\\mashhood\\repos\\agenticwAIfu\\app\\data\\loadouts\\images\\23a658aa1bc74e9a84733867803ecd83.png",
+  "loadoutFile": "",
+  "loadoutAgents": [
+    {
+      "agentName": "Arc",
+      "agentId": "4068c2cf3d3d4952a2a765c294aa1e8b",
+      "agentInstructions": "Create and maintain a list of amazing story arcs.",
+      "characterInput": false,
+      "scenario": false,
+      "carryOver": false,
+      "carryOverAgentId": "",
+      "carryOverAgentName": "Arc",
+      "agentBranch": false,
+      "agentBranchUpperTrigger": "",
+      "agentBranchUpperInstructions": "",
+      "agentBranchLowerTrigger": "",
+      "agentBranchLowerInstructions": "",
+      "pastMessageCount": 0,
+      "parents": [],
+      "children": [
+        "563af260e37e40a3b0a306d92dd2db7b"
+      ],
+      "upperChildren": [],
+      "lowerChildren": [],
+      "agentLLMConfig": {
+        "LLMName": "gpt-4.1",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      },
+      "layout": {
+        "x": 128.8,
+        "y": 258.4
+      }
+    },
+    {
+      "agentName": "Arc Update Check",
+      "agentId": "563af260e37e40a3b0a306d92dd2db7b",
+      "agentInstructions": "Determine if the input queue of story arcs need to be updated given the state of the story. One of the events in the story arc may be just about to finish, or has finished, in which case mark it in the queue as \"PERFORM REWRITE\". and at the top of your respone, write \"<<<PERFORM ARC UPDATE: YES>>>\". otherwise, output the arc queue exactly as you received it an write \"<<<PERFORM ARC UPDATE: NO>>>\" at the top of your response.\n{Arc_output}",
+      "characterInput": false,
+      "scenario": false,
+      "carryOver": false,
+      "carryOverAgentId": "",
+      "carryOverAgentName": "Arc Update Check",
+      "agentBranch": true,
+      "agentBranchUpperTrigger": "<<<PERFORM ARC UPDATE: YES>>>",
+      "agentBranchUpperInstructions": "{this_response}",
+      "agentBranchLowerTrigger": "<<<PERFORM ARC UPDATE: NO>>>",
+      "agentBranchLowerInstructions": "{this_response}",
+      "pastMessageCount": 0,
+      "parents": [
+        "4068c2cf3d3d4952a2a765c294aa1e8b"
+      ],
+      "children": [],
+      "upperChildren": [],
+      "lowerChildren": [],
+      "agentLLMConfig": {
+        "LLMName": "gpt-4.1",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      },
+      "layout": {
+        "x": 295.2,
+        "y": 474.4
+      }
+    }
+  ]
+}

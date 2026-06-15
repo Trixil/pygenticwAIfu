@@ -386,14 +386,14 @@ async def recursiveGenerate(agent, events):
         useUpper = False
 
         if activationTable[agentId]:
-            if output == agent.agentBranchUpperTrigger or "" == agent.agentBranchUpperTrigger:
+            if agent.agentBranchUpperTrigger in output or "" == agent.agentBranchUpperTrigger:
                 #branch_children.extend(agent.upperChildren)
-                branchOutputs["upper"][agentId] = agent.agentBranchUpperInstructions
+                branchOutputs["upper"][agentId] = agent.agentBranchUpperInstructions.replace("{this_response}", output)
                 useUpper = True
 
-            if output == agent.agentBranchLowerTrigger or "" == agent.agentBranchLowerTrigger:
+            if agent.agentBranchLowerTrigger in output or "" == agent.agentBranchLowerTrigger:
                 #branch_children.extend(agent.lowerChildren)
-                branchOutputs["lower"][agentId] = agent.agentBranchLowerInstructions
+                branchOutputs["lower"][agentId] = agent.agentBranchLowerInstructions.replace("{this_response}", output)
                 useLower = True
 
             breakpoint()
@@ -456,6 +456,7 @@ async def generateLLMMessage(agent, events):
 
         parentOutput = None
 
+        #/#/ NOT IMPLEMENTED: well, what if an agent is connected to both the upper and lower branch, huh?
         if not parentCard.agentBranch:
             parentOutput = outputTable[parentId]
 
@@ -545,19 +546,30 @@ async def generateLLMMessage(agent, events):
 
         agentOutputsDir = CHATS_DIR / "agentOutputs"
         agentOutputsDir.mkdir(parents=True, exist_ok=True)
+        if not agent.writeLorebook:
 
-        agentOutputsFile = agentOutputsDir / f"{recursiveChatCard.chatID}.json"
+            agentOutputsFile = agentOutputsDir / f"{recursiveChatCard.chatID}.json"
 
-        if agentOutputsFile.exists():
-            with open(agentOutputsFile, "r", encoding="utf-8") as f:
-                agentOutputs = json.load(f)
+            if agentOutputsFile.exists():
+                with open(agentOutputsFile, "r", encoding="utf-8") as f:
+                    agentOutputs = json.load(f)
+            else:
+                agentOutputs = {}
+
+            agentOutputs[agentId] = assistant_message
+
+            with open(agentOutputsFile, "w", encoding="utf-8") as f:
+                json.dump(agentOutputs, f, ensure_ascii=False, indent=2)
         else:
-            agentOutputs = {}
+            lorebookFile = agentOutputsDir / f"{recursiveChatCard.chatID} lorebook.json"
 
-        agentOutputs[agentId] = assistant_message
-
-        with open(agentOutputsFile, "w", encoding="utf-8") as f:
-            json.dump(agentOutputs, f, ensure_ascii=False, indent=2)
+            if lorebookFile.exists():
+                with open(lorebookFile, "r", encoding="utf-8") as f:
+                    lorebook = json.load(f)
+            else:
+                lorebook = {}
+            
+            
         
         return assistant_message
 

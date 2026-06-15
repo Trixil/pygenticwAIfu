@@ -170,6 +170,15 @@ async def renderAgentPane(request: Request):
     hideBranchSection = "" if agentConfig["agentBranch"] else "hidden"
     agentPaneHTML = agentPaneHTML.replace("{{HIDE_BRANCH_SECTION}}", hideBranchSection)
     
+    if agentConfig["writeLorebook"]:
+        writeLorebookSection = "checked"
+    elif not agentConfig["writeLorebook"] and not agentConfig["agentBranch"]:
+        writeLorebookSection = ""
+    elif not agentConfig["writeLorebook"] and agentConfig["agentBranch"]:
+        writeLorebookSection = "disabled"
+    
+    agentPaneHTML = agentPaneHTML.replace("{{WRITE_LOREBOOK}}", writeLorebookSection)
+    
     inputHTML = ""
     for inputId in agentConfig["parents"]:
         inputName = agentNamesByID[inputId]

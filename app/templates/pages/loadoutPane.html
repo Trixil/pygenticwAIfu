@@ -241,7 +241,7 @@
                 <label class="loadout-editor-field-row" for="loadout-upper-branch-trigger">
                     <span class="loadout-editor-field-text">
                         <span class="loadout-editor-section-description">
-                            The required output from this agent that triggers sending an output to the upper branch. <b>Leave empty to always trigger the upper branch.</b>
+                            The text to search for inside this agent's response. If found, the upper branch will trigger. <b>Leave empty to always trigger the upper branch.</b>                        
                         </span>
                     </span>
 
@@ -275,7 +275,7 @@
                 <label class="loadout-editor-field-row" for="loadout-lower-branch-trigger">
                     <span class="loadout-editor-field-text">
                         <span class="loadout-editor-section-description">
-                            The required output from this agent that triggers sending an output to the lower branch. <b>Leave empty to always trigger the lower branch.</b>
+                            The text to search for inside this agent's response. If found, the lower branch will trigger. <b>Leave empty to always trigger the lower branch.</b>
                         </span>
                     </span>
 
@@ -302,6 +302,24 @@
                         type="text"
                         value="{{LOWER_BRANCH_INSTRUCTIONS}}"
                         placeholder=""
+                    >
+                </label>
+            </section>
+            <section class="loadout-editor-section loadout-editor-inputs-section">
+                <label class="loadout-editor-checkbox-row" for="loadout-write-lorebook">
+                    <span class="loadout-editor-checkbox-text">
+                        <span class="loadout-editor-section-title">Write directly to lorebook</span>
+
+                        <span class="loadout-editor-section-description">
+                            Use the output of this agent to write directly to a lorebook. <b>The output of this must correspond to the raw entries that will be written. See X for an example.</b>
+                        </span>
+                    </span>
+
+                    <input
+                        id="loadout-write-lorebook"
+                        class="loadout-editor-checkbox"
+                        type="checkbox"
+                        {{WRITE_LOREBOOK}}
                     >
                 </label>
             </section>

@@ -39,4 +39,16 @@ DONE
 11. move around agent card with mouse
     a. add event listener to each agent card, tracked by agentid, that tracks for mousedown
     b. calculate the position of the box
+
+DONE
+
+12. implement creating, writing to, and loading lorebook
+    a. upon chat creation, a new lorebook is created in the directory, "chatlorebooks". it is an empty json.
+    b. when an agent tries to write to it, the output is passed directly to addLorebookEntries. the agent passes a series of entries in raw json
+    c. the addLorebookEntries loads the chatlorebook via pydantic object
+    d. loops through each of the entries in the passed lorebook entries, does a model validate, and appends it to the chatlorebook object
+    e. saves it to the chatlorebook
+
+this also necessitates adding a "write to lorebook" option in the "outputs" category of the agent.
 ???. implement character editing in chat
+
