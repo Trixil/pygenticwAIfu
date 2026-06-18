@@ -18,7 +18,7 @@ from ..core.paths import CHATS_DIR, CHARACTER_IMAGES_DIR, TEMPLATES_DIR
 from ..models import definitions
 from ..rendering import htmlHelpers
 from ..storage import file_io
-from ..utils.normalize import normalize
+from ..utils.normalize import normalize, sanitize_agent_output
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -464,6 +464,10 @@ async def generateLLMMessage(agent, events):
             raise AgentGenerationError(
                 f"Agent {agent.agentName} returned an empty message."
             )
+
+        assistant_message, was_sanitized = sanitize_agent_output(assistant_message)
+        if was_sanitized:
+            print(f"Sanitized mojibake in agent output for {agent.agentName} ({agent.agentId})")
         
         writeAgentOutputDebug(assistant_message, agent)
         writeSingleAgentOutput(assistant_message, agent)

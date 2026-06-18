@@ -1,7 +1,7 @@
 {
-  "loadoutName": "splitting event filter",
-  "loadoutId": "3f8a1c6d9b2e40f7a5c8d1e6b9f0247a",
-  "loadoutImageFile": "C:\\Users\\nnnex\\repos\\pygenticwAIfu\\app\\data\\loadouts\\images\\3f8a1c6d9b2e40f7a5c8d1e6b9f0247a.png",
+  "loadoutName": "LTE, MTE, STE deprecation",
+  "loadoutId": "9c4e2a7f6b1d48e0a3f5c8b2d7e9016f",
+  "loadoutImageFile": "C:\\Users\\nnnex\\repos\\pygenticwAIfu\\app\\data\\loadouts\\images\\9c4e2a7f6b1d48e0a3f5c8b2d7e9016f.png",
   "loadoutFile": "",
   "loadoutAgents": [
     {
@@ -57,8 +57,8 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 491.1,
-        "y": 523.65
+        "x": 314.033,
+        "y": 567.383
       }
     },
     {
@@ -85,8 +85,8 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 685.1,
-        "y": 269.733
+        "x": 586.967,
+        "y": 359.317
       }
     },
     {
@@ -116,8 +116,8 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 885.667,
-        "y": 527.333
+        "x": 854.733,
+        "y": 563.583
       }
     },
     {
@@ -133,7 +133,7 @@
       "parents": [
         "6809c2c524c5581980525124e627ea84",
         "7fe190748b995548960f89b0cda1e988",
-        "51253ff0a48448c98d759897a9071961"
+        "65d69abc6f2a40e390aa721744b24075"
       ],
       "children": [
         "f00caa57f7c64beabbe4a4535004a062"
@@ -169,7 +169,7 @@
       "children": [],
       "agentLLMConfig": {
         "LLMName": "openai/gpt-5.1",
-        "temp": 0.8,
+        "temp": 0.5,
         "maxTokens": 1500,
         "topP": 1.0
       },
@@ -185,16 +185,16 @@
       "characterInput": true,
       "scenario": true,
       "carryOver": true,
-      "carryOverAgentId": "51253ff0a48448c98d759897a9071961",
-      "carryOverAgentName": "Mid-term Event",
+      "carryOverAgentId": "65d69abc6f2a40e390aa721744b24075",
+      "carryOverAgentName": "MTE Deprecation",
       "pastMessageCount": 25,
       "parents": [
         "7fe190748b995548960f89b0cda1e988",
         "6809c2c524c5581980525124e627ea84",
-        "e7f35772869c4bd4b399a3c4c9db8ec7"
+        "65f2d17caf7c4dba8a602d36d48378a4"
       ],
       "children": [
-        "484f8ff248245ed1834751e6dd6be7ab"
+        "65d69abc6f2a40e390aa721744b24075"
       ],
       "agentLLMConfig": {
         "LLMName": "openai/gpt-5.1",
@@ -203,37 +203,36 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 708.767,
-        "y": 2.10001
+        "x": 707.7,
+        "y": 3.16666
       }
     },
     {
       "agentName": "Arc",
       "agentId": "e7f35772869c4bd4b399a3c4c9db8ec7",
-      "agentInstructions": "# Arc LLM System Instructions\n\nYou are the **Arc LLM** for a long-term interactive fiction story.\n\nYour job is to maintain a short queue of possible upcoming **story arcs**.\n\nYour main responsibility is **queue maintenance**, not constant invention.\n\nThe previous arc list is the source of truth. Preserve it **exactly, word for word** by default.\n\nMost turns should output the previous arc list unchanged.\n\n## Inputs\n\nUse the following information only to decide whether the previous arc queue must change.\n\n### List of important plot threads:\n\n{Continuity_output}\n\n### List of character goals:\n\n{Goal_output}\n\nDo not use these inputs to polish, improve, rephrase, or replace valid existing arcs.\n\n---\n\n# 1. Deciding Whether To Change The Arc Queue\n\n## Default Behavior\n\nThe default decision is:\n\n**Do not change the arc queue.**\n\nIf the existing arcs are still possible and still useful, copy the previous arc queue exactly.\n\nDo not rewrite an arc because a different wording sounds better.\n\nDo not rewrite an arc because the latest scene added minor details.\n\nDo not rewrite an arc because a character had a small reaction, joke, glance, embarrassment, routine disagreement, or ordinary conversation.\n\n## When To Keep An Arc\n\nKeep an arc unchanged if its broad situation is still valid.\n\nAn arc is still valid if:\n\n* the situation can still happen or is still happening\n* the story has not clearly moved past it\n* the user has not clearly redirected away from it\n* the arc still provides a useful container for future mid-term events\n\nIf an arc is kept, copy its **Summary** and **Soft Conditions** exactly.\n\n## When To Remove An Arc\n\nRemove an arc only if its broad situation has clearly ended.\n\nAn arc should be removed if:\n\n* the arc\u2019s central situation visibly concluded\n* the arc\u2019s central situation became impossible\n* the arc was abandoned by the story\n* the story very clearly transformed into a different broad situation that would make pursuing the other arc feel unnatural\n\nDo not remove an arc just because every emotional issue inside it has not been solved.\n\nA story arc ends when its **external situation** ends, not when every suspicion, goal, relationship problem, or secret is resolved.\n\n## When To Add A New Arc\n\nAdd a new arc only if\u00a0the queue has fewer than three usable arcs.\n\nDo not add a new arc merely because something small happened in the latest scene.\n\nDo not generate three brand-new arcs every turn.\n\n## When To Edit An Existing Arc\n\nNever. Keep or throw away.\n\n## Semantic Rewrite Ban\n\nNever replace an arc with another arc that means basically the same thing.\u00a0Keep the previous wording exactly.\n\n## Queue Behavior\n\nThe arc list is a queue.\n\nArc 1 is the active story container.\n\nArc 2 and Arc 3 are backup arcs for later.\n\nWhen Arc 1 is removed, Arc 2 moves up to Arc 1, and Arc 3 moves up to Arc 2.\n\nOnly create a new Arc 3 if the queue needs another future story container.\n\nArc 2 and Arc 3 should not be direct continuations of Arc 1. Each arc should be separately usable.\n\n---\n\n# 2. What Kind Of Arc Is Desired\n\n## Definition Of A Story Arc\n\nA story arc is a broad story situation, phase, challenge, opportunity, obligation, or shared context that can contain many mid-term events.\n\nA story arc may be, for example:\n\n* a school festival preparation period\n* a social event\n* a rivalry or trust-testing phase\n\nA story arc may have a central conflict, but it does not have to.\n\n## Good Arc Qualities\n\nA good arc should be\u00a0broad enough to contain many mid-term events. It should answer:\n\n* What broad situation, obligation, opportunity, or phase could organize the next stretch of the story?\n\n## Bad Arc Qualities\n\nBad arcs usually describe vague ongoing behavior, not a concrete story container.\n\n## Arc Types\n\n### Obligation Arcs\n\nThese arcs happen because school, family, work, exams, chores, or responsibilities force characters into action.\n\nExamples:\n\n* Final exams force the sisters into a stricter study routine.\n* The sisters must prepare a class booth for the school festival.\n\n### Social-Opportunity Arcs\n\nThese arcs happen because characters are placed in situations where bonding, rivalry, comedy, romance, or awkwardness can naturally occur.\n\nExamples:\n\n* The group takes a short trip together.\n* The sisters invite the tutor into a family tradition.\n\n### Disruption Arcs\n\nThese arcs happen because something interrupts the normal routine and forces adaptation.\n\nExamples:\n\n* Bad weather traps everyone inside the apartment for a weekend.\n* A family obligation changes the sisters\u2019 schedule.\n\n### Discovery Arcs\n\nThese arcs happen because the story creates a concrete opportunity to learn, compare, investigate, or reveal something.\n\nExamples:\n\n* The girls visit the tutor\u2019s home.\n* A misplaced notebook raises questions about the tutor\u2019s past.\n\n## Arc Variety\n\nDo not make every new arc a confrontation, accusation, confession, or suspicion arc.\n\nWhen adding new arcs, vary between obligation arcs, social-opportunity arcs, disruption arcs, and discovery arcs unless the story is already in a major conflict.\n\nA good queue should usually include different kinds of future story containers, not three versions of the same suspicion plot.\n\n---\n\n# 3. Length And Format Rules\n\nEach Summary must be **one sentence only**, maximum **35 words**.\n\nEach arc may have **one to three Soft Conditions--conditions that, when violated, make the arc no longer possible**.\n\nEach Soft Condition must be maximum **18 words**.\n\nDo not write prose narration.\n\nDo not include a guaranteed ending.\n\n---\n\n# 4. Output Format\n\nOutput the current arc queue.\n\nIn most cases, this means copying the previous arc queue exactly.\n\nOnly generate new text for empty slots or for arcs that must be replaced under the update rules.\n\nUse this format:\n\n# ARCS:\n\nArc 1:\n\nSummary:\n[One sentence, maximum 35 words.]\n\nSoft Conditions:\n\n* [One condition, maximum 18 words.]\n\nArc 2:\n\nSummary:\n[One sentence, maximum 35 words.]\n\nSoft Conditions:\n\n* [One condition, maximum 18 words.]\n\nArc 3:\n\nSummary:\n[One sentence, maximum 35 words.]\n\nSoft Conditions:\n\n* [One condition, maximum 18 words.]\n\nNo extra explanation. No JSON. Do not write prose narration or dialogue. Do not explain your reasoning.\n",
+      "agentInstructions": "# Arc LLM System Instructions\n\nYou are the **Arc LLM** for a long-term interactive fiction story.\n\nYour job is to maintain a short queue of possible upcoming **story arcs**.\n\nYour main responsibility is **queue maintenance**, not constant invention.\n\nThe previous arc list is the source of truth. Preserve it **exactly, word for word** by default.\n\nMost turns should output the previous arc list unchanged.\n\n## Inputs\n\nUse the following information only to decide whether the previous arc queue must change.\n\n### List of important plot threads:\n\n{Continuity_output}\n\n### List of character goals:\n\n{Goal_output}\n\nDo not use these inputs to polish, improve, rephrase, or replace valid existing arcs.\n\n---\n\n# 1. Deciding Whether To Change The Arc Queue\n\n## Default Behavior\n\nThe default decision is:\n\n**Do not change the arc queue.**\n\nIf the existing arcs are still possible and still useful, copy the previous arc queue exactly.\n\nDo not rewrite an arc because a different wording sounds better.\n\nDo not rewrite an arc because the latest scene added minor details.\n\nDo not rewrite an arc because a character had a small reaction, joke, glance, embarrassment, routine disagreement, or ordinary conversation.\n\n## When To Keep An Arc\n\nKeep an arc unchanged if its broad situation is still valid.\n\nAn arc is still valid if:\n\n* the situation can still happen or is still happening\n* the story has not clearly moved past it\n* the user has not clearly redirected away from it\n* the arc still provides a useful container for future mid-term events\n\nIf an arc is kept, copy its **Summary** and **Soft Conditions** exactly.\n\n## When To Remove An Arc\n\nRemove an arc only if its broad situation has clearly ended.\n\nAn arc should be removed if:\n\n* the arc\u2019s central situation visibly concluded\n* the arc\u2019s central situation became impossible\n* the arc was abandoned by the story\n* the story very clearly transformed into a different broad situation that would make pursuing the other arc feel unnatural\n\nDo not remove an arc just because every emotional issue inside it has not been solved.\n\nA story arc ends when its **external situation** ends, not when every suspicion, goal, relationship problem, or secret is resolved.\n\n## When To Add A New Arc\n\nAdd a new arc only if\u00a0the queue has fewer than three usable arcs.\n\nDo not add a new arc merely because something small happened in the latest scene.\n\nDo not generate three brand-new arcs every turn.\n\n## When To Edit An Existing Arc\n\nNever. Keep or throw away.\n\n## Semantic Rewrite Ban\n\nNever replace an arc with another arc that means basically the same thing.\u00a0Keep the previous wording exactly.\n\n## Queue Behavior\n\nThe arc list is a queue.\n\nArc 1 is the active story container.\n\nArc 2 and Arc 3 are backup arcs for later.\n\nWhen Arc 1 is removed, Arc 2 moves up to Arc 1, and Arc 3 moves up to Arc 2.\n\nOnly create a new Arc 3 if the queue needs another future story container.\n\nArc 2 and Arc 3 should not be direct continuations of Arc 1. Each arc should be separately usable.\n\n---\n\n# 2. What Kind Of Arc Is Desired\n\n## Definition Of A Story Arc\n\nA story arc is a broad story situation, phase, challenge, opportunity, obligation, or shared context that can contain many mid-term events.\n\nA story arc may be, for example:\n\n* a school festival preparation period\n* a social event\n* a rivalry or trust-testing phase\n\nA story arc may have a central conflict, but it does not have to.\n\n## Good Arc Qualities\n\nA good arc should be\u00a0broad enough to contain many mid-term events. It should answer:\n\n* What broad situation, obligation, opportunity, or phase could organize the next stretch of the story?\n\n**It should feel exciting and volatile, having a real story that dramatically moves forward in a creative way.**## Bad Arc Qualities\n\nBad arcs usually describe vague ongoing behavior, not a concrete story container.\n\n## Arc Types\n\n### Obligation Arcs\n\nThese arcs happen because school, family, work, exams, chores, or responsibilities force characters into action.\n\nExamples:\n\n* Final exams force the sisters into a stricter study routine.\n* The sisters must prepare a class booth for the school festival.\n\n### Social-Opportunity Arcs\n\nThese arcs happen because characters are placed in situations where bonding, rivalry, comedy, romance, or awkwardness can naturally occur.\n\nExamples:\n\n* The group takes a short trip together.\n* The sisters invite the tutor into a family tradition.\n\n### Disruption Arcs\n\nThese arcs happen because something interrupts the normal routine and forces adaptation.\n\nExamples:\n\n* Bad weather traps everyone inside the apartment for a weekend.\n* A family obligation changes the sisters\u2019 schedule.\n\n### Discovery Arcs\n\nThese arcs happen because the story creates a concrete opportunity to learn, compare, investigate, or reveal something.\n\nExamples:\n\n* The girls visit the tutor\u2019s home.\n* A misplaced notebook raises questions about the tutor\u2019s past.\n\n## Arc Variety\n\nDo not make every new arc a confrontation, accusation, confession, or suspicion arc.\n\nWhen adding new arcs, vary between obligation arcs, social-opportunity arcs, disruption arcs, and discovery arcs unless the story is already in a major conflict.\n\nA good queue should usually include different kinds of future story containers, not three versions of the same suspicion plot.\n\n---\n\n# 3. Length And Format Rules\n\nEach Summary must be **one sentence only**, maximum **35 words**.\n\nEach arc may have **one to three Soft Conditions--conditions that, when violated, make the arc no longer possible**.\n\nEach Soft Condition must be maximum **18 words**.\n\nDo not write prose narration.\n\nDo not include a guaranteed ending.\n\n---\n\n# 4. Output Format\n\nOutput the current arc queue.\n\nIn most cases, this means copying the previous arc queue exactly.\n\nOnly generate new text for empty slots or for arcs that must be replaced under the update rules.\n\nUse this format:\n\n# ARCS:\n\nArc 1:\n\nSummary:\n[One sentence, maximum 35 words.]\n\nSoft Conditions:\n\n* [One condition, maximum 18 words.]\n\nArc 2:\n\nSummary:\n[One sentence, maximum 35 words.]\n\nSoft Conditions:\n\n* [One condition, maximum 18 words.]\n\nArc 3:\n\nSummary:\n[One sentence, maximum 35 words.]\n\nSoft Conditions:\n\n* [One condition, maximum 18 words.]\n\nNo extra explanation. No JSON. Do not write prose narration or dialogue. Do not explain your reasoning.\n",
       "characterInput": true,
       "scenario": true,
       "carryOver": true,
-      "carryOverAgentId": "e7f35772869c4bd4b399a3c4c9db8ec7",
-      "carryOverAgentName": "Arc",
+      "carryOverAgentId": "65f2d17caf7c4dba8a602d36d48378a4",
+      "carryOverAgentName": "Arc Deprecation",
       "pastMessageCount": 50,
       "parents": [
         "6809c2c524c5581980525124e627ea84",
         "7fe190748b995548960f89b0cda1e988"
       ],
       "children": [
-        "51253ff0a48448c98d759897a9071961",
-        "51253ff0a48448c98d759897a9071961"
+        "65f2d17caf7c4dba8a602d36d48378a4"
       ],
       "agentLLMConfig": {
         "LLMName": "openai/gpt-5.1",
-        "temp": 0.7,
+        "temp": 1.0,
         "maxTokens": 2000,
         "topP": 1.0
       },
       "layout": {
-        "x": 412.517,
-        "y": 4.0333
+        "x": 387.983,
+        "y": 5.08332
       }
     },
     {
@@ -259,8 +258,8 @@
         "topP": 0.8
       },
       "layout": {
-        "x": 1318.12,
-        "y": 140.533
+        "x": 1322.38,
+        "y": 107.45
       }
     },
     {
@@ -288,6 +287,60 @@
       "layout": {
         "x": 1316.0,
         "y": 423.2
+      }
+    },
+    {
+      "agentName": "MTE Deprecation",
+      "agentId": "65d69abc6f2a40e390aa721744b24075",
+      "agentInstructions": "# Mid-Term Event Completion Filter Agent\n\nYou remove events from the NEW MID-TERM EVENT OUTPUT if the story has already completed, implied, invalidated, or moved past them.\n\n----------- NEW MID-TERM EVENT OUTPUT -----------\n{Mid-termEvent_output}\n------------ END OF NEW MID-TERM EVENT OUTPUT ----------\n\n## Remove an Event If\n\nRemove a mid-term event when its central situation has already happened, been strongly implied, become impossible, gone stale, or no longer fits the active arc.\n\nAlso remove it if:\n\n* its main situation is already done\n* the user assumes it happened\n* only minor emotional residue remains\n* continuing it would feel repetitive, robotic, or stuck\n* the story has clearly moved to a different situation\n\n## Queue Rule\n\nWhen an event is removed, cycle the remaining events upward.\n\nDo not leave gaps.\n\nIf a slot becomes unfilled, write `EMPTY`.\n\n## Format Rule\n\nMimic the NEW MID-TERM EVENT OUTPUT format exactly.\n\n## Output\n\nReturn only the filtered mid-term event queue.\n\nIf no events remain, fill every event slot with `EMPTY` using the same queue format.\n",
+      "characterInput": false,
+      "scenario": false,
+      "carryOver": false,
+      "carryOverAgentId": "",
+      "carryOverAgentName": "",
+      "pastMessageCount": 5,
+      "parents": [
+        "51253ff0a48448c98d759897a9071961"
+      ],
+      "children": [
+        "484f8ff248245ed1834751e6dd6be7ab"
+      ],
+      "agentLLMConfig": {
+        "LLMName": "openai/gpt-5.1",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      },
+      "layout": {
+        "x": 800.8,
+        "y": 288.767
+      }
+    },
+    {
+      "agentName": "Arc Deprecation",
+      "agentId": "65f2d17caf7c4dba8a602d36d48378a4",
+      "agentInstructions": "# Story Arc Completion Filter Agent\n\nYou remove arcs from the NEW STORY ARC OUTPUT if the story has already completed, implied, invalidated, or moved past them.\n\n----------- NEW STORY ARC OUTPUT -----------\n{Arc_output}\n------------ END OF NEW STORY ARC OUTPUT ----------\n\n## Remove an Arc If\n\nRemove a story arc when its broad central situation has clearly resolved, expired, become impossible, gone stale, or no longer fits the current story direction.\n\nAlso remove it if:\n\n* its main situation is already resolved\n* the story has clearly moved into a different broad situation\n* its soft condition is clearly violated\n\n## Queue Rule\n\nWhen an arc is removed, cycle the remaining arcs upward.\n\nDo not leave gaps.\n\nIf a slot becomes unfilled, write `EMPTY`.\n\n## Format Rule\n\nMimic the NEW STORY ARC OUTPUT format exactly.\n\n## Output\n\nReturn only the filtered story arc queue.\n\nIf no arcs remain, fill every arc slot with `EMPTY` using the same queue format.\n",
+      "characterInput": false,
+      "scenario": false,
+      "carryOver": false,
+      "carryOverAgentId": "",
+      "carryOverAgentName": "",
+      "pastMessageCount": 10,
+      "parents": [
+        "e7f35772869c4bd4b399a3c4c9db8ec7"
+      ],
+      "children": [
+        "51253ff0a48448c98d759897a9071961"
+      ],
+      "agentLLMConfig": {
+        "LLMName": "gpt-4.1",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      },
+      "layout": {
+        "x": 485.067,
+        "y": 252.533
       }
     }
   ]
