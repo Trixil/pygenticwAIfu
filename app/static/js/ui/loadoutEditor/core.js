@@ -83,6 +83,7 @@
                 agentBranchUpperInstructions: "",
                 agentBranchLowerTrigger: "",
                 agentBranchLowerInstructions: "",
+                publish: false,
                 writeLorebook: false,
                 queryLorebook: false,
                 pastMessageCount: 0,
@@ -257,6 +258,24 @@
         }
     }
 
+    function setPublish(agentId, isPublish) {
+        const config = LoadoutEditor.ensureAgentConfig(agentId).agentConfiguration;
+        const publishIcon = LoadoutEditor
+            .getAgentElement(agentId)
+            .querySelector(".agent-card__publish-icon");
+
+        const hasChildren =
+            (config.upperChildren.length ||
+            config.lowerChildren.length ||
+            config.children.length);
+
+        config.publish = isPublish;
+
+        publishIcon.classList.toggle("hidden", hasChildren);
+        publishIcon.classList.toggle("enabled", isPublish);
+        publishIcon.classList.toggle("disabled", !isPublish);
+    }
+
     function autoGrowTextarea(textarea) {
         const scrollParent = textarea.closest(".loadout-editor-pane--body");
         const oldScrollTop = scrollParent ? scrollParent.scrollTop : 0;
@@ -355,6 +374,7 @@
         normalizeAgentConfig,
         normalizePastMessageCount,
         resetEditorState,
+        setPublish,
         setAgentToggle,
         setButtonChecked,
         setCarryOverAgent,

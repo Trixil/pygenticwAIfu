@@ -106,6 +106,7 @@
         const characterInputButton = agent.querySelector(".agent-character-input");
         const agentNameElement = agent.querySelector(".agent-card__name");
         const agentPastMessagesInput = agent.querySelector(".agent-card__chat-count-input");
+        const publishButton = agent.querySelector(".agent-card__publish-icon");
 
         [carryOverButton, scenarioButton, characterInputButton, agentPastMessagesInput].forEach(
             function (element) {
@@ -136,6 +137,12 @@
 
         agentPastMessagesInput.addEventListener("input", function () {
             LoadoutEditor.setPastMessageCount(agentId, agentPastMessagesInput.value);
+        });
+
+        publishButton.addEventListener("click", function (event) {
+            event.stopPropagation();
+            const publishChecked = publishButton.classList.contains("enabled")
+            LoadoutEditor.setPublish(agentId, !publishChecked);
         });
 
         agent.addEventListener("pointerup", function (upEvent) {
@@ -306,6 +313,8 @@
             }
 
             resetLineDrag();
+
+            refreshPublish(agentId, false);
         });
     }
 

@@ -40,7 +40,17 @@
 
     <div class="agent-card__divider"></div>
 
-    <div class="agent-card__name">{{AGENT_NAME}}</div>
+    <div class="agent-card__name-row">
+        <div class="agent-card__name">{{AGENT_NAME}}</div>
+        <img
+            class="agent-card__publish-icon {{PUBLISH_ICON_VISIBILITY}}"
+            src="/assets/icons/publish.svg"
+            alt=""
+            draggable="false"
+            role="button"
+            aria-label="Toggle publish output"
+        >
+    </div>
 
     <div class="agent-card__lower">
         <div class="agent-card__instructions">

@@ -18,6 +18,7 @@
       "agentBranchUpperInstructions": "",
       "agentBranchLowerTrigger": "",
       "agentBranchLowerInstructions": "",
+      "writeLorebook": false,
       "pastMessageCount": 0,
       "parents": [],
       "children": [
@@ -50,9 +51,80 @@
       "agentBranchUpperInstructions": "{this_response}",
       "agentBranchLowerTrigger": "<<<PERFORM ARC UPDATE: NO>>>",
       "agentBranchLowerInstructions": "{this_response}",
+      "writeLorebook": false,
       "pastMessageCount": 0,
       "parents": [
         "4068c2cf3d3d4952a2a765c294aa1e8b"
+      ],
+      "children": [],
+      "upperChildren": [
+        "7e0b53afaab54012b7f449dd19cab7b5"
+      ],
+      "lowerChildren": [],
+      "agentLLMConfig": {
+        "LLMName": "gpt-4.1",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      },
+      "layout": {
+        "x": 422.362,
+        "y": 96.3374
+      }
+    },
+    {
+      "agentName": "Arc Draft",
+      "agentId": "7e0b53afaab54012b7f449dd19cab7b5",
+      "agentInstructions": "Creates vague long-term arc drafts.\nThese are broad frameworks, not detailed arcs.\n",
+      "characterInput": true,
+      "scenario": true,
+      "carryOver": false,
+      "carryOverAgentId": "",
+      "carryOverAgentName": "Arc Draft",
+      "agentBranch": false,
+      "agentBranchUpperTrigger": "",
+      "agentBranchUpperInstructions": "",
+      "agentBranchLowerTrigger": "",
+      "agentBranchLowerInstructions": "",
+      "writeLorebook": false,
+      "pastMessageCount": 0,
+      "parents": [
+        "563af260e37e40a3b0a306d92dd2db7b"
+      ],
+      "children": [
+        "bdc8e31ccd824ff7bd5d4f962200da2c"
+      ],
+      "upperChildren": [],
+      "lowerChildren": [],
+      "agentLLMConfig": {
+        "LLMName": "gpt-4.1",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      },
+      "layout": {
+        "x": 755.194,
+        "y": 252.375
+      }
+    },
+    {
+      "agentName": "Arc Tagging",
+      "agentId": "bdc8e31ccd824ff7bd5d4f962200da2c",
+      "agentInstructions": "Examine the draft of story arcs given to you and come up with a list of relevant IDs from the lorebook to more fully populate it.\n{name-alias-type-tag-lb}\nYour output must consist solely of lorebook entry IDs.",
+      "characterInput": true,
+      "scenario": true,
+      "carryOver": false,
+      "carryOverAgentId": "",
+      "carryOverAgentName": "Arc Tagging",
+      "agentBranch": false,
+      "agentBranchUpperTrigger": "",
+      "agentBranchUpperInstructions": "",
+      "agentBranchLowerTrigger": "",
+      "agentBranchLowerInstructions": "",
+      "writeLorebook": false,
+      "pastMessageCount": 0,
+      "parents": [
+        "7e0b53afaab54012b7f449dd19cab7b5"
       ],
       "children": [],
       "upperChildren": [],
@@ -64,8 +136,39 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 295.2,
-        "y": 474.4
+        "x": 1094.79,
+        "y": 39.9938
+      }
+    },
+    {
+      "agentName": "Lore Query",
+      "agentId": "3b420fb9fad24e718157f41717e25e4d",
+      "agentInstructions": "",
+      "characterInput": false,
+      "scenario": false,
+      "carryOver": false,
+      "carryOverAgentId": "",
+      "carryOverAgentName": "Lore Query",
+      "agentBranch": false,
+      "agentBranchUpperTrigger": "",
+      "agentBranchUpperInstructions": "",
+      "agentBranchLowerTrigger": "",
+      "agentBranchLowerInstructions": "",
+      "writeLorebook": false,
+      "pastMessageCount": 0,
+      "parents": [],
+      "children": [],
+      "upperChildren": [],
+      "lowerChildren": [],
+      "agentLLMConfig": {
+        "LLMName": "gpt-4.1",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      },
+      "layout": {
+        "x": 1508.79,
+        "y": 89.1937
       }
     }
   ]

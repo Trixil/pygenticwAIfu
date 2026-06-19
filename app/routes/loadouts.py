@@ -236,6 +236,14 @@ async def renderAgentCard(request: Request):
         hideRegularPort = ""
         hideBranchPort = "hidden"
     
+    if agentConfig["publish"]:
+        publishIconVisiblity = "enabled"
+    elif not agentConfig["children"] and not agentConfig["upperChildren"] and not agentConfig["lowerChildren"]:
+        publishIconVisiblity = "disabled"
+    else:
+        publishIconVisiblity = "hidden"
+    
+    agentCardHTML = agentCardHTML.replace("{{PUBLISH_ICON_VISIBILITY}}", publishIconVisiblity)
     agentCardHTML = agentCardHTML.replace("{{HIDE_REGULAR_PORT}}", hideRegularPort)
     agentCardHTML = agentCardHTML.replace("{{HIDE_BRANCH_PORT}}", hideBranchPort)
 

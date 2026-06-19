@@ -345,7 +345,7 @@
 }
 
 .agent-card__name {
-  margin: 0 auto calc(80px * var(--agent-scale));
+  margin: 0 auto var(--name-margin-bottom);
   width: fit-content;
   text-align: center;
   color: #f4f7ff;
@@ -767,3 +767,43 @@
     overflow-anchor: none;
 }
 
+.agent-card__name-row {
+    margin: 0 auto calc(80px * var(--agent-scale));
+    width: fit-content;
+    position: relative;
+}
+
+.agent-card__name-row .agent-card__name {
+    margin: 0;
+}
+
+.agent-card__publish-icon {
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+
+    margin-left: calc(16px * var(--agent-scale));
+    height: var(--name-size);
+    width: var(--name-size);
+
+    display: block;
+    flex: 0 0 auto;
+
+    cursor: pointer;
+
+    pointer-events: auto;
+    z-index: 100;
+}
+
+.agent-card__publish-icon.hidden {
+    display: none;
+}
+
+.agent-card__publish-icon.enabled {
+    opacity: 1;
+}
+
+.agent-card__publish-icon.disabled {
+    opacity: 0.25;
+}
