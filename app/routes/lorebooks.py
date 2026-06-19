@@ -37,8 +37,8 @@ def appendLorebookEntry(lorebook: definitions.lorebook, newEntries: list[dict]):
 
         entry = definitions.lorebookEntry.model_validate(entry)
         if not entry.id:
-            entry.id = f"{entry.type}_{slugify(entry.name, separator="_")}_{uuid4().hex[:8]}"
-        
+            entry.id = f"{entry.type}_{slugify(entry.name, separator='_')}_{uuid4().hex[:8]}"
+                  
         allEntries.append(definitions.lorebookEntry.model_validate(entry))
 
     return lorebook
