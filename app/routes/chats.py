@@ -531,15 +531,16 @@ async def generateLLMMessage(agent, events):
     writeOpenRouterMessagesDebug(openrouterMessages, agent)
 
     try:
-        completion = await client.chat.completions.create(
-            model=agent.agentLLMConfig.LLMName,
-            messages=openrouterMessages,
-            temperature=agent.agentLLMConfig.temp,
-            top_p=agent.agentLLMConfig.topP,
-            max_tokens=agent.agentLLMConfig.maxTokens
-        )
-
-        assistant_message = completion.choices[0].message.content
+        #completion = await client.chat.completions.create(
+        #    model=agent.agentLLMConfig.LLMName,
+        #    messages=openrouterMessages,
+        #    temperature=agent.agentLLMConfig.temp,
+        #    top_p=agent.agentLLMConfig.topP,
+        #    max_tokens=agent.agentLLMConfig.maxTokens
+        #)
+#
+        #assistant_message = completion.choices[0].message.content
+        assistant_message = ""
 
         if not assistant_message:
             raise AgentGenerationError(
@@ -550,7 +551,7 @@ async def generateLLMMessage(agent, events):
         writeSingleAgentOutput(assistant_message, agent)
 
         print(assistant_message)
-        if agent.children == []:
+        if agent.publish:
             finalMessage = assistant_message
 
         agentOutputsDir = CHATS_DIR / "agentOutputs"

@@ -83,6 +83,7 @@
                 agentBranchUpperInstructions: "",
                 agentBranchLowerTrigger: "",
                 agentBranchLowerInstructions: "",
+                maxLoop: 2,
                 publish: false,
                 writeLorebook: false,
                 queryLorebook: false,
@@ -129,6 +130,7 @@
             agentBranchLowerTrigger: sourceConfig.agentBranchLowerTrigger,
             agentBranchLowerInstructions: sourceConfig.agentBranchLowerInstructions,
             pastMessageCount: normalizePastMessageCount(sourceConfig.pastMessageCount),
+            publish: Boolean(sourceConfig.publish),
             parents: [...(sourceConfig.parents || [])],
             children: [...(sourceConfig.children || [])],
             upperChildren: [...(sourceConfig.upperChildren || [])],
@@ -258,22 +260,93 @@
         }
     }
 
-    function setPublish(agentId, isPublish) {
-        const config = LoadoutEditor.ensureAgentConfig(agentId).agentConfiguration;
+    function refreshPublish(agentId) {
         const publishIcon = LoadoutEditor
-            .getAgentElement(agentId)
-            .querySelector(".agent-card__publish-icon");
-
+        .getAgentElement(agentId)
+        .querySelector(".agent-card__publish-icon");
+        
+        const config = LoadoutEditor.ensureAgentConfig(agentId).agentConfiguration;
         const hasChildren =
-            (config.upperChildren.length ||
+        (config.upperChildren.length ||
             config.lowerChildren.length ||
             config.children.length);
+        
+        if (!hasChildren) {
+            const allAgentIds = Object.keys(editorState.allConfigsById);
+            
+            const previousPublishId = allAgentIds.find((thisAgentId) => {
+                const isThisPublish = LoadoutEditor.ensureAgentConfig(thisAgentId).agentConfiguration.publish;
+                return isThisPublish;
+            });
 
-        config.publish = isPublish;
+            if (previousPublishId) {
+                LoadoutEditor.setPublish(previousPublishId, false);
+            }
+            LoadoutEditor.setPublish(agentId, true);
+        }
+    }
 
+    function setPublish(agentId, isPublish) {
+        const publishIcon = LoadoutEditor
+        .getAgentElement(agentId)
+        .querySelector(".agent-card__publish-icon");
+        
+        const config = LoadoutEditor.ensureAgentConfig(agentId).agentConfiguration;
+        const hasChildren =
+        (config.upperChildren.length ||
+            config.lowerChildren.length ||
+            config.children.length);
+            
         publishIcon.classList.toggle("hidden", hasChildren);
         publishIcon.classList.toggle("enabled", isPublish);
         publishIcon.classList.toggle("disabled", !isPublish);
+        
+        const allAgentIds = Object.keys(editorState.allConfigsById);
+
+        const previousPublishId = allAgentIds.find((thisAgentId) => {
+            const isThisPublish = LoadoutEditor.ensureAgentConfig(thisAgentId).agentConfiguration.publish;
+            return isThisPublish;
+        })
+        if (isPublish) {
+
+            if (previousPublishId) {
+                const publishIcon = LoadoutEditor
+                    .getAgentElement(previousPublishId)
+                    .querySelector(".agent-card__publish-icon");
+                
+                const previousConfig = LoadoutEditor.ensureAgentConfig(previousPublishId).agentConfiguration;
+                const previousHasChildren =
+                (previousConfig.upperChildren.length ||
+                    previousConfig.lowerChildren.length ||
+                    previousConfig.children.length);
+                    
+                publishIcon.classList.toggle("hidden", previousHasChildren);
+                publishIcon.classList.toggle("enabled", false);
+                publishIcon.classList.toggle("disabled", true);
+                previousConfig.publish = false;
+            }
+        }
+        else if (previousPublishId === agentId) {
+            const childlessId = allAgentIds.find((thisAgentId) => {
+                const thisConfig = LoadoutEditor.ensureAgentConfig(thisAgentId).agentConfiguration;
+                
+                return (
+                    thisConfig.children.length === 0 &&
+                    thisConfig.upperChildren.length === 0 &&
+                    thisConfig.lowerChildren.length === 0 &&
+                    thisAgentId !== agentId
+                );
+            })
+            
+            if (childlessId) {
+                setPublish(childlessId, true);
+            }
+            else {
+                throw new Error("Can't find childless agent to set as the publisher");
+            }
+        }
+        config.publish = isPublish;
+
     }
 
     function autoGrowTextarea(textarea) {
@@ -375,6 +448,7 @@
         normalizePastMessageCount,
         resetEditorState,
         setPublish,
+        refreshPublish,
         setAgentToggle,
         setButtonChecked,
         setCarryOverAgent,

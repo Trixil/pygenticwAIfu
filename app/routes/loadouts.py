@@ -97,6 +97,7 @@ async def saveLoadoutConfiguration(request: Request):
             "agentBranchUpperInstructions": agentConfig["agentBranchUpperInstructions"],
             "agentBranchLowerTrigger": agentConfig["agentBranchLowerTrigger"],
             "agentBranchLowerInstructions": agentConfig["agentBranchLowerInstructions"],
+            "publish": agentConfig["publish"],
             "pastMessageCount": agentConfig["pastMessageCount"],
             "parents": agentConfig["parents"],
             "children": agentConfig["children"],
@@ -238,7 +239,7 @@ async def renderAgentCard(request: Request):
     
     if agentConfig["publish"]:
         publishIconVisiblity = "enabled"
-    elif not agentConfig["children"] and not agentConfig["upperChildren"] and not agentConfig["lowerChildren"]:
+    elif not agentConfig["children"] and not agentConfig["upperChildren"] and not agentConfig["lowerChildren"] and agentConfig["parents"]:
         publishIconVisiblity = "disabled"
     else:
         publishIconVisiblity = "hidden"

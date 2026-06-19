@@ -64,5 +64,13 @@ DONE
     b. define python function that outputs first
     c.
 this also necessitates adding a "write to lorebook" option in the "outputs" category of the agent.
+
+14. writing lorebook
+DONE
+
+15. defining show to screen agent
+DONE
+
+16. loopcount
 ???. implement character editing in chat
 

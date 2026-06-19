@@ -139,9 +139,16 @@
             LoadoutEditor.setPastMessageCount(agentId, agentPastMessagesInput.value);
         });
 
-        publishButton.addEventListener("click", function (event) {
+        publishButton.addEventListener("pointerdown", function (event) {
+            event.preventDefault();
             event.stopPropagation();
-            const publishChecked = publishButton.classList.contains("enabled")
+        });
+
+        publishButton.addEventListener("click", function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            const publishChecked = publishButton.classList.contains("enabled");
             LoadoutEditor.setPublish(agentId, !publishChecked);
         });
 
@@ -314,7 +321,9 @@
 
             resetLineDrag();
 
-            refreshPublish(agentId, false);
+           LoadoutEditor.setPublish(startAgentId, false);
+           LoadoutEditor.refreshPublish(endAgentId);
+           
         });
     }
 

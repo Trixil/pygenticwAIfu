@@ -794,6 +794,9 @@
 
     pointer-events: auto;
     z-index: 100;
+
+    user-select: none;
+    -webkit-user-drag: none;
 }
 
 .agent-card__publish-icon.hidden {
