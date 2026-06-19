@@ -206,6 +206,7 @@
         carryoverAgentInput.addEventListener("blur", validateCarryoverAgentName);
 
         const writeLorebookCheckbox = editorPane.querySelector("#loadout-write-lorebook");
+        const queryLorebookCheckbox = editorPane.querySelector("#loadout-query-lorebook");
 
         const branchAgentCheckbox = editorPane.querySelector("#loadout-use-branch");
         const agentBranchUpperTrigger = editorPane.querySelector("#loadout-upper-branch-trigger");
@@ -231,6 +232,7 @@
 
             config.agentBranch = useBranch;
             writeLorebookCheckbox.disabled = useBranch;
+            queryLorebookCheckbox.disabled = useBranch;
 
         });
 
@@ -252,6 +254,15 @@
             config.writeLorebook = useWriteLorebook;
 
             branchAgentCheckbox.disabled = useWriteLorebook;
+            queryLorebookCheckbox.disabled = useWriteLorebook;
+        })
+
+        queryLorebookCheckbox.addEventListener("change", function () {
+            const useQueryLorebook = queryLorebookCheckbox.checked;
+            config.queryLorebook = useQueryLorebook;
+
+            branchAgentCheckbox.disabled = useQueryLorebook;
+            writeLorebookCheckbox.disabled = useQueryLorebook;
         })
 
         registerPaneNameEditor(editorPane, agentId, agent);

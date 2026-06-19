@@ -323,6 +323,24 @@
                     >
                 </label>
             </section>
+            <section class="loadout-editor-section loadout-editor-inputs-section">
+                <label class="loadout-editor-checkbox-row" for="loadout-query-lorebook">
+                    <span class="loadout-editor-checkbox-text">
+                        <span class="loadout-editor-section-title">Query a lorebook directly via a comma separated list of entry IDs</span>
+
+                        <span class="loadout-editor-section-description">
+                            Use the output of this agent to retrieve the content of the entries whose ID matches the output of this agent. <b>The output of this agent must appear like "[id1], [id2], [id3]".</b>
+                        </span>
+                    </span>
+
+                    <input
+                        id="loadout-query-lorebook"
+                        class="loadout-editor-checkbox"
+                        type="checkbox"
+                        {{QUERY_LOREBOOK}}
+                    >
+                </label>
+            </section>
         </section>
         <section class="loadout-tab-panel" data-panel="other">
             Other content

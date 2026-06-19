@@ -19,7 +19,13 @@ class LLMConfig(BaseModel):
     topP: float = 1
 
 class lorebookEntry(BaseModel):
-    
+    name: str = ""
+    type: str = ""
+    aliases: list[str] = Field(default_factory=list)
+    tags: list[str] = Field(default_factory=list)
+    content: str = ""
+    id: str = Field(default_factory=lambda: uuid4().hex)
+
 class lorebook(BaseModel):
     name: str = ""
     id: str = Field(default_factory=lambda: uuid4().hex)
@@ -55,6 +61,7 @@ class agent(BaseModel):
     agentBranchLowerTrigger: str = ""
     agentBranchLowerInstructions: str = ""
     writeLorebook: bool = False
+    queryLorebook: bool = False
     pastMessageCount: int = Field(default_factory=int)
     parents: list[str] = Field(default_factory=list)
     children: list[str] = Field(default_factory=list)

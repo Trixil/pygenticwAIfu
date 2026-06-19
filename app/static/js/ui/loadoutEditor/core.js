@@ -84,13 +84,14 @@
                 agentBranchLowerTrigger: "",
                 agentBranchLowerInstructions: "",
                 writeLorebook: false,
+                queryLorebook: false,
                 pastMessageCount: 0,
                 parents: [],
                 children: [],
                 upperChildren: [],
                 lowerChildren: [],
                 agentLLMConfig: {
-                    LLMName: "gpt-4.1",
+                    LLMName: "openai/gpt-4.1",
                     temp: 1,
                     maxTokens: 4000,
                     topP: 1

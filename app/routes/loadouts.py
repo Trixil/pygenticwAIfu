@@ -172,18 +172,27 @@ async def renderAgentPane(request: Request):
     
     if agentConfig["writeLorebook"]:
         writeLorebookSection = "checked"
-    elif not agentConfig["writeLorebook"] and not agentConfig["agentBranch"]:
-        writeLorebookSection = ""
-    elif not agentConfig["writeLorebook"] and agentConfig["agentBranch"]:
+    elif agentConfig["agentBranch"] or agentConfig["queryLorebook"]:
         writeLorebookSection = "disabled"
+    else:
+        writeLorebookSection = ""
     
+    if agentConfig["queryLorebook"]:
+        queryLorebookSection = "checked"
+    elif agentConfig["agentBranch"] or agentConfig["writeLorebook"]:
+        queryLorebookSection = "disabled"
+    else:
+        queryLorebookSection = ""
+
     agentPaneHTML = agentPaneHTML.replace("{{WRITE_LOREBOOK}}", writeLorebookSection)
+    agentPaneHTML = agentPaneHTML.replace("{{QUERY_LOREBOOK}}", queryLorebookSection)
     
     inputHTML = ""
     for inputId in agentConfig["parents"]:
         inputName = agentNamesByID[inputId]
         agentSlug = inputName.replace(" ", "")
         inputHTML += htmlHelpers.buildOutputListEntryHTML(agentSlug)
+    inputHTML += htmlHelpers.buildOutputListEntryHTML("name-alias-type-tag", isLorebook=True)
     
     agentPaneHTML = agentPaneHTML.replace("{{INPUT_LIST}}", inputHTML)
 

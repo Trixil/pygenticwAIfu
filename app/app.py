@@ -3,7 +3,7 @@ from fastapi.staticfiles import StaticFiles
 
 from .core.lifespan import lifespan
 from .core.paths import CHARACTER_IMAGES_DIR, LOADOUT_IMAGES_DIR, STATIC_DIR
-from .routes import characters, chats, health, loadouts, pages
+from .routes import characters, chats, health, loadouts, pages, lorebooks
 
 agenticwAIfuApp = FastAPI(lifespan=lifespan)
 

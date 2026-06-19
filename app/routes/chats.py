@@ -14,9 +14,10 @@ from fastapi import Request
 from enum import Enum
 from uuid import uuid4
 
-from ..core.paths import CHATS_DIR, CHARACTER_IMAGES_DIR, TEMPLATES_DIR
+from ..core.paths import CHATS_DIR, CHARACTER_IMAGES_DIR, TEMPLATES_DIR, LOREBOOKS_DIR
 from ..models import definitions
 from ..rendering import htmlHelpers
+from .lorebooks import appendLorebookEntry, nameAliasTypeTagLb, contentById
 from ..storage import file_io
 from ..utils.normalize import normalize
 from dotenv import load_dotenv
@@ -446,6 +447,7 @@ async def generateLLMMessage(agent, events):
     global branchOutputs
 
     masterInput = ""
+    lorebookFile = LOREBOOKS_DIR / f"{recursiveChatCard.chatID}_auto.json"
 
     instructionSet = agent.agentInstructions
     agentId = agent.agentId
@@ -474,7 +476,14 @@ async def generateLLMMessage(agent, events):
                 f"{{{parentSlug}_output}}",
                 parentOutput
             )
-    
+
+    if os.exists(lorebookFile) and "{name-alias-type-tag-lb}" in instructionSet: 
+        nattLb = nameAliasTypeTagLb(file_io.loadLorebook(lorebookFile=lorebookFile))
+        instructionSet = instructionSet.replace(
+            "{name-alias-type-tag-lb}",
+            nattLb
+        )
+
     masterInput += htmlHelpers.buildInstructionSection(instructionSet)
 
     if agent.characterInput:
@@ -546,8 +555,30 @@ async def generateLLMMessage(agent, events):
 
         agentOutputsDir = CHATS_DIR / "agentOutputs"
         agentOutputsDir.mkdir(parents=True, exist_ok=True)
-        if not agent.writeLorebook:
+        if agent.writeLorebook:
+            lorebookFile = LOREBOOKS_DIR / f"{recursiveChatCard.chatID}_auto.json"
 
+            if lorebookFile.exists():
+                lorebook = file_io.loadLorebook(lorebookFile=lorebookFile)
+            else:
+                lorebook = definitions.lorebook()
+            
+            lorebook = appendLorebookEntry(lorebook, assistant_message)
+            file_io.saveLorebook(lorebook, lorebookFile)
+
+            return "Successfully wrote to lorebook."
+        
+        elif agent.queryLorebook:
+            lorebookFile = LOREBOOKS_DIR / f"{recursiveChatCard.chatID}_auto.json"
+            if lorebookFile.exists():
+                lorebook = file_io.loadLorebook(lorebookFile=lorebookFile)
+            else:
+                return "---NO LOREBOOK FOUND---"
+            
+            ids = [item.strip() for item in assistant_message.split(",")]
+            return contentById(lorebook, ids)
+        
+        else:
             agentOutputsFile = agentOutputsDir / f"{recursiveChatCard.chatID}.json"
 
             if agentOutputsFile.exists():
@@ -560,18 +591,8 @@ async def generateLLMMessage(agent, events):
 
             with open(agentOutputsFile, "w", encoding="utf-8") as f:
                 json.dump(agentOutputs, f, ensure_ascii=False, indent=2)
-        else:
-            lorebookFile = agentOutputsDir / f"{recursiveChatCard.chatID} lorebook.json"
 
-            if lorebookFile.exists():
-                with open(lorebookFile, "r", encoding="utf-8") as f:
-                    lorebook = json.load(f)
-            else:
-                lorebook = {}
-            
-            
-        
-        return assistant_message
+            return assistant_message
 
     except BadRequestError as e:
         raise AgentGenerationError(f"Bad request: {e}")

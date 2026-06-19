@@ -42,13 +42,27 @@ DONE
 
 DONE
 
-12. implement creating, writing to, and loading lorebook
+12. implement creating, writing to lorebook
     a. upon chat creation, a new lorebook is created in the directory, "chatlorebooks". it is an empty json.
-    b. when an agent tries to write to it, the output is passed directly to addLorebookEntries. the agent passes a series of entries in raw json
-    c. the addLorebookEntries loads the chatlorebook via pydantic object
-    d. loops through each of the entries in the passed lorebook entries, does a model validate, and appends it to the chatlorebook object
-    e. saves it to the chatlorebook
+    DONE
 
+    b. when an agent tries to write to it, the output is passed directly to addLorebookEntries. the agent passes a series of entries in raw json
+    DONE
+
+    c. the addLorebookEntries loads the chatlorebook via pydantic object
+    DONE
+
+    d. loops through each of the entries in the passed lorebook entries, does a model validate, and appends it to the chatlorebook object
+    DONE
+
+    e. saves it to the chatlorebook
+    DONE
+DONE
+
+13. accessing lorebook to different levels of specificity
+    a. {name-alias-type-tags-lb}, {name-alias-type-lb}, {name-alias-lb}, {name-lb} are the injectors. 
+    b. define python function that outputs first
+    c.
 this also necessitates adding a "write to lorebook" option in the "outputs" category of the agent.
 ???. implement character editing in chat
 
