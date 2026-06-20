@@ -190,14 +190,14 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 1425.97,
-        "y": 108.375
+        "x": 1436.76,
+        "y": 109.556
       }
     },
     {
       "agentName": "Lore Fill",
       "agentId": "1abbe620bcf14f2c9efc252da3d910d3",
-      "agentInstructions": "Examine the refined list of story arcs and write anything new that is found in the story arcs that is not found in the lorebook to the lorebooks. Your output must follow this exactly:\n[\n        {\n            \"name\": \"my mom\",\n            \"aliases\": [\"skibidi\", \"ohio\"],\n            \"type\": \"character\",\n            \"tags\": [\"side character\", \"maternality\"],\n        },\n        {\n          \"name\": \"chick-fil-a,\n          \"aliases\": [],\n            \"type\": \"location\",\n            \"tags\": [\"restaurant\"]\n    ]\n}\n\nStory arc queue:\n{ArcRefine_output}\n\nLorebook:\n{name-alias-type-tag-lb}",
+      "agentInstructions": "# Lorebook Fill Agent\n\nExamine the refined story arc queue and write new lorebook entries for important information that appears in the arcs but is not already present in the lorebook.\n\nThe lorebook may be completely empty. If it is empty, create entries for the important reusable characters, places, factions, objects, concepts, rules, relationships, secrets, or events found in the refined arcs.\n\nIf the lorebook is not empty, do not duplicate existing entries. Only create entries for important reusable information that is genuinely missing.\n\nDo not create entries for minor one-time details, temporary actions, generic emotions, or vague themes.\n\nDo not summarize the arcs. Do not explain your reasoning.\n\nYour output must be a valid JSON array only.\n\n## Machine Output Contract\n\nYour output is passed directly into a Python function.\n\nIf your output is not valid JSON, the parser will fail and the entire lorebook update pipeline will break.\n\nYou must output exactly one JSON array and nothing else.\n\nDo not include markdown.\n\nDo not include a code block.\n\nDo not include trailing commas.\n\nDo not include placeholder text.\n\nDo not include text before or after the JSON array.\n\nThe first character of your response must be `[`.\n\nThe last character of your response must be `]`.\n\nEvery entry must be a JSON object with exactly these keys:\n\n`name`, `aliases`, `type`, `tags`, `content`\n\nEach key must use double quotes.\n\n`name` must be a string.\n\n`aliases` must be an array of strings.\n\n`type` must be a string.\n\n`tags` must be an array of strings.\n\n`content` must be a string.\n\nExample of valid output:\n\n[\n{\n\"name\": \"Itsuki Nakano\",\n\"aliases\": [\"Fifth Sister\"],\n\"type\": \"character\",\n\"tags\": [\"quintuplet\", \"student\", \"main character\"],\n\"content\": \"The youngest of the Nakano quintuplets, known for her earnest personality and love of food.\"\n},\n{\n\"name\": \"Yotsuba Nakano\",\n\"aliases\": [\"Fourth Sister\"],\n\"type\": \"character\",\n\"tags\": [\"quintuplet\", \"student\", \"athletic\"],\n\"content\": \"One of the Nakano quintuplets, known for her cheerful personality, boundless energy, and willingness to help others.\"\n}\n]\n\nIf there is no new lorebook information to add, output EXACTLY:\n\n[]\n\n## Story Arc Queue\n\n{ArcRefine_output}\n\n## Lorebook\n\n{name-alias-type-tag-lb}\n",
       "characterInput": false,
       "scenario": false,
       "carryOver": false,
@@ -225,14 +225,14 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 1769.17,
-        "y": 121.575
+        "x": 1757.12,
+        "y": 121.537
       }
     },
     {
       "agentName": "Arc Crop",
       "agentId": "020c67db5951460bb545c0004c0d7c07",
-      "agentInstructions": "Output the first story arc in the queue EXACTLY as you see it. Do not output anything else at all.",
+      "agentInstructions": "Output the first story arc in the queue EXACTLY as you see it. Do not output anything else at all.\n{ArcUpdateCheck_output}",
       "characterInput": false,
       "scenario": false,
       "carryOver": false,
@@ -245,10 +245,161 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
-      "publish": true,
+      "publish": false,
       "pastMessageCount": 0,
       "parents": [
         "563af260e37e40a3b0a306d92dd2db7b"
+      ],
+      "children": [
+        "33839c824e6e44d6a9744b5db93cfaff"
+      ],
+      "upperChildren": [],
+      "lowerChildren": [],
+      "agentLLMConfig": {
+        "LLMName": "openai/gpt-4.1",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      },
+      "layout": {
+        "x": 423.975,
+        "y": 354.375
+      }
+    },
+    {
+      "agentName": "MTE Update Check",
+      "agentId": "33839c824e6e44d6a9744b5db93cfaff",
+      "agentInstructions": "# Mid-Term Event Update Check Agent\n\nDetermine whether the current mid-term event queue needs to be updated based on the current state of the story.\n\nYour default behavior is to preserve the existing mid-term event queue exactly as received.\n\nTrigger a mid-term event update if:\n\n* one or more mid-term events are empty, or\n* one or more mid-term events are extremely unrealistic given the state of the story and are very unlikely to become relevant again, or\n* the first mid-term event has finished or is wrapping up\n* the first mid-term event has been running for too long\n\n**If any events are marked as `<NEW>`, you MUST not update the queue no matter what. The only thing you must do is output the mid-term event queue, word for word, but remove the `<NEW>` tag completely.**\n\n## Triggering an Update\n\nIf no update is needed, write this exact marker at the top of your response:\n\n`<<<PERFORM MID-TERM EVENT UPDATE: NO>>>`\n\nThen output the mid-term event queue exactly as received, letter by letter.\n\nIf an update is needed, write this exact marker at the top of your response:\n\n`<<<PERFORM MID-TERM EVENT UPDATE: YES>>>`\n\nThen output the updated mid-term event queue using the rules below.\n\n## How to Update Queue\n\n### 1. Entire Queue Is Empty\n\nIf the entire mid-term event queue is empty, output a 3-event queue where each event is marked for rewriting.\n\nOutput:\n\nMID-TERM EVENT QUEUE:\n\n<REWRITE>\nEvent 1: EMPTY\n\n<REWRITE>\nEvent 2:\n\n<REWRITE>\nEvent 3:\n\n### 2. First Event Finished Or Wrapping Up\n\nIf Event 1 has finished or is wrapping up, remove Event 1 from the queue, move Event 2 into the Event 1 slot, move Event 3 into the Event 2 slot, and replace Event 3 with:\n\n<REWRITE>\nEvent 3: EMPTY\n\nDo not rewrite Event 2 or Event 3. Move them upward exactly as written.\n\n### 3. A Particular Event No Longer Fits\n\nIf a particular event is empty, impossible, extremely unrealistic, or no longer fitting for the story, preserve its slot but append this above it:\n\n`<REWRITE>`\n\nDo not rewrite the other events.\n\n## Preservation Rule\n\nOnly change the mid-term event queue in the specific ways described above.\n\nAny event that is not being removed, moved upward, or marked as `<REWRITE>` must be preserved exactly as received, letter by letter.\n\n## Input Mid-Term Event Queue\n\n{MTEBuffer_output}\n",
+      "characterInput": false,
+      "scenario": false,
+      "carryOver": false,
+      "carryOverAgentId": "",
+      "carryOverAgentName": "MTE Update Check",
+      "agentBranch": true,
+      "agentBranchUpperTrigger": "<<<PERFORM MID-TERM EVENT UPDATE: YES>>>",
+      "agentBranchUpperInstructions": "{this_response}",
+      "agentBranchLowerTrigger": "<<<PERFORM MID-TERM EVENT UPDATE: NO>>>",
+      "agentBranchLowerInstructions": "{this_response}",
+      "writeLorebook": false,
+      "queryLorebook": false,
+      "publish": false,
+      "pastMessageCount": 15,
+      "parents": [
+        "020c67db5951460bb545c0004c0d7c07",
+        "266f165df28343cc9c6ece0af0890bf7"
+      ],
+      "children": [],
+      "upperChildren": [
+        "714725df9c4c4ef89940f2dd20f38548"
+      ],
+      "lowerChildren": [
+        "a0e53110584a4f13b3f95374cd5087f6"
+      ],
+      "agentLLMConfig": {
+        "LLMName": "openai/gpt-4.1",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      },
+      "layout": {
+        "x": 422.794,
+        "y": 543.994
+      }
+    },
+    {
+      "agentName": "MTE Writer",
+      "agentId": "714725df9c4c4ef89940f2dd20f38548",
+      "agentInstructions": "# Mid-Term Event Writer Agent\n\nWrite new mid-term events for any queue slots marked with `<REWRITE>`.\n\nThere are no separate mid-term event drafts. You must write the final replacement mid-term events directly.\n\n## What to Write\n\nOnly write new content for events marked with `<REWRITE>`.\n\nAny event not marked with `<REWRITE>` must be preserved exactly as received, letter by letter.\n\nRemove the `<REWRITE>` marker from any event after you rewrite it.\n\nEach rewritten mid-term event should describe one significant story development that can unfold over multiple short-term events.\n\nThe rewritten event must fit within the current story arc and help progress the story toward completing that arc.\n\nDo not write events that ignore, replace, or derail the current arc.\n\nEach rewritten event should represent a significant development that unfolds across multiple turns and directly advances the story toward the resolution of the current arc.\n\nAvoid vague goals, thematic summaries, mood descriptions, generic filler, and empty statements about tension or stakes.\n\nDo not write scene-by-scene micro-events or exact dialogue.\n\n## Rewrite Rules\n\nIf all 3 events are marked with `<REWRITE>`, write a full new 3-event queue that progresses through the current arc in order.\n\nIf only some events are marked with `<REWRITE>`, rewrite only those events and preserve the others exactly.\n\nWhen rewriting an event, make sure it fits naturally with the surrounding preserved events.\n\nFor all rewritten events, mark them with `<NEW>` by placing `<NEW>` directly above the event.\n\n## Output Format\n\n# MID-TERM EVENT QUEUE:\n\nEvent 1:\n[Preserved event or rewritten mid-term event.]\n\nEvent 2:\n[Preserved event or rewritten mid-term event.]\n\nEvent 3:\n[Preserved event or rewritten mid-term event.]\n\n## Marked Mid-Term Event Queue\n\n{MTEUpdateCheck_output}\n\n## Current Story Arc\n\n{ArcCrop_output}",
+      "characterInput": false,
+      "scenario": false,
+      "carryOver": false,
+      "carryOverAgentId": "",
+      "carryOverAgentName": "MTE Writer",
+      "agentBranch": false,
+      "agentBranchUpperTrigger": "",
+      "agentBranchUpperInstructions": "",
+      "agentBranchLowerTrigger": "",
+      "agentBranchLowerInstructions": "",
+      "writeLorebook": false,
+      "queryLorebook": false,
+      "publish": false,
+      "pastMessageCount": 0,
+      "parents": [
+        "33839c824e6e44d6a9744b5db93cfaff"
+      ],
+      "children": [
+        "266f165df28343cc9c6ece0af0890bf7"
+      ],
+      "upperChildren": [],
+      "lowerChildren": [],
+      "agentLLMConfig": {
+        "LLMName": "openai/gpt-4.1",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      },
+      "layout": {
+        "x": 755.156,
+        "y": 545.138
+      }
+    },
+    {
+      "agentName": "MTE Buffer",
+      "agentId": "266f165df28343cc9c6ece0af0890bf7",
+      "agentInstructions": "If there is a mid-term event queue directly below, output it.\n\n{MidTermEventWriter_output}\n\nIf there is not, output the mid-term event queue found in \"----PREVIOUS OUTPUT---\".\n\nEither way, output the queue EXACTLY as you see it. Do not change a single letter. Keep the tags found in \"<>\", \"<<>>\", or \"<<<>>>\".\n\nIf there is no mid-term event queue at all, output:\n\nEvent 1: EMPTY\nEvent 2: EMPTY\nEvent 3: EMPTY",
+      "characterInput": false,
+      "scenario": false,
+      "carryOver": false,
+      "carryOverAgentId": "",
+      "carryOverAgentName": "MTE Buffer",
+      "agentBranch": false,
+      "agentBranchUpperTrigger": "",
+      "agentBranchUpperInstructions": "",
+      "agentBranchLowerTrigger": "",
+      "agentBranchLowerInstructions": "",
+      "writeLorebook": false,
+      "queryLorebook": false,
+      "publish": false,
+      "pastMessageCount": 0,
+      "parents": [
+        "714725df9c4c4ef89940f2dd20f38548"
+      ],
+      "children": [
+        "33839c824e6e44d6a9744b5db93cfaff"
+      ],
+      "upperChildren": [],
+      "lowerChildren": [],
+      "agentLLMConfig": {
+        "LLMName": "openai/gpt-4.1",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      },
+      "layout": {
+        "x": 84.375,
+        "y": 536.775
+      }
+    },
+    {
+      "agentName": "MTE Crop",
+      "agentId": "a0e53110584a4f13b3f95374cd5087f6",
+      "agentInstructions": "Output the first event in the queue EXACTLY as you see it. Do not output anything else at all.\n{MTEUpdateCheck_output}",
+      "characterInput": false,
+      "scenario": false,
+      "carryOver": false,
+      "carryOverAgentId": "",
+      "carryOverAgentName": "MTE Crop",
+      "agentBranch": false,
+      "agentBranchUpperTrigger": "",
+      "agentBranchUpperInstructions": "",
+      "agentBranchLowerTrigger": "",
+      "agentBranchLowerInstructions": "",
+      "writeLorebook": false,
+      "queryLorebook": false,
+      "publish": true,
+      "pastMessageCount": 0,
+      "parents": [
+        "33839c824e6e44d6a9744b5db93cfaff"
       ],
       "children": [],
       "upperChildren": [],
@@ -260,41 +411,8 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 421.575,
-        "y": 357.975
-      }
-    },
-    {
-      "agentName": "Untitled agent",
-      "agentId": "33839c824e6e44d6a9744b5db93cfaff",
-      "agentInstructions": "Why do they call it the oven when you of in the cold food of out hot eat the food?",
-      "characterInput": false,
-      "scenario": false,
-      "carryOver": false,
-      "carryOverAgentId": "",
-      "carryOverAgentName": "Untitled agent",
-      "agentBranch": false,
-      "agentBranchUpperTrigger": "",
-      "agentBranchUpperInstructions": "",
-      "agentBranchLowerTrigger": "",
-      "agentBranchLowerInstructions": "",
-      "writeLorebook": false,
-      "queryLorebook": false,
-      "publish": false,
-      "pastMessageCount": 0,
-      "parents": [],
-      "children": [],
-      "upperChildren": [],
-      "lowerChildren": [],
-      "agentLLMConfig": {
-        "LLMName": "openai/gpt-4.1",
-        "temp": 1.0,
-        "maxTokens": 4000,
-        "topP": 1.0
-      },
-      "layout": {
-        "x": 423.994,
-        "y": 536.794
+        "x": 422.756,
+        "y": 801.994
       }
     }
   ]
