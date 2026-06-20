@@ -1,0 +1,150 @@
+{
+  "loadoutName": "Untitled Loadout Configuration",
+  "loadoutId": "60abdd5754954c648226babd82b69a9d",
+  "loadoutImageFile": "C:\\Users\\mashhood\\repos\\agenticwAIfu\\app\\data\\loadouts\\images\\60abdd5754954c648226babd82b69a9d.png",
+  "loadoutFile": "",
+  "loadoutAgents": [
+    {
+      "agentName": "agent 1",
+      "agentId": "14448161e16944be9304a46dbae171fa",
+      "agentInstructions": "Why do they call it the oven when you of in the cold food of out hot eat the food?",
+      "characterInput": false,
+      "scenario": false,
+      "carryOver": false,
+      "carryOverAgentId": "",
+      "carryOverAgentName": "agent 1",
+      "agentBranch": false,
+      "agentBranchUpperTrigger": "",
+      "agentBranchUpperInstructions": "",
+      "agentBranchLowerTrigger": "",
+      "agentBranchLowerInstructions": "",
+      "writeLorebook": false,
+      "queryLorebook": false,
+      "publish": false,
+      "pastMessageCount": 0,
+      "parents": [],
+      "children": [
+        "29f612ac02304a20b7ac8f0362a43a40",
+        "e59712dc049b46749fdf8a9998b1f50d",
+        "f94bf18c9c0a45b8b2546f260b8aedc3"
+      ],
+      "upperChildren": [],
+      "lowerChildren": [],
+      "agentLLMConfig": {
+        "LLMName": "openai/gpt-4.1",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      },
+      "layout": {
+        "x": 363.994,
+        "y": 255.994
+      }
+    },
+    {
+      "agentName": "agent 2",
+      "agentId": "29f612ac02304a20b7ac8f0362a43a40",
+      "agentInstructions": "Why do they call it the oven when you of in the cold food of out hot eat the food?",
+      "characterInput": false,
+      "scenario": false,
+      "carryOver": false,
+      "carryOverAgentId": "",
+      "carryOverAgentName": "agent 2",
+      "agentBranch": false,
+      "agentBranchUpperTrigger": "",
+      "agentBranchUpperInstructions": "",
+      "agentBranchLowerTrigger": "",
+      "agentBranchLowerInstructions": "",
+      "writeLorebook": false,
+      "queryLorebook": false,
+      "publish": false,
+      "pastMessageCount": 0,
+      "parents": [
+        "14448161e16944be9304a46dbae171fa"
+      ],
+      "children": [],
+      "upperChildren": [],
+      "lowerChildren": [],
+      "agentLLMConfig": {
+        "LLMName": "openai/gpt-4.1",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      },
+      "layout": {
+        "x": 822.394,
+        "y": 259.594
+      }
+    },
+    {
+      "agentName": "agent 3",
+      "agentId": "e59712dc049b46749fdf8a9998b1f50d",
+      "agentInstructions": "Why do they call it the oven when you of in the cold food of out hot eat the food?",
+      "characterInput": false,
+      "scenario": false,
+      "carryOver": false,
+      "carryOverAgentId": "",
+      "carryOverAgentName": "agent 3",
+      "agentBranch": false,
+      "agentBranchUpperTrigger": "",
+      "agentBranchUpperInstructions": "",
+      "agentBranchLowerTrigger": "",
+      "agentBranchLowerInstructions": "",
+      "writeLorebook": false,
+      "queryLorebook": false,
+      "publish": false,
+      "pastMessageCount": 0,
+      "parents": [
+        "14448161e16944be9304a46dbae171fa"
+      ],
+      "children": [],
+      "upperChildren": [],
+      "lowerChildren": [],
+      "agentLLMConfig": {
+        "LLMName": "openai/gpt-4.1",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      },
+      "layout": {
+        "x": 887.194,
+        "y": 487.594
+      }
+    },
+    {
+      "agentName": "agent 4",
+      "agentId": "f94bf18c9c0a45b8b2546f260b8aedc3",
+      "agentInstructions": "Why do they call it the oven when you of in the cold food of out hot eat the food?",
+      "characterInput": false,
+      "scenario": false,
+      "carryOver": false,
+      "carryOverAgentId": "",
+      "carryOverAgentName": "agent 4",
+      "agentBranch": false,
+      "agentBranchUpperTrigger": "",
+      "agentBranchUpperInstructions": "",
+      "agentBranchLowerTrigger": "",
+      "agentBranchLowerInstructions": "",
+      "writeLorebook": false,
+      "queryLorebook": false,
+      "publish": true,
+      "pastMessageCount": 0,
+      "parents": [
+        "14448161e16944be9304a46dbae171fa"
+      ],
+      "children": [],
+      "upperChildren": [],
+      "lowerChildren": [],
+      "agentLLMConfig": {
+        "LLMName": "openai/gpt-4.1",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      },
+      "layout": {
+        "x": 788.794,
+        "y": 759.994
+      }
+    }
+  ]
+}

@@ -5,22 +5,26 @@
   "loadoutFile": "",
   "loadoutAgents": [
     {
-      "agentName": "Arc",
+      "agentName": "Arc Buffer",
       "agentId": "4068c2cf3d3d4952a2a765c294aa1e8b",
-      "agentInstructions": "Create and maintain a list of amazing story arcs.",
+      "agentInstructions": "If there is an arc queue directly below, output it. \n\n{ArcRefine_output}\n\nIf there is not, output the arc queue found in \"----PREVIOUS OUTPUT---\". Either way, output the queue EXACTLY as you see it. Do not change a single letter. Keep the tags found in \"<>\", \"<<>>\", or \"<<<>>>\".\n\nIf there is no arc queue at all, output:\nARC 1: EMPTY\nARC 2: EMPTY\nARC 3: EMPTY\n",
       "characterInput": false,
       "scenario": false,
-      "carryOver": false,
+      "carryOver": true,
       "carryOverAgentId": "",
-      "carryOverAgentName": "Arc",
+      "carryOverAgentName": "Arc Buffer",
       "agentBranch": false,
       "agentBranchUpperTrigger": "",
       "agentBranchUpperInstructions": "",
       "agentBranchLowerTrigger": "",
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
+      "queryLorebook": false,
+      "publish": false,
       "pastMessageCount": 0,
-      "parents": [],
+      "parents": [
+        "3b420fb9fad24e718157f41717e25e4d"
+      ],
       "children": [
         "563af260e37e40a3b0a306d92dd2db7b"
       ],
@@ -33,14 +37,14 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 128.8,
-        "y": 258.4
+        "x": 78.375,
+        "y": 141.994
       }
     },
     {
       "agentName": "Arc Update Check",
       "agentId": "563af260e37e40a3b0a306d92dd2db7b",
-      "agentInstructions": "Determine if the input queue of story arcs need to be updated given the state of the story. One of the events in the story arc may be just about to finish, or has finished, in which case mark it in the queue as \"PERFORM REWRITE\". and at the top of your respone, write \"<<<PERFORM ARC UPDATE: YES>>>\". otherwise, output the arc queue exactly as you received it an write \"<<<PERFORM ARC UPDATE: NO>>>\" at the top of your response.\n{Arc_output}",
+      "agentInstructions": "# Arc Update Check Agent\n\nDetermine whether the current story arc queue needs to be updated based on the current state of the story.\n\nYour default behavior is to preserve the existing arc queue exactly as received.\n\nTrigger an arc update if:\n\n* one or more arcs are empty, or\n* one or more arcs are extremely unrealistic given the state of the story and are very unlikely to become relevant again, or\n* the first arc has finished or is wrapping up\n\n**If any events are marked as <NEW>, you MUST not update the queue no matter what. The only thing you must do is output the arc queue, word for word, but remove the <NEW> tag completely.**\n\n## Triggering an Update\nIf no update is needed, write this exact marker at the top of your response:\n\n`<<<PERFORM ARC UPDATE: NO>>>`\n\nThen output the arc queue exactly as received, letter by letter.\n\nIf an update is needed, write this exact marker at the top of your response:\n\n`<<<PERFORM ARC UPDATE: YES>>>`\n\nThen output the updated arc queue using the rules below.\n\n## How to Update Queue\n\n### 1. Entire Queue Is Empty\n\nIf the entire arc queue is empty, output a 3-arc queue where each arc is marked for rewriting.\n\nOutput:\n\n# ARC QUEUE:\n\n<REWRITE>\nArc 1: EMPTY\n\n<REWRITE>\nArc 2:\\\n\n<REWRITE>\nArc 3:\\\n\n### 2. First Arc Finished Or Wrapping Up\n\nIf Arc 1 has finished or is wrapping up, remove Arc 1 from the queue, move Arc 2 into the Arc 1 slot, move Arc 3 into the Arc 2 slot, replace Arc 3 with\n\n<REWRITE>\nArc 3: EMPTY\n\nDo not rewrite Arc 2 or Arc 3. Move them upward exactly as written.\n\n### 3. A Particular Arc No Longer Fits\n\nIf a particular arc is empty, impossible, extremely unrealistic, or no longer fitting for the story, preserve its slot but append this to the end of its contents:\n\n`<REWRITE>`\n\nDo not rewrite the other arcs.\n\n## Preservation Rule\n\nOnly change the arc queue in the specific ways described above.\n\nAny arc that is not being removed, moved upward, or marked as `<REWRITE>` must be preserved exactly as received, letter by letter.\n\n## Input Arc Queue\n\n{ArcBuffer_output}\n",
       "characterInput": false,
       "scenario": false,
       "carryOver": false,
@@ -52,6 +56,8 @@
       "agentBranchLowerTrigger": "<<<PERFORM ARC UPDATE: NO>>>",
       "agentBranchLowerInstructions": "{this_response}",
       "writeLorebook": false,
+      "queryLorebook": false,
+      "publish": false,
       "pastMessageCount": 0,
       "parents": [
         "4068c2cf3d3d4952a2a765c294aa1e8b"
@@ -60,7 +66,9 @@
       "upperChildren": [
         "7e0b53afaab54012b7f449dd19cab7b5"
       ],
-      "lowerChildren": [],
+      "lowerChildren": [
+        "020c67db5951460bb545c0004c0d7c07"
+      ],
       "agentLLMConfig": {
         "LLMName": "gpt-4.1",
         "temp": 1.0,
@@ -75,7 +83,7 @@
     {
       "agentName": "Arc Draft",
       "agentId": "7e0b53afaab54012b7f449dd19cab7b5",
-      "agentInstructions": "Creates vague long-term arc drafts.\nThese are broad frameworks, not detailed arcs.\n",
+      "agentInstructions": "# Arc Draft Agent\n\nCreate or repair a queue of 3 long-term story arcs based on the marked arc queue, character cards, scenario, and recent story messages.\n\n## What to Write\n\nOnly write new content for arcs marked with `<REWRITE>`.\n\nAny arc not marked with `<REWRITE>` must be preserved exactly as received, letter by letter.\n\nEach rewritten arc should be exactly 1 paragraph long. An arc must describe a sequence of dramatic, long-term events that could unfold in order.\n\nDo not write vague thematic summaries, mood descriptions, promotional blurbs, or statements about what the arc \u201ccenters on.\u201d\n\nEach arc should contain concrete developments: what begins, what escalates, what is revealed, what changes, and what new problem appears afterward.\n\nAvoid obvious, trope-first plots. Each arc should contain unusual, scenario-specific development that a generic version of this story would not include.\n\nThe arcs should be sequential in structure. The first major development should naturally cause or lead into the next major development.\n\nDo not write scene-by-scene micro-events, exact dialogue, or guaranteed final endings.\n\n## Rewrite Rules\n\nIf all 3 arcs are marked with `<REWRITE>`, write a full new 3-arc queue.\n\nIf only some arcs are marked with `<REWRITE>`, rewrite only those arcs and preserve the others exactly.\n\nWhen rewriting an arc, make sure it fits naturally with the surrounding preserved arcs.\n\nFor all rewritten arcs, mark it with`<NEW>` by appending it right above the arc.\n\n## Output Format\n\n# ARC QUEUE:\n\n[<NEW> if rewritten, otherwise blank]\nArc 1:\n[Preserved arc or rewritten one-paragraph arc.]\n\n[<NEW> if rewritten, otherwise blank]\nArc 2:\n[Preserved arc or rewritten one-paragraph arc.]\n\n[<NEW> if rewritten, otherwise blank]\nArc 3:\n[Preserved arc or rewritten one-paragraph arc.]\n\n## Marked Arc Queue\n\n{ArcUpdateCheck_output}\n",
       "characterInput": true,
       "scenario": true,
       "carryOver": false,
@@ -87,12 +95,15 @@
       "agentBranchLowerTrigger": "",
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
+      "queryLorebook": false,
+      "publish": false,
       "pastMessageCount": 0,
       "parents": [
         "563af260e37e40a3b0a306d92dd2db7b"
       ],
       "children": [
-        "bdc8e31ccd824ff7bd5d4f962200da2c"
+        "bdc8e31ccd824ff7bd5d4f962200da2c",
+        "3b420fb9fad24e718157f41717e25e4d"
       ],
       "upperChildren": [],
       "lowerChildren": [],
@@ -103,47 +114,14 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 755.194,
-        "y": 252.375
-      }
-    },
-    {
-      "agentName": "Arc Tagging",
-      "agentId": "bdc8e31ccd824ff7bd5d4f962200da2c",
-      "agentInstructions": "Examine the draft of story arcs given to you and come up with a list of relevant IDs from the lorebook to more fully populate it.\n{name-alias-type-tag-lb}\nYour output must consist solely of lorebook entry IDs.",
-      "characterInput": true,
-      "scenario": true,
-      "carryOver": false,
-      "carryOverAgentId": "",
-      "carryOverAgentName": "Arc Tagging",
-      "agentBranch": false,
-      "agentBranchUpperTrigger": "",
-      "agentBranchUpperInstructions": "",
-      "agentBranchLowerTrigger": "",
-      "agentBranchLowerInstructions": "",
-      "writeLorebook": false,
-      "pastMessageCount": 0,
-      "parents": [
-        "7e0b53afaab54012b7f449dd19cab7b5"
-      ],
-      "children": [],
-      "upperChildren": [],
-      "lowerChildren": [],
-      "agentLLMConfig": {
-        "LLMName": "gpt-4.1",
-        "temp": 1.0,
-        "maxTokens": 4000,
-        "topP": 1.0
-      },
-      "layout": {
-        "x": 1094.79,
-        "y": 39.9938
+        "x": 746.794,
+        "y": 128.775
       }
     },
     {
       "agentName": "Lore Query",
-      "agentId": "3b420fb9fad24e718157f41717e25e4d",
-      "agentInstructions": "",
+      "agentId": "bdc8e31ccd824ff7bd5d4f962200da2c",
+      "agentInstructions": "# Lore Query Agent\n\nExamine only the story arcs marked with `<NEW>` and select lorebook entries that would be useful for refining, grounding, or complicating those new arcs.\n\nIgnore any arcs that are not marked with `<NEW>`.\n\nYour job is not to write prose, summarize the arcs, or explain your choices.\n\nSelect lorebook entry IDs for:\n\n* characters, places, factions, or other concepts directly involved in the `<NEW>` arcs\n* entries that would help make the `<NEW>` arcs more specific and consistent with existing lore\n* entries that are not immediately required, but could make the `<NEW>` arcs more interesting if incorporated naturally\n\nDo not invent IDs. Only use IDs that appear in the lorebook.\n\nYour output must consist solely of lorebook entry IDs.\n\nThe IDs must be comma-separated with spaces after each comma except the last, like this:\n\n`id1, id2, id3`\n\n## Draft Story Arcs\n\n{ArcDraft_output}\n\n## Lorebook\n\n{name-alias-type-tag-lb}\n",
       "characterInput": false,
       "scenario": false,
       "carryOver": false,
@@ -155,9 +133,15 @@
       "agentBranchLowerTrigger": "",
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
+      "queryLorebook": false,
+      "publish": false,
       "pastMessageCount": 0,
-      "parents": [],
-      "children": [],
+      "parents": [
+        "7e0b53afaab54012b7f449dd19cab7b5"
+      ],
+      "children": [
+        "3b420fb9fad24e718157f41717e25e4d"
+      ],
       "upperChildren": [],
       "lowerChildren": [],
       "agentLLMConfig": {
@@ -167,8 +151,150 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 1508.79,
-        "y": 89.1937
+        "x": 1095.97,
+        "y": 42.3937
+      }
+    },
+    {
+      "agentName": "Arc Refine",
+      "agentId": "3b420fb9fad24e718157f41717e25e4d",
+      "agentInstructions": "# Arc Refine Agent\n\nUse the provided lorebook content to refine newly written story arcs in the queue.\n\nYour job is to make new arcs more specific, detailed, creative, and grounded in established lore.\n\n## What to Refine\n\nOnly refine arcs marked with `<NEW>`.\n\nAny arc not marked with `<NEW>` must be preserved exactly as received, letter by letter.\n\nRemove the `<NEW>` marker from any arc after you refine it.\n\n## What to Write\n\nRewrite each `<NEW>` arc into 2-3 paragraphs.\n\nPreserve the same 3-arc queue structure.\n\nUse the lorebook content to make the new arcs more specific, grounded, and consistent with the setting, drawing on relevant details where they naturally fit.\n\nThe refined arcs must still describe long-term sequences of dramatic events, not scene-by-scene micro-events.\n\nMake the arcs feel creative, unusual, and deliberately authored. Avoid generic LLM-style plotting, obvious tropes, vague stakes, prophecy-shaped filler, and empty phrases about tension, destiny, alliances, or choices.\n\nDo not write events that contradict anything in the lorebook, unless the event involves changing the entity in the lorebook in some way.\n\nYou may add new details or mid-term events in the arc when needed, but they must fit naturally with the existing lore and story arcs.\n\nDo not summarize the lorebook. Do not explain your reasoning. Only output the refined arc queue.\n\n## Output Format\n\n# ARC QUEUE:\n\nArc 1:\n[Preserved arc or refined 2-3 paragraph arc.]\n\nArc 2:\n[Preserved arc or refined 2-3 paragraph arc.]\n\nArc 3:\n[Preserved arc or refined 2-3 paragraph arc.]\n\n## Lorebook Content\n\n{LoreQuery_output}\n\n## Queue of Story Arcs\n\n{ArcDraft_output}\n",
+      "characterInput": false,
+      "scenario": false,
+      "carryOver": false,
+      "carryOverAgentId": "",
+      "carryOverAgentName": "Arc Refine",
+      "agentBranch": false,
+      "agentBranchUpperTrigger": "",
+      "agentBranchUpperInstructions": "",
+      "agentBranchLowerTrigger": "",
+      "agentBranchLowerInstructions": "",
+      "writeLorebook": false,
+      "queryLorebook": false,
+      "publish": false,
+      "pastMessageCount": 0,
+      "parents": [
+        "bdc8e31ccd824ff7bd5d4f962200da2c",
+        "7e0b53afaab54012b7f449dd19cab7b5"
+      ],
+      "children": [
+        "1abbe620bcf14f2c9efc252da3d910d3",
+        "4068c2cf3d3d4952a2a765c294aa1e8b"
+      ],
+      "upperChildren": [],
+      "lowerChildren": [],
+      "agentLLMConfig": {
+        "LLMName": "gpt-4.1",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      },
+      "layout": {
+        "x": 1425.97,
+        "y": 108.375
+      }
+    },
+    {
+      "agentName": "Lore Fill",
+      "agentId": "1abbe620bcf14f2c9efc252da3d910d3",
+      "agentInstructions": "Examine the refined list of story arcs and write anything new that is found in the story arcs that is not found in the lorebook to the lorebooks. Your output must follow this exactly:\n[\n        {\n            \"name\": \"my mom\",\n            \"aliases\": [\"skibidi\", \"ohio\"],\n            \"type\": \"character\",\n            \"tags\": [\"side character\", \"maternality\"],\n        },\n        {\n          \"name\": \"chick-fil-a,\n          \"aliases\": [],\n            \"type\": \"location\",\n            \"tags\": [\"restaurant\"]\n    ]\n}\n\nStory arc queue:\n{ArcRefine_output}\n\nLorebook:\n{name-alias-type-tag-lb}",
+      "characterInput": false,
+      "scenario": false,
+      "carryOver": false,
+      "carryOverAgentId": "",
+      "carryOverAgentName": "Lore Fill",
+      "agentBranch": false,
+      "agentBranchUpperTrigger": "",
+      "agentBranchUpperInstructions": "",
+      "agentBranchLowerTrigger": "",
+      "agentBranchLowerInstructions": "",
+      "writeLorebook": false,
+      "queryLorebook": false,
+      "publish": false,
+      "pastMessageCount": 0,
+      "parents": [
+        "3b420fb9fad24e718157f41717e25e4d"
+      ],
+      "children": [],
+      "upperChildren": [],
+      "lowerChildren": [],
+      "agentLLMConfig": {
+        "LLMName": "openai/gpt-4.1",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      },
+      "layout": {
+        "x": 1769.17,
+        "y": 121.575
+      }
+    },
+    {
+      "agentName": "Arc Crop",
+      "agentId": "020c67db5951460bb545c0004c0d7c07",
+      "agentInstructions": "Output the first story arc in the queue EXACTLY as you see it. Do not output anything else at all.",
+      "characterInput": false,
+      "scenario": false,
+      "carryOver": false,
+      "carryOverAgentId": "",
+      "carryOverAgentName": "Arc Crop",
+      "agentBranch": false,
+      "agentBranchUpperTrigger": "",
+      "agentBranchUpperInstructions": "",
+      "agentBranchLowerTrigger": "",
+      "agentBranchLowerInstructions": "",
+      "writeLorebook": false,
+      "queryLorebook": false,
+      "publish": true,
+      "pastMessageCount": 0,
+      "parents": [
+        "563af260e37e40a3b0a306d92dd2db7b"
+      ],
+      "children": [],
+      "upperChildren": [],
+      "lowerChildren": [],
+      "agentLLMConfig": {
+        "LLMName": "openai/gpt-4.1",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      },
+      "layout": {
+        "x": 421.575,
+        "y": 357.975
+      }
+    },
+    {
+      "agentName": "Untitled agent",
+      "agentId": "33839c824e6e44d6a9744b5db93cfaff",
+      "agentInstructions": "Why do they call it the oven when you of in the cold food of out hot eat the food?",
+      "characterInput": false,
+      "scenario": false,
+      "carryOver": false,
+      "carryOverAgentId": "",
+      "carryOverAgentName": "Untitled agent",
+      "agentBranch": false,
+      "agentBranchUpperTrigger": "",
+      "agentBranchUpperInstructions": "",
+      "agentBranchLowerTrigger": "",
+      "agentBranchLowerInstructions": "",
+      "writeLorebook": false,
+      "queryLorebook": false,
+      "publish": false,
+      "pastMessageCount": 0,
+      "parents": [],
+      "children": [],
+      "upperChildren": [],
+      "lowerChildren": [],
+      "agentLLMConfig": {
+        "LLMName": "openai/gpt-4.1",
+        "temp": 1.0,
+        "maxTokens": 4000,
+        "topP": 1.0
+      },
+      "layout": {
+        "x": 423.994,
+        "y": 536.794
       }
     }
   ]
