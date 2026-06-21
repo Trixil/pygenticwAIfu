@@ -218,7 +218,7 @@ async def generateAssistantMessage(request: Request):
     events = {}
     print("agents is")
     print(agents)
-    breakpoint()
+    #breakpoint()
     for agent in agents:
         agentId = agent.agentId
         outputTable[agentId] = ""
@@ -262,6 +262,7 @@ async def generateAssistantMessage(request: Request):
 async def runGeneration(startingAgents, events):
     global outputTable
 
+    #breakpoint()
     tasks = [
         asyncio.create_task(recursiveGenerate(agent, events))
         for agent in startingAgents
@@ -284,7 +285,7 @@ async def runGeneration(startingAgents, events):
 
     finalAgents = [
         agent for agent in allAgentCards
-        if agent.children == [] and agent.upperChildren == [] and agent.lowerChildren == []
+        if agent.publish
     ]
 
     if len(finalAgents) != 1:
@@ -319,7 +320,17 @@ def getAgentSlugByID(selectedAgentID):
             selectedAgent = getAgentByID(selectedAgentID)
             return selectedAgent.agentName.replace(" ", "")
     
-    raise ValueError("Agent slug not found")
+    raise ValueError("Agent ID not found")
+
+def getAgentNameByID(selectedAgentID):
+    global allAgentCards
+
+    for agent in allAgentCards:
+        if agent.agentId == selectedAgentID:
+            selectedAgent = getAgentByID(selectedAgentID)
+            return selectedAgent.agentName
+    
+    raise ValueError("Agent ID not found")
 
 def getAgentIDByName(selectedAgentName):
     global allAgentCards
@@ -343,11 +354,18 @@ async def recursiveGenerate(agent, events):
     global activationTable
 
     agentId = agent.agentId
+    if agent.agentName == "Arc Update Check":
+        breakpoint()
+    
     statusTable[agentId] = AgentStatus.RUNNING
+    writeStatusFile(statusTable)
 
+    if agent.agentName == "Arc Buffer":
+        breakpoint()
+    
     print("activationTable")
     print(activationTable)
-    breakpoint()
+    #breakpoint()
     if (all(not activationTable[parentId] for parentId in agent.parents) and agent.parents) or not activationTable[agentId]:
         activationTable[agentId] = False
         outputTable[agentId] = ""
@@ -365,6 +383,7 @@ async def recursiveGenerate(agent, events):
         outputTable[agentId] = message
 
     statusTable[agentId] = AgentStatus.DONE
+    writeStatusFile(statusTable)
     events[agentId].set()
 
     waitingChildren: list[definitions.agent] = []
@@ -397,7 +416,12 @@ async def recursiveGenerate(agent, events):
                 branchOutputs["lower"][agentId] = agent.agentBranchLowerInstructions.replace("{this_response}", output)
                 useLower = True
 
-            breakpoint()
+            if not useUpper:
+                branchOutputs["upper"][agentId] = ""
+            if not useLower:
+                branchOutputs["lower"][agentId] = ""
+            
+            #breakpoint()
             activationTable.update({
                 childAgentId: False
                 for childAgentId in agent.lowerChildren
@@ -428,7 +452,7 @@ async def recursiveGenerate(agent, events):
             if statusTable[child_id] == AgentStatus.WAITING:
                 waitingChildren.append(getAgentByID(child_id))
 
-        breakpoint()
+        #breakpoint()
         if waitingChildren:
             await asyncio.gather(
                 *(recursiveGenerate(child, events) for child in waitingChildren)
@@ -446,9 +470,13 @@ async def generateLLMMessage(agent, events):
     global outputTable
     global branchOutputs
 
+    #breakpoint()
     masterInput = ""
     lorebookFile = LOREBOOKS_DIR / f"{recursiveChatCard.chatID}_auto.json"
 
+    if agent.agentName == "Arc Draft":
+        breakpoint()
+    
     instructionSet = agent.agentInstructions
     agentId = agent.agentId
 
@@ -459,9 +487,12 @@ async def generateLLMMessage(agent, events):
         parentOutput = None
 
         #/#/ NOT IMPLEMENTED: well, what if an agent is connected to both the upper and lower branch, huh?
+        if parentId == "563af260e37e40a3b0a306d92dd2db7b":
+            breakpoint()
+
+        
         if not parentCard.agentBranch:
             parentOutput = outputTable[parentId]
-
         elif agentId in parentCard.upperChildren:
             parentOutput = branchOutputs["upper"][parentId]
 
@@ -477,8 +508,13 @@ async def generateLLMMessage(agent, events):
                 parentOutput
             )
 
-    if os.exists(lorebookFile) and "{name-alias-type-tag-lb}" in instructionSet: 
-        nattLb = nameAliasTypeTagLb(file_io.loadLorebook(lorebookFile=lorebookFile))
+    if "{name-alias-type-tag-lb}" in instructionSet:
+        if not lorebookFile.exists():
+            file_io.saveLorebook(lorebookObject=definitions.lorebook(), lorebookFile=lorebookFile)
+            nattLb = "EMPTY LOREBOOK"
+        else:
+            nattLb = nameAliasTypeTagLb(file_io.loadLorebook(lorebookFile=lorebookFile))
+        
         instructionSet = instructionSet.replace(
             "{name-alias-type-tag-lb}",
             nattLb
@@ -494,14 +530,22 @@ async def generateLLMMessage(agent, events):
 
     if agent.carryOver:
         agentOutputsFile = CHATS_DIR / "agentOutputs" / f"{recursiveChatCard.chatID}.json"
-        if agentOutputsFile.exists():
+
+        if not agentOutputsFile.exists():
+            with open(agentOutputsFile, "w", encoding="utf-8") as f:
+                pass
+            carryOver = ""
+        else:
             with open(agentOutputsFile, "r", encoding="utf-8") as f:
-                agentOutputs = json.load(f)
+                content = f.read().strip()
 
-            carryOver = agentOutputs.get(agent.carryOverAgentId, [])
+            if content:
+                agentOutputs = json.loads(content)
+                carryOver = agentOutputs.get(agent.carryOverAgentId, "")
+            else:
+                carryOver = ""
 
-            if carryOver:
-                masterInput += htmlHelpers.buildCarryoverSection(carryOver)
+        masterInput += htmlHelpers.buildCarryoverSection(carryOver)
 
 
     openrouterMessages = [
@@ -530,22 +574,31 @@ async def generateLLMMessage(agent, events):
     
     writeOpenRouterMessagesDebug(openrouterMessages, agent)
 
-    try:
-        #completion = await client.chat.completions.create(
-        #    model=agent.agentLLMConfig.LLMName,
-        #    messages=openrouterMessages,
-        #    temperature=agent.agentLLMConfig.temp,
-        #    top_p=agent.agentLLMConfig.topP,
-        #    max_tokens=agent.agentLLMConfig.maxTokens
-        #)
-#
-        #assistant_message = completion.choices[0].message.content
-        assistant_message = ""
+    errorFilePath = CHATS_DIR / "agentOutputs"/ f"{recursiveChatCard.chatID}" / "errorlog.txt"
 
-        if not assistant_message:
-            raise AgentGenerationError(
-                f"Agent {agent.agentName} returned an empty message."
-            )
+    os.makedirs(os.path.dirname(errorFilePath), exist_ok=True)
+
+    try:
+        #breakpoint()
+        openRouterMessages = [{"role": "system", "content": "repeat after me: bruh"}, {"role": "user", "content": "repeat after me: bruh"}]
+        completion = await client.chat.completions.create(
+            model=agent.agentLLMConfig.LLMName,
+            messages=openrouterMessages,
+            temperature=agent.agentLLMConfig.temp,
+            top_p=agent.agentLLMConfig.topP,
+            max_tokens=agent.agentLLMConfig.maxTokens
+        )
+#
+        assistant_message = completion.choices[0].message.content
+        #assistant_message = ""
+
+        #if not assistant_message:
+        #    raise AgentGenerationError(
+        #        f"Agent {agent.agentName} returned an empty message."
+        #    )
+        
+        if assistant_message is None:
+            assistant_message = ""
         
         writeAgentOutputDebug(assistant_message, agent)
         writeSingleAgentOutput(assistant_message, agent)
@@ -596,19 +649,29 @@ async def generateLLMMessage(agent, events):
             return assistant_message
 
     except BadRequestError as e:
-        raise AgentGenerationError(f"Bad request: {e}")
+        errorString = f"Bad request: {e}"
+        logError(errorString)
+        raise AgentGenerationError(errorString)
 
     except RateLimitError as e:
-        raise AgentGenerationError(f"Rate limit error: {e}")
+        errorString = f"Rate limit error: {e}"
+        logError(errorString)
+        raise AgentGenerationError(errorString)
 
     except APIConnectionError as e:
-        raise AgentGenerationError(f"Connection error: {e}")
+        errorString = f"Connection error: {e}"
+        logError(errorString)
+        raise AgentGenerationError(errorString)
 
     except APIError as e:
-        raise AgentGenerationError(f"API error: {e}")
+        errorString = f"API error: {e}"
+        logError(errorString)
+        raise AgentGenerationError(errorString)
 
     except Exception as e:
-        raise AgentGenerationError(f"Unexpected error: {type(e).__name__}: {e}")
+        errorString = f"Unexpected error: {type(e).__name__}: {e}"
+        logError(errorString)
+        raise AgentGenerationError(errorString)
 
 class AgentGenerationError(Exception):
     pass
@@ -633,6 +696,21 @@ def writeOpenRouterMessagesDebug(openrouterMessages, agent):
 
     return filePath
 
+def logError(errorString):
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    filePath = CHATS_DIR / "agentOutputs"/ f"{recursiveChatCard.chatID}" / "errorLog.txt"
+
+    os.makedirs(os.path.dirname(filePath), exist_ok=True)
+
+    with open(filePath, "a", encoding="utf-8") as file:
+        file.write("\n")
+        file.write("=" * 80)
+        file.write("\n")
+        file.write(f"Datetime: {timestamp}\n")
+        file.write(errorString)
+        file.write("=" * 80)
+        file.write("\n\n")
+        
 def writeAgentOutputDebug(assistant_message, agent):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     filePath = CHATS_DIR / "agentOutputs"/ f"{recursiveChatCard.chatID}" / "debugoutputs.txt"
@@ -674,10 +752,17 @@ def writeSingleAgentOutput(assistant_message, agent):
 
     return filePath
 
+def writeStatusFile(statusTable):
+    statusLogFile = CHATS_DIR / "agentOutputs" / recursiveChatCard.chatID / "statusLog.txt"
 
+    statusLogFile.parent.mkdir(parents=True, exist_ok=True)
 
-
-
+    with open(statusLogFile, "a", encoding="utf-8") as f:
+        f.write(f"""------------------------------------------------------""")
+        for agentId, status in statusTable.items():
+            f.write(f"""
+                    {getAgentNameByID(agentId)}: {status.value}\n
+                    """)
 
 
 

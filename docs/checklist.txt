@@ -71,6 +71,7 @@ DONE
 15. defining show to screen agent
 DONE
 
-16. loopcount
+16. defining entrypoint agent
+17. loopcount
 ???. implement character editing in chat
 

@@ -1,13 +1,13 @@
 {
-  "loadoutName": "world testing",
-  "loadoutId": "23a658aa1bc74e9a84733867803ecd83",
-  "loadoutImageFile": "C:\\Users\\mashhood\\repos\\agenticwAIfu\\app\\data\\loadouts\\images\\23a658aa1bc74e9a84733867803ecd83.png",
+  "loadoutName": "world testing buffer rebranched",
+  "loadoutId": "3f1c7f7a8e2b4d9bb54c3476fd1a2e90",
+  "loadoutImageFile": "C:\\Users\\mashhood\\repos\\agenticwAIfu\\app\\data\\loadouts\\images\\3f1c7f7a8e2b4d9bb54c3476fd1a2e90.png",
   "loadoutFile": "",
   "loadoutAgents": [
     {
       "agentName": "Arc Buffer",
       "agentId": "4068c2cf3d3d4952a2a765c294aa1e8b",
-      "agentInstructions": "If there is an arc queue directly below, output it. \n\n{ArcRefine_output}\n\nIf there is not, output the arc queue found in \"----PREVIOUS OUTPUT---\". Either way, output the queue EXACTLY as you see it. Do not change a single letter. Keep the tags found in \"<>\", \"<<>>\", or \"<<<>>>\".\n\nIf there is no arc queue at all, output:\nARC 1: EMPTY\nARC 2: EMPTY\nARC 3: EMPTY\n",
+      "agentInstructions": "If there is an arc queue directly below, output it. \n\n{ArcRefine_output}\n\nIf there is not, output the arc queue found in \"----PREVIOUS OUTPUT---\". \n\nEither way, output the queue EXACTLY as you see it. Do not change a single letter. Keep the tags found in \"<>\", \"<<>>\", or \"<<<>>>\".\n",
       "characterInput": false,
       "scenario": false,
       "carryOver": true,
@@ -24,10 +24,10 @@
       "pastMessageCount": 0,
       "parents": [
         "3b420fb9fad24e718157f41717e25e4d",
-        "b36002c479a64f4f95b3552291544b46"
+        "563af260e37e40a3b0a306d92dd2db7b"
       ],
       "children": [
-        "563af260e37e40a3b0a306d92dd2db7b"
+        "020c67db5951460bb545c0004c0d7c07"
       ],
       "upperChildren": [],
       "lowerChildren": [],
@@ -38,19 +38,19 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 78.375,
-        "y": 141.994
+        "x": 413.475,
+        "y": 267.112
       }
     },
     {
       "agentName": "Arc Update Check",
       "agentId": "563af260e37e40a3b0a306d92dd2db7b",
-      "agentInstructions": "# Arc Update Check Agent\n\nDetermine whether the current story arc queue needs to be updated based on the current state of the story.\n\nYour default behavior is to preserve the existing arc queue exactly as received.\n\nTrigger an arc update if:\n\n* one or more arcs are empty, or\n* one or more arcs are extremely unrealistic given the state of the story and are very unlikely to become relevant again, or\n* the first arc has finished or is wrapping up\n\n**If any events are marked as <NEW>, you MUST not update the queue no matter what. The only thing you must do is output the arc queue, word for word, but remove the <NEW> tag completely.**\n\n## Triggering an Update\nIf no update is needed, write this exact marker at the top of your response:\n\n`<<<PERFORM ARC UPDATE: NO>>>`\n\nThen output the arc queue exactly as received, letter by letter.\n\nIf an update is needed, write this exact marker at the top of your response:\n\n`<<<PERFORM ARC UPDATE: YES>>>`\n\nThen output the updated arc queue using the rules below.\n\n## How to Update Queue\n\n### 1. Entire Queue Is Empty\n\nIf the entire arc queue is empty, output a 3-arc queue where each arc is marked for rewriting.\n\nOutput:\n\n# ARC QUEUE:\n\n<REWRITE>\nArc 1: EMPTY\n\n<REWRITE>\nArc 2:\\\n\n<REWRITE>\nArc 3:\\\n\n### 2. First Arc Finished Or Wrapping Up\n\nIf Arc 1 has finished or is wrapping up, remove Arc 1 from the queue, move Arc 2 into the Arc 1 slot, move Arc 3 into the Arc 2 slot, replace Arc 3 with\n\n<REWRITE>\nArc 3: EMPTY\n\nDo not rewrite Arc 2 or Arc 3. Move them upward exactly as written.\n\n### 3. A Particular Arc No Longer Fits\n\nIf a particular arc is empty, impossible, extremely unrealistic, or no longer fitting for the story, preserve its slot but append this to the end of its contents:\n\n`<REWRITE>`\n\nDo not rewrite the other arcs.\n\n## Preservation Rule\n\nOnly change the arc queue in the specific ways described above.\n\nAny arc that is not being removed, moved upward, or marked as `<REWRITE>` must be preserved exactly as received, letter by letter.\n\n## Input Arc Queue\n\n{ArcBuffer_output}\n",
+      "agentInstructions": "# Arc Update Check Agent\n\nDetermine whether the current story arc queue needs to be updated based on the current state of the story.\n\nYour default behavior is to preserve the existing arc queue exactly as received.\n\nTrigger an arc update if:\n\n* one or more arcs are empty, or\n* one or more arcs are extremely unrealistic given the state of the story and are very unlikely to become relevant again, or\n* the first arc has finished or is wrapping up\n\n**If any events are marked as <NEW>, you MUST not update the queue no matter what. The only thing you must do is output the arc queue, word for word, but remove the <NEW> tag completely.**\n\n## Triggering an Update\nIf no update is needed, write this exact marker at the top of your response:\n\n`<<<PERFORM ARC UPDATE: NO>>>`\n\nThen output the arc queue exactly as received, letter by letter.\n\nIf an update is needed, write this exact marker at the top of your response:\n\n`<<<PERFORM ARC UPDATE: YES>>>`\n\nThen output the updated arc queue using the rules below.\n\n## How to Update Queue\n\n### 1. Entire Queue Is Empty\n\nIf the entire arc queue is empty, output a 3-arc queue where each arc is marked for rewriting.\n\nOutput:\n\n# ARC QUEUE:\n\n<REWRITE>\nArc 1: EMPTY\n\n<REWRITE>\nArc 2:\\\n\n<REWRITE>\nArc 3:\\\n\n### 2. First Arc Finished Or Wrapping Up\n\nIf Arc 1 has finished or is wrapping up, remove Arc 1 from the queue, move Arc 2 into the Arc 1 slot, move Arc 3 into the Arc 2 slot, replace Arc 3 with\n\n<REWRITE>\nArc 3: EMPTY\n\nDo not rewrite Arc 2 or Arc 3. Move them upward exactly as written.\n\n### 3. A Particular Arc No Longer Fits\n\nIf a particular arc is empty, impossible, extremely unrealistic, or no longer fitting for the story, preserve its slot but append this to the end of its contents:\n\n`<REWRITE>`\n\nDo not rewrite the other arcs.\n\n## Preservation Rule\n\nOnly change the arc queue in the specific ways described above.\n\nAny arc that is not being removed, moved upward, or marked as `<REWRITE>` must be preserved exactly as received, letter by letter.\n\n## Input Arc Queue\nThe input arc queue is found **under -\"----PREVIOUS OUTPUTS----\"** below.\n(if none displayed under ---PREVIOUS OUTPUTS----, output \"EMPTY\" for all 3 arcs.)\n",
       "characterInput": false,
       "scenario": false,
-      "carryOver": false,
-      "carryOverAgentId": "",
-      "carryOverAgentName": "Arc Update Check",
+      "carryOver": true,
+      "carryOverAgentId": "4068c2cf3d3d4952a2a765c294aa1e8b",
+      "carryOverAgentName": "Arc Buffer",
       "agentBranch": true,
       "agentBranchUpperTrigger": "<<<PERFORM ARC UPDATE: YES>>>",
       "agentBranchUpperInstructions": "{this_response}",
@@ -61,14 +61,14 @@
       "publish": false,
       "pastMessageCount": 0,
       "parents": [
-        "4068c2cf3d3d4952a2a765c294aa1e8b"
+        "b36002c479a64f4f95b3552291544b46"
       ],
       "children": [],
       "upperChildren": [
         "7e0b53afaab54012b7f449dd19cab7b5"
       ],
       "lowerChildren": [
-        "020c67db5951460bb545c0004c0d7c07"
+        "4068c2cf3d3d4952a2a765c294aa1e8b"
       ],
       "agentLLMConfig": {
         "LLMName": "openai/gpt-5.1",
@@ -77,8 +77,8 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 422.362,
-        "y": 96.3374
+        "x": 411.925,
+        "y": -12.075
       }
     },
     {
@@ -117,8 +117,8 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 746.794,
-        "y": 128.775
+        "x": 711.994,
+        "y": -14.025
       }
     },
     {
@@ -154,8 +154,8 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 1047.95,
-        "y": 131.975
+        "x": 1011.94,
+        "y": -9.6375
       }
     },
     {
@@ -193,8 +193,8 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 1343.95,
-        "y": 133.55
+        "x": 1306.33,
+        "y": -3.64997
       }
     },
     {
@@ -235,7 +235,7 @@
     {
       "agentName": "Arc Crop",
       "agentId": "020c67db5951460bb545c0004c0d7c07",
-      "agentInstructions": "Output the first story arc in the queue EXACTLY as you see it. Do not output anything else at all.\n{ArcUpdateCheck_output}",
+      "agentInstructions": "Output the first story arc in the queue (and its conditions that came with it, if there are any) EXACTLY as you see it. Do not output anything else at all.\n{ArcBuffer_output}",
       "characterInput": false,
       "scenario": false,
       "carryOver": false,
@@ -251,11 +251,10 @@
       "publish": false,
       "pastMessageCount": 0,
       "parents": [
-        "563af260e37e40a3b0a306d92dd2db7b"
+        "4068c2cf3d3d4952a2a765c294aa1e8b"
       ],
       "children": [
         "33839c824e6e44d6a9744b5db93cfaff",
-        "266f165df28343cc9c6ece0af0890bf7",
         "714725df9c4c4ef89940f2dd20f38548"
       ],
       "upperChildren": [],
@@ -267,19 +266,19 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 423.975,
-        "y": 354.375
+        "x": 718.375,
+        "y": 280.75
       }
     },
     {
       "agentName": "MTE Update Check",
       "agentId": "33839c824e6e44d6a9744b5db93cfaff",
-      "agentInstructions": "# Mid-Term Event Update Check Agent\n\nDetermine whether the current mid-term event queue needs to be updated based on the current state of the story.\n\nYour default behavior is to preserve the existing mid-term event queue exactly as received.\n\nTrigger a mid-term event update if:\n\n* one or more mid-term events are empty, or\n* one or more mid-term events are extremely unrealistic given the state of the story and are very unlikely to become relevant again, or\n* the first mid-term event has finished or is wrapping up\n* the first mid-term event has been running for too long\n\n**If any events are marked as `<NEW>`, you MUST not update the queue no matter what. The only thing you must do is output the mid-term event queue, word for word, but remove the `<NEW>` tag completely.**\n\n## Triggering an Update\n\nIf no update is needed, write this exact marker at the top of your response:\n\n`<<<PERFORM MID-TERM EVENT UPDATE: NO>>>`\n\nThen output the mid-term event queue exactly as received, letter by letter.\n\nIf an update is needed, write this exact marker at the top of your response:\n\n`<<<PERFORM MID-TERM EVENT UPDATE: YES>>>`\n\nThen output the updated mid-term event queue using the rules below.\n\n## How to Update Queue\n\n### 1. Entire Queue Is Empty\n\nIf the entire mid-term event queue is empty, output a 3-event queue where each event is marked for rewriting.\n\nOutput:\n\nMID-TERM EVENT QUEUE:\n\n<REWRITE>\nEvent 1: EMPTY\n\n<REWRITE>\nEvent 2:\n\n<REWRITE>\nEvent 3:\n\n### 2. First Event Finished Or Wrapping Up\n\nIf Event 1 has finished or is wrapping up, remove Event 1 from the queue, move Event 2 into the Event 1 slot, move Event 3 into the Event 2 slot, and replace Event 3 with:\n\n<REWRITE>\nEvent 3: EMPTY\n\nDo not rewrite Event 2 or Event 3. Move them upward exactly as written.\n\n### 3. A Particular Event No Longer Fits\n\nIf a particular event is empty, impossible, extremely unrealistic, or no longer fitting for the story, preserve its slot but append this above it:\n\n`<REWRITE>`\n\nDo not rewrite the other events.\n\n## Preservation Rule\n\nOnly change the mid-term event queue in the specific ways described above.\n\nAny event that is not being removed, moved upward, or marked as `<REWRITE>` must be preserved exactly as received, letter by letter.\n\n## Input Mid-Term Event Queue\n\n{MTEBuffer_output}\n\n## Current Story Arc\n{ArcCrop_output}\n\n",
+      "agentInstructions": "# Mid-Term Event Update Check Agent\n\nDetermine whether the current mid-term event queue needs to be updated based on the current state of the story.\n\nYour default behavior is to preserve the existing mid-term event queue exactly as received.\n\nTrigger a mid-term event update if:\n\n* one or more mid-term events are empty, or\n* one or more mid-term events are extremely unrealistic given the state of the story and are very unlikely to become relevant again, or\n* the first mid-term event has finished or is wrapping up\n* the first mid-term event has been running for too long\n\n**If any events are marked as `<NEW>`, you MUST not update the queue no matter what. The only thing you must do is output the mid-term event queue, word for word, but remove the `<NEW>` tag completely.**\n\n## Triggering an Update\n\nIf no update is needed, write this exact marker at the top of your response:\n\n`<<<PERFORM MID-TERM EVENT UPDATE: NO>>>`\n\nThen output the mid-term event queue exactly as received, letter by letter.\n\nIf an update is needed, write this exact marker at the top of your response:\n\n`<<<PERFORM MID-TERM EVENT UPDATE: YES>>>`\n\nThen output the updated mid-term event queue using the rules below.\n\n## How to Update Queue\n\n### 1. Entire Queue Is Empty\n\nIf the entire mid-term event queue is empty, output a 3-event queue where each event is marked for rewriting.\n\nOutput:\n\nMID-TERM EVENT QUEUE:\n\n<REWRITE>\nEvent 1: EMPTY\n\n<REWRITE>\nEvent 2:\n\n<REWRITE>\nEvent 3:\n\n### 2. First Event Finished Or Wrapping Up\n\nIf Event 1 has finished or is wrapping up, remove Event 1 from the queue, move Event 2 into the Event 1 slot, move Event 3 into the Event 2 slot, and replace Event 3 with:\n\n<REWRITE>\nEvent 3: EMPTY\n\nDo not rewrite Event 2 or Event 3. Move them upward exactly as written.\n\n### 3. A Particular Event No Longer Fits\n\nIf a particular event is empty, impossible, extremely unrealistic, or no longer fitting for the story, preserve its slot but append this above it:\n\n`<REWRITE>`\n\nDo not rewrite the other events.\n\n## Preservation Rule\n\nOnly change the mid-term event queue in the specific ways described above.\n\nAny event that is not being removed, moved upward, or marked as `<REWRITE>` must be preserved exactly as received, letter by letter.\n\n## Input Mid-Term Event Queue\nThe input MTE queue is found **under -\"----PREVIOUS OUTPUTS----\"** much further below this.\n(if none displayed under ---PREVIOUS OUTPUTS----, output \"EMPTY\" for all 3 mid-term events.)\n\n## Current Story Arc\n{ArcCrop_output}\n\n",
       "characterInput": false,
       "scenario": false,
-      "carryOver": false,
-      "carryOverAgentId": "",
-      "carryOverAgentName": "MTE Update Check",
+      "carryOver": true,
+      "carryOverAgentId": "266f165df28343cc9c6ece0af0890bf7",
+      "carryOverAgentName": "MTE Buffer",
       "agentBranch": true,
       "agentBranchUpperTrigger": "<<<PERFORM MID-TERM EVENT UPDATE: YES>>>",
       "agentBranchUpperInstructions": "{this_response}",
@@ -290,15 +289,14 @@
       "publish": false,
       "pastMessageCount": 15,
       "parents": [
-        "020c67db5951460bb545c0004c0d7c07",
-        "266f165df28343cc9c6ece0af0890bf7"
+        "020c67db5951460bb545c0004c0d7c07"
       ],
       "children": [],
       "upperChildren": [
         "714725df9c4c4ef89940f2dd20f38548"
       ],
       "lowerChildren": [
-        "a0e53110584a4f13b3f95374cd5087f6"
+        "266f165df28343cc9c6ece0af0890bf7"
       ],
       "agentLLMConfig": {
         "LLMName": "openai/gpt-5.1",
@@ -307,8 +305,8 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 422.794,
-        "y": 543.994
+        "x": 416.375,
+        "y": 524.775
       }
     },
     {
@@ -349,8 +347,8 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 755.156,
-        "y": 545.138
+        "x": 735.95,
+        "y": 516.325
       }
     },
     {
@@ -373,10 +371,10 @@
       "pastMessageCount": 0,
       "parents": [
         "714725df9c4c4ef89940f2dd20f38548",
-        "020c67db5951460bb545c0004c0d7c07"
+        "33839c824e6e44d6a9744b5db93cfaff"
       ],
       "children": [
-        "33839c824e6e44d6a9744b5db93cfaff"
+        "a0e53110584a4f13b3f95374cd5087f6"
       ],
       "upperChildren": [],
       "lowerChildren": [],
@@ -387,14 +385,14 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 84.375,
-        "y": 536.775
+        "x": 415.575,
+        "y": 791.15
       }
     },
     {
       "agentName": "MTE Crop",
       "agentId": "a0e53110584a4f13b3f95374cd5087f6",
-      "agentInstructions": "Output the first event in the queue EXACTLY as you see it. Do not output anything else at all.\n{MTEUpdateCheck_output}",
+      "agentInstructions": "Output the first event in the queue EXACTLY as you see it. Do not output anything else at all.\n{MTEBuffer_output}",
       "characterInput": false,
       "scenario": false,
       "carryOver": false,
@@ -410,11 +408,10 @@
       "publish": false,
       "pastMessageCount": 0,
       "parents": [
-        "33839c824e6e44d6a9744b5db93cfaff"
+        "266f165df28343cc9c6ece0af0890bf7"
       ],
       "children": [
         "dd6223100d4a4fa9a5fecdc767d21ff9",
-        "09f0f5c20481483bb99cd88751aadde7",
         "f6ea544ca27e467f9533bdaae26c0419"
       ],
       "upperChildren": [],
@@ -426,14 +423,14 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 422.756,
-        "y": 801.994
+        "x": 729.925,
+        "y": 814.725
       }
     },
     {
       "agentName": "STE Update Check",
       "agentId": "dd6223100d4a4fa9a5fecdc767d21ff9",
-      "agentInstructions": "# Short-Term Event Update Check Agent\n\nDetermine whether the current short-term event queue needs to be updated based on the current state of the story.\n\nYour default behavior is to preserve the existing short-term event queue exactly as received.\n\nTrigger a short-term event update if:\n\n* one or more short-term events are empty, or\n* one or more short-term events are extremely unrealistic given the state of the story and are very unlikely to become relevant again, or\n* the first short-term event has already happened or is no longer possible, or\n* the first short-term event has been sitting in the queue for too long without being used\n\n**If any events are marked as `<NEW>`, you MUST not update the queue no matter what. The only thing you must do is output the short-term event queue, word for word, but remove the `<NEW>` tag completely.**\n\n## Triggering an Update\n\nIf no update is needed, write this exact marker at the top of your response:\n\n`<<<PERFORM SHORT-TERM EVENT UPDATE: NO>>>`\n\nThen output the short-term event queue exactly as received, letter by letter.\n\nIf an update is needed, write this exact marker at the top of your response:\n\n`<<<PERFORM SHORT-TERM EVENT UPDATE: YES>>>`\n\nThen output the updated short-term event queue using the rules below.\n\n## How to Update Queue\n\n### 1. Entire Queue Is Empty\n\nIf the entire short-term event queue is empty, output a 3-event queue where each event is marked for rewriting.\n\nOutput:\n\nSHORT-TERM EVENT QUEUE:\n\n<REWRITE>\nEvent 1: EMPTY\n\n<REWRITE>\nEvent 2:\n\n<REWRITE>\nEvent 3:\n\n### 2. First Event Already Happened Or Is No Longer Possible\n\nIf Event 1 has already happened, is no longer possible, or has been sitting too long without being used, remove Event 1 from the queue, move Event 2 into the Event 1 slot, move Event 3 into the Event 2 slot, and replace Event 3 with:\n\n<REWRITE>\nEvent 3: EMPTY\n\nDo not rewrite Event 2 or Event 3. Move them upward exactly as written.\n\n### 3. A Particular Event No Longer Fits\n\nIf a particular event is empty, impossible, extremely unrealistic, or no longer fitting for the story, preserve its slot but append this above it:\n\n`<REWRITE>`\n\nDo not rewrite the other events.\n\n## Preservation Rule\n\nOnly change the short-term event queue in the specific ways described above.\n\nAny event that is not being removed, moved upward, or marked as `<REWRITE>` must be preserved exactly as received, letter by letter.\n\n## Input Short-Term Event Queue\n\n{STEBuffer_output}\n",
+      "agentInstructions": "# Short-Term Event Update Check Agent\n\nDetermine whether the current short-term event queue needs to be updated based on the current state of the story.\n\nYour default behavior is to preserve the existing short-term event queue exactly as received.\n\nTrigger a short-term event update if:\n\n* one or more short-term events are empty, or\n* one or more short-term events are extremely unrealistic given the state of the story and are very unlikely to become relevant again, or\n* the first short-term event has already happened or is no longer possible, or\n* the first short-term event has been sitting in the queue for too long without being used\n\n**If any events are marked as `<NEW>`, you MUST not update the queue no matter what. The only thing you must do is output the short-term event queue, word for word, but remove the `<NEW>` tag completely.**\n\n## Triggering an Update\n\nIf no update is needed, write this exact marker at the top of your response:\n\n`<<<PERFORM SHORT-TERM EVENT UPDATE: NO>>>`\n\nThen output the short-term event queue exactly as received, letter by letter.\n\nIf an update is needed, write this exact marker at the top of your response:\n\n`<<<PERFORM SHORT-TERM EVENT UPDATE: YES>>>`\n\nThen output the updated short-term event queue using the rules below.\n\n## How to Update Queue\n\n### 1. Entire Queue Is Empty\n\nIf the entire short-term event queue is empty, output a 3-event queue where each event is marked for rewriting.\n\nOutput:\n\nSHORT-TERM EVENT QUEUE:\n\n<REWRITE>\nEvent 1: EMPTY\n\n<REWRITE>\nEvent 2:\n\n<REWRITE>\nEvent 3:\n\n### 2. First Event Already Happened Or Is No Longer Possible\n\nIf Event 1 has already happened, is no longer possible, or has been sitting too long without being used, remove Event 1 from the queue, move Event 2 into the Event 1 slot, move Event 3 into the Event 2 slot, and replace Event 3 with:\n\n<REWRITE>\nEvent 3: EMPTY\n\nDo not rewrite Event 2 or Event 3. Move them upward exactly as written.\n\n### 3. A Particular Event No Longer Fits\n\nIf a particular event is empty, impossible, extremely unrealistic, or no longer fitting for the story, preserve its slot but append this above it:\n\n`<REWRITE>`\n\nDo not rewrite the other events.\n\n## Preservation Rule\n\nOnly change the short-term event queue in the specific ways described above.\n\nAny event that is not being removed, moved upward, or marked as `<REWRITE>` must be preserved exactly as received, letter by letter.\n\n## Input Short-term Event Queue\nThe input STE queue is found **under -\"----PREVIOUS OUTPUTS----\"** much further below.\n(if none displayed under ---PREVIOUS OUTPUTS----, output \"EMPTY\" for all 3 short-term events.)\n",
       "characterInput": false,
       "scenario": false,
       "carryOver": false,
@@ -466,8 +463,8 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 415.575,
-        "y": 1000.38
+        "x": 412.375,
+        "y": 1035.58
       }
     },
     {
@@ -507,8 +504,8 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 751.2,
-        "y": 997.6
+        "x": 731.975,
+        "y": 1018.4
       }
     },
     {
@@ -530,11 +527,10 @@
       "publish": false,
       "pastMessageCount": 0,
       "parents": [
-        "f6ea544ca27e467f9533bdaae26c0419",
-        "a0e53110584a4f13b3f95374cd5087f6"
+        "f6ea544ca27e467f9533bdaae26c0419"
       ],
       "children": [
-        "dd6223100d4a4fa9a5fecdc767d21ff9"
+        "cb55114d83da58fea4326d0b5f45ad66"
       ],
       "upperChildren": [],
       "lowerChildren": [],
@@ -545,8 +541,8 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 58.325,
-        "y": 1003.92
+        "x": 413.525,
+        "y": 1291.9
       }
     },
     {
@@ -569,8 +565,8 @@
       "pastMessageCount": 0,
       "parents": [],
       "children": [
-        "4068c2cf3d3d4952a2a765c294aa1e8b",
-        "6809c2c524c5581980525124e627ea84"
+        "6809c2c524c5581980525124e627ea84",
+        "563af260e37e40a3b0a306d92dd2db7b"
       ],
       "upperChildren": [],
       "lowerChildren": [],
@@ -621,8 +617,8 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 1345.1,
-        "y": 1200.93
+        "x": 1340.3,
+        "y": 1202.52
       }
     },
     {
@@ -762,7 +758,8 @@
       "pastMessageCount": 30,
       "parents": [
         "dd6223100d4a4fa9a5fecdc767d21ff9",
-        "b4e777e486cf5b6bb655eee92b75cf5a"
+        "b4e777e486cf5b6bb655eee92b75cf5a",
+        "09f0f5c20481483bb99cd88751aadde7"
       ],
       "children": [],
       "upperChildren": [],

@@ -64,14 +64,6 @@ def loadChar(charFile=None, charID=None) -> definitions.character:
     return definitions.character.model_validate(character)
 
 def saveLorebook(lorebookObject, lorebookFile):
-
-    imageFileSrc = Path(lorebookObject.charImageFile)
-    if not imageFileSrc.is_absolute():
-        imageFileSrc = APP_DIR / imageFileSrc
-    imageFileDest = CHARACTER_IMAGES_DIR / imageFileSrc.name
-
-    if imageFileSrc.resolve() != imageFileDest.resolve():
-        shutil.copyfile(imageFileSrc, imageFileDest)
     with open(lorebookFile, "w", encoding="utf-8") as f:
         json.dump(lorebookObject.model_dump(), f, indent=2)
 
