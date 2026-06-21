@@ -354,14 +354,14 @@ async def recursiveGenerate(agent, events):
     global activationTable
 
     agentId = agent.agentId
-    if agent.agentName == "Arc Update Check":
-        breakpoint()
+    #if agent.agentName == "Arc Update Check":
+        #breakpoint()
     
     statusTable[agentId] = AgentStatus.RUNNING
     writeStatusFile(statusTable)
 
-    if agent.agentName == "Arc Buffer":
-        breakpoint()
+    #if agent.agentName == "Arc Buffer":
+        #breakpoint()
     
     print("activationTable")
     print(activationTable)
@@ -474,8 +474,8 @@ async def generateLLMMessage(agent, events):
     masterInput = ""
     lorebookFile = LOREBOOKS_DIR / f"{recursiveChatCard.chatID}_auto.json"
 
-    if agent.agentName == "Arc Draft":
-        breakpoint()
+    #if agent.agentName == "Arc Draft":
+        #breakpoint()
     
     instructionSet = agent.agentInstructions
     agentId = agent.agentId
@@ -487,8 +487,8 @@ async def generateLLMMessage(agent, events):
         parentOutput = None
 
         #/#/ NOT IMPLEMENTED: well, what if an agent is connected to both the upper and lower branch, huh?
-        if parentId == "563af260e37e40a3b0a306d92dd2db7b":
-            breakpoint()
+        #if parentId == "563af260e37e40a3b0a306d92dd2db7b":
+            #breakpoint()
 
         
         if not parentCard.agentBranch:
@@ -610,6 +610,7 @@ async def generateLLMMessage(agent, events):
         agentOutputsDir = CHATS_DIR / "agentOutputs"
         agentOutputsDir.mkdir(parents=True, exist_ok=True)
         if agent.writeLorebook:
+            breakpoint()
             lorebookFile = LOREBOOKS_DIR / f"{recursiveChatCard.chatID}_auto.json"
 
             if lorebookFile.exists():
