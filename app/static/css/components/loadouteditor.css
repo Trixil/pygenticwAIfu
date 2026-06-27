@@ -810,3 +810,74 @@
 .agent-card__publish-icon.disabled {
     opacity: 0.25;
 }
+
+.delete-links-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+
+    position: absolute;
+    top: 25px;
+    right: 25px;
+
+    border: none;
+    border-radius: 10px;
+
+    font-family: "Manrope", sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+
+    color: white;
+    background: linear-gradient(180deg, #ff3b30 0%, #b3261e 100%);
+    cursor: pointer;
+
+    width: 10vw;
+    min-width: 190px;
+    max-width: 260px;
+
+    height: 5vh;
+    min-height: 56px;
+    max-height: 80px;
+
+    padding: 0 24px;
+}
+
+.delete-links-icon {
+    width: 42px;
+    height: 42px;
+    display: block;
+    flex: 0 0 auto;
+}
+
+.delete-links-button:hover {
+    background-color: #d93025;
+}
+
+.delete-links-button:active {
+    background-color: #8c1d18;
+}
+
+.delete-links-button {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+}
+
+.wire-layer line {
+    pointer-events: stroke; /* only the line stroke catches clicks */
+}
+
+.connector-line {
+  stroke: royalblue;
+  stroke-width: 5;
+  stroke-linecap: round;
+  transition: stroke 0.15s ease, filter 0.15s ease;
+}
+
+.connector-line-hover {
+  cursor: pointer;
+  stroke: white;
+  filter: drop-shadow(0 0 6px dodgerblue)
+          drop-shadow(0 0 12px royalblue);
+}

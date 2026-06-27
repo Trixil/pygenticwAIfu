@@ -81,6 +81,53 @@
         });
     }
 
+    function addLineListener(svgElement)
+    {
+        svgElement.addEventListener("mouseenter", function () {
+            svgElement.classList.toggle("connector-line-hover", LoadoutEditor.state.isDeletingLinks);
+        });
+        svgElement.addEventListener("mouseleave", function () {
+            svgElement.classList.toggle("connector-line-hover", false);
+        });
+        
+        svgElement.addEventListener("pointerdown", function () {
+            if (LoadoutEditor.state.isDeletingLinks)
+            {
+                const startAgentId = svgElement.dataset.agentStart;
+                const endAgentId = svgElement.dataset.agentEnd;
+                const startPort = svgElement.dataset.startPort
+                const startAgentElement = LoadoutEditor.getAgentElement(startAgentId);
+
+                if (startPort === "normal")
+                {
+                    LoadoutEditor.state.allConfigsById[startAgentId].agentConfiguration.children = 
+                    LoadoutEditor.state.allConfigsById[startAgentId].agentConfiguration.children.filter(child => child !== endAgentId);
+                    LoadoutEditor.state.allChildren[startAgentId].delete(endAgentId);
+                }
+                else if (startPort === "upper")
+                {
+                    LoadoutEditor.state.allConfigsById[startAgentId].agentConfiguration.upperChildren =
+                    LoadoutEditor.state.allConfigsById[startAgentId].agentConfiguration.upperChildren.filter(child => child !== endAgentId);
+                    LoadoutEditor.state.allUpperChildren[startAgentId].delete(endAgentId);
+                }
+                else if (startPort === "lower")
+                {
+                    LoadoutEditor.state.allConfigsById[startAgentId].agentConfiguration.lowerChildren = 
+                    LoadoutEditor.state.allConfigsById[startAgentId].agentConfiguration.lowerChildren.filter(child => child !== endAgentId);
+                    LoadoutEditor.state.allLowerChildren[startAgentId].delete(endAgentId);
+                }
+                
+                LoadoutEditor.state.allConfigsById[endAgentId].agentConfiguration.parents = 
+                LoadoutEditor.state.allConfigsById[endAgentId].agentConfiguration.parents.filter(parent => parent !== startAgentId);
+
+                LoadoutEditor.state.allChildren[startAgentId].delete(endAgentId);
+
+                svgElement.remove();
+            }
+        });
+
+    }
+
     function registerAgent(agent) {
         const state = LoadoutEditor.state;
         const agentId = agent.dataset.agentId;
@@ -236,8 +283,7 @@
                 line.setAttribute("y1", outRect.top + outRect.height / 2 - svgRect.top);
                 line.setAttribute("x2", downEvent.clientX - svgRect.left);
                 line.setAttribute("y2", downEvent.clientY - svgRect.top);
-                line.setAttribute("stroke", "white");
-                line.setAttribute("stroke-width", "2");
+                line.classList.add("connector-line");
 
                 line.setAttribute("data-agent-start", agentId);
                 line.setAttribute("data-start-port", startPort);
@@ -280,13 +326,14 @@
             connectorLine.setAttribute("y1", startY);
             connectorLine.setAttribute("x2", endX);
             connectorLine.setAttribute("y2", endY);
-            connectorLine.setAttribute("stroke", "white");
-            connectorLine.setAttribute("stroke-width", "2");
+            connectorLine.classList.add("connector-line");
             connectorLine.setAttribute("data-agent-start", startAgentId);
             connectorLine.setAttribute("data-start-port", startPort);
             connectorLine.setAttribute("data-agent-end", endAgentId);
 
             state.activeSvg.appendChild(connectorLine);
+
+            addLineListener(connectorLine);
 
             if (!LoadoutEditor.ensureAgentConfig(startAgentId).agentConfiguration.agentBranch) {
                 LoadoutEditor.ensureChildrenSet(startAgentId).add(endAgentId);
@@ -321,8 +368,8 @@
 
             resetLineDrag();
 
-           LoadoutEditor.setPublish(startAgentId, false);
-           LoadoutEditor.refreshPublish(endAgentId);
+            LoadoutEditor.setPublish(startAgentId, false);
+            LoadoutEditor.refreshPublish(endAgentId);
            
         });
     }
@@ -433,13 +480,15 @@
         
         line.setAttribute("x2", inRect.left + inRect.width / 2 - svgRect.left);
         line.setAttribute("y2", inRect.top + inRect.height / 2 - svgRect.top);
-        line.setAttribute("stroke", "white");
-        line.setAttribute("stroke-width", "2");
+        line.classList.add("connector-line");
         line.setAttribute("data-agent-start", startAgentId);
         line.setAttribute("data-start-port", startPort);
         line.setAttribute("data-agent-end", endAgentId);
 
         svg.appendChild(line);
+
+        addLineListener(line);
+
     }
 
     function rebuildAllSavedWires() {
@@ -476,6 +525,7 @@
         rebuildAllSavedWires,
         registerAgent,
         registerAllAgents,
-        updateConnectedLines
+        updateConnectedLines,
+        addLineListener
     });
 })();

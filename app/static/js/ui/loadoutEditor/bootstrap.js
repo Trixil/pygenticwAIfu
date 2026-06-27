@@ -10,6 +10,15 @@
         LoadoutEditor.state.hasSaveListener = true;
     }
 
+    function attachDeleteLinksListener() {
+        const deleteLinksButton = document.querySelector(".delete-links-button");
+
+        if (!deleteLinksButton || LoadoutEditor.state.hasDeleteLinksListener) return;
+
+        deleteLinksButton.addEventListener("pointerdown", LoadoutEditor.toggleDeleteLinks);
+        LoadoutEditor.state.hasDeleteLinksListener = true;
+    }
+
     function attachTitleEditorListeners() {
         const titleEditButton = document.querySelector(".loadout-title-edit-button");
         const titleHeader = LoadoutEditor.getLoadoutTitleElement();
@@ -54,12 +63,14 @@
         LoadoutEditor.attachEditorDragListeners();
         attachSaveListener();
         attachTitleEditorListeners();
+        attachDeleteLinksListener();
         LoadoutEditor.registerAllAgents();
     }
-
+    
     Object.assign(LoadoutEditor, {
         attachSaveListener,
         attachTitleEditorListeners,
+        attachDeleteLinksListener,
         startLoadoutEditor
     });
 
@@ -81,4 +92,6 @@
 
     attachSaveListener();
     attachTitleEditorListeners();
+    attachDeleteLinksListener();
+
 })();

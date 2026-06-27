@@ -50,6 +50,16 @@
             console.error("Failed to save loadout configuration");
         }
     }
+    
+    function toggleDeleteLinks() {
+        
+        const isDeletingLinks = LoadoutEditor.state.isDeletingLinks;
+
+        // #/#/ implement prettification
+        
+        LoadoutEditor.state.isDeletingLinks = !isDeletingLinks;
+
+    }
 
     async function createAgentCardFromSavedAgent(savedAgent) {
         const runtimeAgent = LoadoutEditor.normalizeAgentConfig(savedAgent);
@@ -158,6 +168,7 @@
         createAgentCardFromSavedAgent,
         loadSavedLoadoutIntoEditor,
         openSavedLoadout,
-        saveLoadoutConfiguration
+        saveLoadoutConfiguration,
+        toggleDeleteLinks
     });
 })();

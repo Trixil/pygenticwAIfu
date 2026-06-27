@@ -16,7 +16,9 @@
         yOffset: 0,
         hasEditorDragListeners: false,
         hasSaveListener: false,
-        hasTitleListeners: false
+        hasDeletingLinksListener: false,
+        hasTitleListeners: false,
+        isDeletingLinks: false
     };
 
     function getLayoutElement() {
@@ -383,6 +385,7 @@
         editorState.activeSvg = null;
         editorState.xOffset = 0;
         editorState.yOffset = 0;
+        editorState.isDeletingLinks = false;
     }
 
     function clearEditorSurface(editor) {
