@@ -114,6 +114,12 @@
             LoadoutEditor.state.allChildren[agentId] = new Set(
                 runtimeAgent.agentConfiguration.children || []
             );
+            LoadoutEditor.state.allUpperChildren[agentId] = new Set(
+                runtimeAgent.agentConfiguration.upperChildren || []
+            );
+            LoadoutEditor.state.allLowerChildren[agentId] = new Set(
+                runtimeAgent.agentConfiguration.lowerChildren || []
+            );
 
             const agent = await createAgentCardFromSavedAgent(runtimeAgent);
             if (!agent) continue;
@@ -155,6 +161,8 @@
 
         LoadoutEditor.state.allConfigsById[agentId] = runtimeAgent;
         LoadoutEditor.state.allChildren[agentId] = new Set();
+        LoadoutEditor.state.allUpperChildren[agentId] = new Set();
+        LoadoutEditor.state.allLowerChildren[agentId] = new Set();
 
         const newAgent = await createAgentCardFromSavedAgent(runtimeAgent);
         if (!newAgent) return;
