@@ -438,6 +438,8 @@ async def recursiveGenerate(agent, events):
         branch_children.extend(agent.upperChildren)
         branch_children.extend(agent.lowerChildren)
         if activationTable[agentId]:
+
+                
             if agent.agentBranchUpperTrigger in output or "" == agent.agentBranchUpperTrigger:
                 #branch_children.extend(agent.upperChildren)
                 branchOutputs["upper"][agentId] = agent.agentBranchUpperInstructions.replace("{this_response}", output)
@@ -504,9 +506,6 @@ async def generateLLMMessage(agent, events):
     #breakpoint()
     masterInput = ""
     lorebookFile = LOREBOOKS_DIR / f"{recursiveChatCard.chatID}_auto.json"
-
-    #if agent.agentName == "Arc Draft":
-        #breakpoint()
     
     instructionSet = agent.agentInstructions
     agentId = agent.agentId
@@ -514,7 +513,7 @@ async def generateLLMMessage(agent, events):
     for parentId in agent.parents:
         parentCard = getAgentByID(parentId)
         parentSlug = getAgentSlugByID(parentId)
-
+        
         parentOutput = None
 
         #/#/ NOT IMPLEMENTED: well, what if an agent is connected to both the upper and lower branch, huh?

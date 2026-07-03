@@ -51,3 +51,4 @@ the starting/ending position of lines on the agent tabs do not update with more 
 untitled chat # title is not saved
 buggy publish
 buggy input attachment
+make both carryoveragentname and carryoveragentid initialize
