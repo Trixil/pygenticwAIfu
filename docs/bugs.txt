@@ -49,3 +49,5 @@ the line for the lower branch is not centered on the svg
 margins on branch output
 the starting/ending position of lines on the agent tabs do not update with more text being added to the instruction preview
 untitled chat # title is not saved
+buggy publish
+buggy input attachment

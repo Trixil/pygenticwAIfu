@@ -52,34 +52,34 @@ def buildOutputListEntryHTML(agentSlug: str, isLorebook=False):
 
 def buildInstructionSection(instructions: str):
     return f"""
-    --------------- AGENT INSTRUCTIONS ---------------
+    --------------- START OF AGENT INSTRUCTIONS ---------------
     You must follow all of these instructions exactly.
 
     {instructions}
+    --------------- END OF AGENT INSTRUCTIONS ---------------
     """
 
 def buildCharacterInfoSection(characterInfo: str):
     return f"""
-    --------------- CHARACTER INFORMATION ---------------
+    --------------- START OF CHARACTER INFORMATION ---------------
     These are details on all of the character(s) in the chat.
-
     {characterInfo}
+    --------------- END OF CHARACTER INFORMATION ---------------
     """
 
 def buildScenarioInfoSection(scenarioInfo: str):
     return f"""
-    --------------- SCENARIO INFORMATION ---------------
+    --------------- START OF SCENARIO INFORMATION ---------------
     The fictional scenario that this chat occurs in. The scenario specific to each character is written.
-
     {scenarioInfo}
+    --------------- END OF SCENARIO INFORMATION ---------------
     """
 
 def buildCarryoverSection(carryover: str):
     return f"""
-    --------------- PREVIOUS OUTPUT ---------------
-    The output that you generated last turn.
-
+    --------------- START OF PREVIOUS OUTPUT ---------------
     {carryover}
+    --------------- END OF PREVIOUS OUTPUT ---------------
     """
 
 def buildMessageLogSection(pastMessageContent: str):

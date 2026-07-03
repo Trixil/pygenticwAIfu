@@ -363,22 +363,42 @@ async def recursiveGenerate(agent, events):
     #if agent.agentName == "Arc Buffer":
         #breakpoint()
     
+    #if agent.agentName == "Arc Draft":
+    #    breakpoint()
     print("activationTable")
     print(activationTable)
+    waitingParentIds = []
+
+    for parentId in agent.parents:
+        if statusTable[parentId] != AgentStatus.DONE:
+            waitingParentIds.append(parentId)
+
+    await asyncio.gather(
+        *(events[parentId].wait() for parentId in waitingParentIds)
+    )
     #breakpoint()
-    if (any(not activationTable[parentId] for parentId in agent.parents) and agent.parents and not agent.softActivation) or not activationTable[agentId]:
+    hasParents = bool(agent.parents)
+    hasChildren = bool(agent.children)
+    parentDeactivated = any(
+        not activationTable[parentId]
+        for parentId in agent.parents
+    )
+
+    hardDependsOnParents = hasParents and not agent.softActivation
+    blockedByParent = parentDeactivated and hardDependsOnParents
+    selfDeactivated = not activationTable[agentId]
+    isolatedAgent = not hasParents and not hasChildren
+
+    shouldDeactivate = (
+        blockedByParent
+        or selfDeactivated
+        or isolatedAgent
+    )
+
+    if shouldDeactivate:
         activationTable[agentId] = False
         outputTable[agentId] = ""
     else:
-        waitingParentIds = []
-
-        for parentId in agent.parents:
-            if statusTable[parentId] != AgentStatus.DONE:
-                waitingParentIds.append(parentId)
-
-        await asyncio.gather(
-            *(events[parentId].wait() for parentId in waitingParentIds)
-        )
         message = await generateLLMMessage(agent, events)
         outputTable[agentId] = message
 
@@ -387,7 +407,10 @@ async def recursiveGenerate(agent, events):
     events[agentId].set()
 
     waitingChildren: list[definitions.agent] = []
-
+    
+    #if agent.agentName == "Arc Update Check" or agent.agentName == "Arc Draft":
+    #    breakpoint()
+    
     if not agent.agentBranch:
         for childId in agent.children:
 
@@ -397,7 +420,7 @@ async def recursiveGenerate(agent, events):
         if not activationTable[agent.agentId]:
             activationTable.update({
                 childAgentId: False
-                for childAgentId in branch_children
+                for childAgentId in agent.children
                 if not getAgentByID(childAgentId).softActivation
             })
                     
@@ -407,14 +430,13 @@ async def recursiveGenerate(agent, events):
             )
     else:
         output = outputTable[agentId]
-
-        branch_children = []
-        branch_children.extend(agent.upperChildren)
-        branch_children.extend(agent.lowerChildren)
         
         useLower = False
         useUpper = False
 
+        branch_children = []
+        branch_children.extend(agent.upperChildren)
+        branch_children.extend(agent.lowerChildren)
         if activationTable[agentId]:
             if agent.agentBranchUpperTrigger in output or "" == agent.agentBranchUpperTrigger:
                 #branch_children.extend(agent.upperChildren)
