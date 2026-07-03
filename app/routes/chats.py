@@ -366,7 +366,7 @@ async def recursiveGenerate(agent, events):
     print("activationTable")
     print(activationTable)
     #breakpoint()
-    if (all(not activationTable[parentId] for parentId in agent.parents) and agent.parents) or not activationTable[agentId]:
+    if (any(not activationTable[parentId] for parentId in agent.parents) and agent.parents and not agent.softActivation) or not activationTable[agentId]:
         activationTable[agentId] = False
         outputTable[agentId] = ""
     else:
@@ -394,6 +394,13 @@ async def recursiveGenerate(agent, events):
             if statusTable[childId] == AgentStatus.WAITING:
                 waitingChildren.append(getAgentByID(childId))
 
+        if not activationTable[agent.agentId]:
+            activationTable.update({
+                childAgentId: False
+                for childAgentId in branch_children
+                if not getAgentByID(childAgentId).softActivation
+            })
+                    
         if waitingChildren:
             await asyncio.gather(
                 *(recursiveGenerate(child, events) for child in waitingChildren)
@@ -402,6 +409,9 @@ async def recursiveGenerate(agent, events):
         output = outputTable[agentId]
 
         branch_children = []
+        branch_children.extend(agent.upperChildren)
+        branch_children.extend(agent.lowerChildren)
+        
         useLower = False
         useUpper = False
 
@@ -425,13 +435,13 @@ async def recursiveGenerate(agent, events):
             activationTable.update({
                 childAgentId: False
                 for childAgentId in agent.lowerChildren
-                if not useLower and len(getAgentByID(childAgentId).parents) == 1
+                if not useLower and not getAgentByID(childAgentId).softActivation
             })
 
             activationTable.update({
                 childAgentId: False
                 for childAgentId in agent.upperChildren
-                if not useUpper and len(getAgentByID(childAgentId).parents) == 1
+                if not useUpper and not getAgentByID(childAgentId).softActivation
             })
 
         else:
@@ -441,11 +451,10 @@ async def recursiveGenerate(agent, events):
             activationTable.update({
                 childAgentId: False
                 for childAgentId in branch_children
-                if len(getAgentByID(childAgentId).parents) == 1
+                if not getAgentByID(childAgentId).softActivation
             })
         
-        branch_children.extend(agent.upperChildren)
-        branch_children.extend(agent.lowerChildren)
+
         
         for child_id in branch_children:
 

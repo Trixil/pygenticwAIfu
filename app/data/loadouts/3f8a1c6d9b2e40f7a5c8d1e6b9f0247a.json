@@ -22,7 +22,7 @@
         "e7f35772869c4bd4b399a3c4c9db8ec7"
       ],
       "agentLLMConfig": {
-        "LLMName": "openai/gpt-5.1",
+        "LLMName": "google/gemini-3.5-flash",
         "temp": 0.2,
         "maxTokens": 900,
         "topP": 1.0
@@ -51,7 +51,7 @@
         "7fe190748b995548960f89b0cda1e988"
       ],
       "agentLLMConfig": {
-        "LLMName": "openai/gpt-5.1",
+        "LLMName": "google/gemini-3.5-flash",
         "temp": 0.7,
         "maxTokens": 900,
         "topP": 1.0
@@ -79,7 +79,7 @@
         "7fe190748b995548960f89b0cda1e988"
       ],
       "agentLLMConfig": {
-        "LLMName": "openai/gpt-5.1",
+        "LLMName": "google/gemini-3.5-flash",
         "temp": 0.2,
         "maxTokens": 500,
         "topP": 1.0
@@ -110,7 +110,7 @@
         "e7f35772869c4bd4b399a3c4c9db8ec7"
       ],
       "agentLLMConfig": {
-        "LLMName": "openai/gpt-5.1",
+        "LLMName": "google/gemini-3.5-flash",
         "temp": 0.5,
         "maxTokens": 700,
         "topP": 1.0
@@ -139,7 +139,7 @@
         "f00caa57f7c64beabbe4a4535004a062"
       ],
       "agentLLMConfig": {
-        "LLMName": "openai/gpt-5.1",
+        "LLMName": "google/gemini-3.5-flash",
         "temp": 0.7,
         "maxTokens": 1200,
         "topP": 1.0
@@ -168,7 +168,7 @@
       ],
       "children": [],
       "agentLLMConfig": {
-        "LLMName": "openai/gpt-5.1",
+        "LLMName": "google/gemini-3.5-flash",
         "temp": 0.8,
         "maxTokens": 1500,
         "topP": 1.0
@@ -197,7 +197,7 @@
         "484f8ff248245ed1834751e6dd6be7ab"
       ],
       "agentLLMConfig": {
-        "LLMName": "openai/gpt-5.1",
+        "LLMName": "google/gemini-3.5-flash",
         "temp": 0.7,
         "maxTokens": 1200,
         "topP": 1.0
@@ -226,7 +226,7 @@
         "51253ff0a48448c98d759897a9071961"
       ],
       "agentLLMConfig": {
-        "LLMName": "openai/gpt-5.1",
+        "LLMName": "google/gemini-3.5-flash",
         "temp": 0.7,
         "maxTokens": 2000,
         "topP": 1.0
@@ -253,7 +253,7 @@
         "a54bd441348340138b4be9c3567045ef"
       ],
       "agentLLMConfig": {
-        "LLMName": "openai/gpt-5.1",
+        "LLMName": "google/gemini-3.5-flash",
         "temp": 1.0,
         "maxTokens": 4000,
         "topP": 0.8
@@ -280,7 +280,7 @@
         "cb55114d83da58fea4326d0b5f45ad66"
       ],
       "agentLLMConfig": {
-        "LLMName": "openai/gpt-5.1",
+        "LLMName": "google/gemini-3.5-flash",
         "temp": 1.0,
         "maxTokens": 4000,
         "topP": 0.8

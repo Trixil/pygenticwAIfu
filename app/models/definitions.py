@@ -62,6 +62,7 @@ class agent(BaseModel):
     agentBranchLowerInstructions: str = ""
     writeLorebook: bool = False
     queryLorebook: bool = False
+    softActivation: bool = True
     publish: bool = False
     pastMessageCount: int = Field(default_factory=int)
     parents: list[str] = Field(default_factory=list)
