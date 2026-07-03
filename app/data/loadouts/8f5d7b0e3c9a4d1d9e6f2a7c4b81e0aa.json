@@ -20,6 +20,7 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
       "pastMessageCount": 0,
       "parents": [
@@ -58,6 +59,7 @@
       "agentBranchLowerInstructions": "{this_response}",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
       "pastMessageCount": 30,
       "parents": [
@@ -84,7 +86,7 @@
     {
       "agentName": "Arc Draft",
       "agentId": "7e0b53afaab54012b7f449dd19cab7b5",
-      "agentInstructions": "# Arc Draft Agent\n\nCreate or repair a queue of 3 long-term story arcs based on the marked arc queue, character cards, scenario, and recent story messages.\n\n## What to Write\n\nOnly write new content for arcs marked with `<REWRITE>`.\n\nAny arc not marked with `<REWRITE>` must be preserved exactly as received, letter by letter.\n\nEach rewritten arc must be exactly 1 brief paragraph of 3-4 short sentences and no more than 120 words total. It should summarize the major sequence of events, not describe every step in detail.\n\nDo not write vague thematic summaries, mood descriptions, promotional blurbs, or statements about what the arc \u201ccenters on.\u201d\n\nEach arc should contain concrete developments: what begins, what escalates, what is revealed, what changes, and what new problem appears afterward.\n\nAvoid obvious, trope-first plots. Each arc should contain unusual, scenario-specific development that a generic version of this story would not include.\n\nThe arcs should form one continuous sequence, not three disconnected story ideas. Each arc should grow out of the consequences of the previous arc and create the conditions for the next arc.\n\nDo not write scene-by-scene micro-events, exact dialogue, or guaranteed final endings.\n\n## Balancing User Agency and Story Resilience\n\nIf an arc is marked with `<NEW DIRECTION>`, replace it with an arc that better reflects the direction created by the user\u2019s recent actions.\n\nUse the existing arc queue, scenario, and character situation as the default narrative anchor. When the user\u2019s actions continue the current long-term direction, carry that momentum forward. When the user\u2019s actions pull away from it, respond to the emerging direction naturally:\n\n* either follow the user\u2019s momentum into a new long-term story direction, or\n* push back with plausible resistance or consequences.\n\n## Rewrite Rules\n\nIf all 3 arcs are marked with `<REWRITE>`, write a full new 3-arc queue.\n\nIf only some arcs are marked with `<REWRITE>`, rewrite only those arcs and preserve the others exactly.\n\nWhen rewriting an arc, make sure it fits naturally with the surrounding preserved arcs.\n\nFor all rewritten arcs, mark it with`<NEW>` by appending it right above the arc.\n\n## Output Format\n\n# ARC QUEUE:\n\n[<NEW> if rewritten, otherwise blank]\nArc 1:\n[Preserved arc or rewritten one-paragraph arc.]\n\n[<NEW> if rewritten, otherwise blank]\nArc 2:\n[Preserved arc or rewritten one-paragraph arc.]\n\n[<NEW> if rewritten, otherwise blank]\nArc 3:\n[Preserved arc or rewritten one-paragraph arc.]\n\n## Marked Arc Queue\n\n{ArcUpdateCheck_output}\n\n## Some world facts to note, maybe make use of or not\n\n{Continuity_output}\n\n## Character's feelings:\n\n{Stat_output}\n",
+      "agentInstructions": "# Arc Draft Agent\n\nCreate or repair a queue of 3 long-term story arcs based on the marked arc queue, character cards, scenario, and recent story messages.\n\n## What to Write\n\nOnly write new content for arcs marked with `<REWRITE>`.\n\nAny arc not marked with `<REWRITE>` must be preserved exactly as received, letter by letter.\n\nEach rewritten arc must be exactly 1 brief paragraph of 3-4 short sentences and no more than 120 words total. It should summarize the major sequence of events, not describe every step in detail. Each arc should describe a chain of specific developments that could be played through as story scenes in order. An arc may cover multiple scenes, but it should not skip across days or weeks unless the actual story events inside that time are named concretely.\n\nDo not write vague thematic summaries, mood descriptions, promotional blurbs, or statements about what the arc \u201ccenters on.\u201d\n\nAvoid obvious, trope-first plots. Each arc should contain unusual, scenario-specific development that a generic version of this story would not include.\n\nThe arcs should form one continuous sequence, not three disconnected story ideas. Each arc should grow out of the consequences of the previous arc and create the conditions for the next arc.\n\nDo not write scene-by-scene micro-events, exact dialogue, or guaranteed final endings.\n\n## Balancing User Agency and Story Resilience\n\nIf an arc is marked with `<NEW DIRECTION>`, replace it with an arc that better reflects the direction created by the user\u2019s recent actions.\n\nUse the existing arc queue, scenario, and character situation as the default narrative anchor. When the user\u2019s actions continue the current long-term direction, carry that momentum forward. When the user\u2019s actions pull away from it, respond to the emerging direction naturally:\n\n* either follow the user\u2019s momentum into a new long-term story direction, or\n* push back with plausible resistance or consequences.\n\n## Rewrite Rules\n\nIf all 3 arcs are marked with `<REWRITE>`, write a full new 3-arc queue.\n\nIf only some arcs are marked with `<REWRITE>`, rewrite only those arcs and preserve the others exactly.\n\nWhen rewriting an arc, make sure it fits naturally with the surrounding preserved arcs.\n\nFor all rewritten arcs, mark it with`<NEW>` by appending it right above the arc.\n\n## Output Format\n\n# ARC QUEUE:\n\n[<NEW> if rewritten, otherwise blank]\nArc 1:\n[Preserved arc or rewritten one-paragraph arc.]\n\n[<NEW> if rewritten, otherwise blank]\nArc 2:\n[Preserved arc or rewritten one-paragraph arc.]\n\n[<NEW> if rewritten, otherwise blank]\nArc 3:\n[Preserved arc or rewritten one-paragraph arc.]\n\n## Marked Arc Queue\n\n{ArcUpdateCheck_output}\n\n## Some world facts to note, maybe make use of or not\n\n{Continuity_output}\n\n## Character's feelings:\n\n{Stat_output}\n",
       "characterInput": true,
       "scenario": true,
       "carryOver": false,
@@ -97,8 +99,9 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
-      "pastMessageCount": 0,
+      "pastMessageCount": 30,
       "parents": [
         "563af260e37e40a3b0a306d92dd2db7b",
         "1baa8140ed3657c385a708f0de7edb4e",
@@ -137,6 +140,7 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
       "pastMessageCount": 0,
       "parents": [
@@ -174,6 +178,7 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
       "pastMessageCount": 0,
       "parents": [
@@ -213,6 +218,7 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
       "pastMessageCount": 0,
       "parents": [
@@ -248,6 +254,7 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
       "pastMessageCount": 0,
       "parents": [
@@ -286,6 +293,7 @@
       "agentBranchLowerInstructions": "{this_response}",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
       "pastMessageCount": 15,
       "parents": [
@@ -312,7 +320,7 @@
     {
       "agentName": "MTE Writer",
       "agentId": "714725df9c4c4ef89940f2dd20f38548",
-      "agentInstructions": "# Mid-Term Event Writer Agent\n\nYou extract mid-term events from a broader story arc.\n\nThe current story arc is a sequence of connected developments that together form a larger part of the story. You must find the earliest development in the arc that has not happened yet and output the next mid-term event from that point.\n\nDo not continue after the arc. Do not skip ahead. Do not start after a time skip, escape, relocation, aftermath, or explanation scene unless every earlier arc development has already happened. **The arc is not a synopsis to continue beyond; it is the bounded story sequence you must extract mid-term events from.**\n\nExample: If the arc is `A. sisters appear in the execution plaza -> B. tower reacts and marks them -> C. factions clash over them -> D. they flee underground`, and `A` has not happened yet, the mid-term queue must be `A -> B -> C`, not `C -> D -> new events after D`.\n\n## What a Mid-Term Event Is\n\nA mid-term event is one medium-scale development extracted directly from the current story arc.\n\nIt is larger than a single moment, but smaller than the entire arc.\n\nIt should describe one concrete development that can later be broken into short-term events.\n\nDo not write prose narration, scene openings, sensory description, exact dialogue, moment-by-moment action, or tiny short-term beats.\n\nWrite each event plainly as a story-planning item.\n\nThe mid-term events you write should fit within the Current Story Arc. However, the Current Story Arc is a flexible working premise, not a fixed outcome. Write the next mid-term events as medium-scale developments that occur within the Current Story Arc. These mid-term events also arise from the current state of the story and the user\u2019s recent actions.\n\n## Balancing User Agency and Story Resilience\n\nThis is your most important job, and the hardest one.\n\nIf an event is marked with `<NEW DIRECTION>`, replace it with a mid-term event that better reflects the direction created by the user\u2019s recent actions.\n\nUse the Current Story Arc as the default narrative anchor. When the user\u2019s actions continue that arc, carry its momentum forward. When the user\u2019s actions pull away from it, respond to the emerging direction naturally:\n\n* either follow the user\u2019s momentum into a new story direction, or\n* push back with plausible resistance or consequences.\n\n## Don'ts\n\nDo not summarize the whole arc into one event, and do not jump to the arc\u2019s later consequences before earlier developments have occurred. Pace it slowly, following the above rules.\n\nAvoid vague goals, thematic summaries, mood descriptions, generic filler, and empty statements about tension or stakes.\n\n## Pace\n\n**Take it slow**. The story arc contains many mid-term events. You are in no rush to create a single queue of mid-term events that covers the entire story arc.\n\n## What to Rewrite\n\nOnly rewrite queue slots marked with `<REWRITE>`.\n\nPreserve unmarked events exactly, letter by letter.\n\nRemove `<REWRITE>` after rewriting.\n\nPlace `<NEW>` directly above every rewritten event.\n\n## Rewrite Rules\n\nIf all 3 events are marked with `<REWRITE>`, write the next 3 unresolved mid-term events from the current story arc, in order.\n\nIf only some events are marked with `<REWRITE>`, rewrite only those events and preserve the others exactly.\n\nWhen rewriting an event, make sure it fits naturally with the surrounding preserved events.\n\n## Output Format\n\n# MID-TERM EVENT QUEUE:\n\n[<NEW> if rewritten, otherwise blank]\nEvent 1:\n[Preserved event or rewritten mid-term event.]\n\n[<NEW> if rewritten, otherwise blank]\nEvent 2:\n[Preserved event or rewritten mid-term event.]\n\n[<NEW> if rewritten, otherwise blank]\nEvent 3:\n[Preserved event or rewritten mid-term event.]\n\n## Marked Mid-Term Event Queue\n\n{MTEUpdateCheck_output}\n\n## Current Story Arc\n\nThe arc is not a synopsis to continue from. It is a bounded medium-scale progression to extract mid-term events from.\n\n{ArcCrop_output}\n\n## Some world facts\n\n{Continuity_output}\n\n## Goals\n\n{Goal_output}\n\n## Social Relationship Stats towards User\n\n{Stat_output}\n",
+      "agentInstructions": "# Mid-Term Event Writer Agent\n\nYou extract mid-term events from a broader story arc. A mid-term event is one concrete playable event within the arc, large enough to contain several short-term beats, but not a synopsis of the arc or a summary of time passing.\n\nThe current story arc is a sequence of connected developments that together form a larger part of the story. You must find the earliest development in the arc that has not happened yet and output the next mid-term event at that point.\n\nDo not continue after the arc. Do not skip ahead. Do not start after a time skip, escape, relocation, aftermath, or explanation scene unless every earlier arc development has already happened. **The arc is not a synopsis to continue beyond; it is the bounded story sequence you must extract mid-term events from.**\n\nExample: If the arc is `A. sisters appear in the execution plaza -> B. tower reacts and marks them -> C. factions clash over them -> D. they flee underground`, and `A` has not happened yet, the mid-term queue must be `A -> B -> C`, not `C -> D -> new events after D`.\n\n## What a Mid-Term Event Is\n\nA mid-term event is one medium-scale development extracted directly from the current story arc.\n\nIt is larger than a single moment, but smaller than the entire arc.\n\nIt should describe one concrete development that can later be broken across about 5 chat messages.\n\nWrite each event plainly as a story-planning item. Do not write prose narration, scene openings, sensory description, exact dialogue, moment-by-moment action, or tiny short-term beats.\n\nThe mid-term events you write should fit within the Current Story Arc. However, the Current Story Arc is a flexible working premise, not a fixed outcome. Write the next mid-term events as  broad, medium-length segments that occur within the Current Story Arc. These mid-term events also arise from the current state of the story and the user\u2019s recent actions.\n\n## Balancing User Agency and Story Resilience\n\nThis is your most important job, and the hardest one.\n\nIf an event is marked with `<NEW DIRECTION>`, replace it with a mid-term event that better reflects the direction created by the user\u2019s recent actions.\n\nUse the Current Story Arc as the default narrative anchor. When the user\u2019s actions continue that arc, carry its momentum forward. When the user\u2019s actions pull away from it, respond to the emerging direction naturally:\n\n* either follow the user\u2019s momentum into a new story direction, or\n* push back with plausible resistance or consequences.\n\n## Don'ts\n\nDo not summarize the whole arc into one event, and do not jump to the arc\u2019s later consequences before earlier developments have occurred. Pace it slowly, following the above rules.\n\nAvoid vague goals, thematic summaries, mood descriptions, generic filler, and empty statements about tension or stakes.\n\n## Pace\n\n**Take it slow**. The story arc contains many mid-term events. You are in no rush to create a single queue of mid-term events that covers the entire story arc.\n\n## What to Rewrite\n\nOnly rewrite queue slots marked with `<REWRITE>`.\n\nPreserve unmarked events exactly, letter by letter.\n\nRemove `<REWRITE>` after rewriting.\n\nPlace `<NEW>` directly above every rewritten event.\n\n## Rewrite Rules\n\nIf all 3 events are marked with `<REWRITE>`, write the next 3 unresolved mid-term events from the current story arc, in order.\n\nIf only some events are marked with `<REWRITE>`, rewrite only those events and preserve the others exactly.\n\nWhen rewriting an event, make sure it fits naturally with the surrounding preserved events.\n\n## Output Format\n\n# MID-TERM EVENT QUEUE:\n\n[<NEW> if rewritten, otherwise blank]\nEvent 1:\n[Preserved event or rewritten mid-term event.]\n\n[<NEW> if rewritten, otherwise blank]\nEvent 2:\n[Preserved event or rewritten mid-term event.]\n\n[<NEW> if rewritten, otherwise blank]\nEvent 3:\n[Preserved event or rewritten mid-term event.]\n\n## Marked Mid-Term Event Queue\n\n{MTEUpdateCheck_output}\n\n## Current Story Arc\n\nThe arc is not a synopsis to continue from. It is a bounded medium-scale progression to extract mid-term events from.\n\n{ArcCrop_output}\n\n## Some world facts\n\n{Continuity_output}\n\n## Goals\n\n{Goal_output}\n\n## Social Relationship Stats towards User\n\n{Stat_output}\n",
       "characterInput": false,
       "scenario": false,
       "carryOver": false,
@@ -325,8 +333,9 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
-      "pastMessageCount": 0,
+      "pastMessageCount": 20,
       "parents": [
         "020c67db5951460bb545c0004c0d7c07",
         "33839c824e6e44d6a9744b5db93cfaff",
@@ -367,6 +376,7 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
       "pastMessageCount": 0,
       "parents": [
@@ -405,6 +415,7 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
       "pastMessageCount": 0,
       "parents": [
@@ -443,6 +454,7 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
       "pastMessageCount": 10,
       "parents": [
@@ -483,8 +495,9 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
-      "pastMessageCount": 0,
+      "pastMessageCount": 15,
       "parents": [
         "dd6223100d4a4fa9a5fecdc767d21ff9",
         "1baa8140ed3657c385a708f0de7edb4e",
@@ -524,6 +537,7 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
       "pastMessageCount": 0,
       "parents": [
@@ -562,6 +576,7 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
       "pastMessageCount": 0,
       "parents": [],
@@ -598,6 +613,7 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
       "pastMessageCount": 2,
       "parents": [
@@ -638,6 +654,7 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
       "pastMessageCount": 20,
       "parents": [
@@ -678,6 +695,7 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
       "pastMessageCount": 5,
       "parents": [
@@ -718,6 +736,7 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
       "pastMessageCount": 5,
       "parents": [
@@ -755,6 +774,7 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": true,
       "pastMessageCount": 30,
       "parents": [

@@ -572,7 +572,12 @@ async def generateLLMMessage(agent, events):
 
             if content:
                 agentOutputs = json.loads(content)
-                carryOver = agentOutputs.get(agent.carryOverAgentId, "")
+                if agent.carryOverAgentId == "" and agent.carryOverAgentName != "":
+                    carryOverAgentId = getAgentIDByName(agent.carryOverAgentName)
+                else:
+                    carryOverAgentId = agent.carryOverAgentId
+                    
+                carryOver = agentOutputs.get(carryOverAgentId, "")
             else:
                 carryOver = ""
 

@@ -1,17 +1,17 @@
 {
   "loadoutName": "world testing buffer opened",
   "loadoutId": "9f2c8b7a5e4d4a6c91d0f3b8e72a44cf",
-  "loadoutImageFile": "C:\\Users\\mashhood\\repos\\agenticwAIfu\\app\\data\\loadouts\\images\\8f5d7b0e3c9a4d1d9e6f2a7c4b81e0aa.png",
+  "loadoutImageFile": "C:\\Users\\mashhood\\repos\\agenticwAIfu\\app\\data\\loadouts\\images\\9f2c8b7a5e4d4a6c91d0f3b8e72a44cf.png",
   "loadoutFile": "",
   "loadoutAgents": [
     {
       "agentName": "Arc Buffer",
       "agentId": "4068c2cf3d3d4952a2a765c294aa1e8b",
-      "agentInstructions": "If there is an arc queue directly below, output it. \n\n{ArcRefine_output}\n\nIf there is not, output the arc queue found in \"----PREVIOUS OUTPUT---\". \n\nEither way, output the queue EXACTLY as you see it. Do not change a single letter. Keep the tags found in \"<>\", \"<<>>\", or \"<<<>>>\".\n",
+      "agentInstructions": "If there is an arc queue directly below, output it. \n\n{ArcDraft_output}\n\nIf there is not, output the arc queue found in \"----PREVIOUS OUTPUT---\". \n\nEither way, output the queue EXACTLY as you see it. Do not change a single letter. Keep the tags found in \"<>\", \"<<>>\", or \"<<<>>>\".\n",
       "characterInput": false,
       "scenario": false,
       "carryOver": true,
-      "carryOverAgentId": "",
+      "carryOverAgentId": "4068c2cf3d3d4952a2a765c294aa1e8b",
       "carryOverAgentName": "Arc Buffer",
       "agentBranch": false,
       "agentBranchUpperTrigger": "",
@@ -20,11 +20,12 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
       "pastMessageCount": 0,
       "parents": [
-        "3b420fb9fad24e718157f41717e25e4d",
-        "563af260e37e40a3b0a306d92dd2db7b"
+        "563af260e37e40a3b0a306d92dd2db7b",
+        "7e0b53afaab54012b7f449dd19cab7b5"
       ],
       "children": [
         "020c67db5951460bb545c0004c0d7c07"
@@ -45,7 +46,7 @@
     {
       "agentName": "Arc Update Check",
       "agentId": "563af260e37e40a3b0a306d92dd2db7b",
-      "agentInstructions": "# Arc Update Check Agent\n\nDetermine whether the current story arc queue needs to be updated based on the current state of the story.\n\nYour default behavior is to preserve the existing arc queue exactly as received.\n\nTrigger an arc update if:\n\n* one or more arcs are empty, or\n* one or more arcs are extremely unrealistic given the state of the story and are very unlikely to become relevant again, or\n* the first arc has finished or is wrapping up\n\n**If any events are marked as <NEW>, you MUST not update the queue no matter what. The only thing you must do is output the arc queue, word for word, but remove the <NEW> tag completely.**\n\n## Triggering an Update\nIf no update is needed, write this exact marker at the top of your response:\n\n`<<<PERFORM ARC UPDATE: NO>>>`\n\nThen output the arc queue exactly as received, letter by letter.\n\nIf an update is needed, write this exact marker at the top of your response:\n\n`<<<PERFORM ARC UPDATE: YES>>>`\n\nThen output the updated arc queue using the rules below.\n\n## How to Update Queue\n\n### 1. Entire Queue Is Empty\n\nIf the entire arc queue is empty, output a 3-arc queue where each arc is marked for rewriting.\n\nOutput:\n\n# ARC QUEUE:\n\n<REWRITE>\nArc 1: EMPTY\n\n<REWRITE>\nArc 2:\\\n\n<REWRITE>\nArc 3:\\\n\n### 2. First Arc Finished Or Wrapping Up\n\nIf Arc 1 has finished or is wrapping up, remove Arc 1 from the queue, move Arc 2 into the Arc 1 slot, move Arc 3 into the Arc 2 slot, replace Arc 3 with\n\n<REWRITE>\nArc 3: EMPTY\n\nDo not rewrite Arc 2 or Arc 3. Move them upward exactly as written.\n\n### 3. A Particular Arc No Longer Fits\n\nIf a particular arc is empty, impossible, extremely unrealistic, or no longer fitting for the story, preserve its slot but append this to the end of its contents:\n\n`<REWRITE>`\n\nDo not rewrite the other arcs.\n\n## Preservation Rule\n\nOnly change the arc queue in the specific ways described above.\n\nAny arc that is not being removed, moved upward, or marked as `<REWRITE>` must be preserved exactly as received, letter by letter.\n\n## Input Arc Queue\nThe input arc queue is found **under -\"----PREVIOUS OUTPUTS----\"** below.\n(if none displayed under ---PREVIOUS OUTPUTS----, output \"EMPTY\" for all 3 arcs.)\n",
+      "agentInstructions": "# Arc Update Check Agent\n\nDetermine whether the current story arc queue needs to be updated based on the current state of the story.\n\nYour default behavior is to preserve the existing arc queue exactly as received.\n\nTrigger an arc update only if:\n\n* one or more arcs are empty, or\n* Arc 1 has clearly finished in the actual story, or\n* Arc 1 is currently being resolved and only its aftermath remains, or\n* an arc has become impossible because the story has directly contradicted a required premise of that arc.\n\nDo not update the queue merely because the user took an unexpected action, or changed the scene\u2019s mood, avoided a planned interaction, or introduced a complication. **If it is remotely possible for the most immediate event in the arc to occur, do NOT update the queue.**\n\n**If any events are marked as <NEW>, you MUST not update the queue no matter what. The only thing you must do is output the arc queue, word for word, but remove the <NEW> tag completely.**\n\n## Triggering an Update\nIf no update is needed, write this exact marker at the top of your response:\n\n`<<<PERFORM ARC UPDATE: NO>>>`\n\nThen output the arc queue exactly as received, letter by letter.\n\nIf an update is needed, write this exact marker at the top of your response:\n\n`<<<PERFORM ARC UPDATE: YES>>>`\n\nThen output the updated arc queue using the rules below.\n\n## How to Update Queue\n\n### 1. Entire Queue Is Empty\n\nIf the entire arc queue is empty, output a 3-arc queue where each arc is marked for rewriting.\n\nOutput:\n\n# ARC QUEUE:\n\n<REWRITE>\nArc 1: EMPTY\n\n<REWRITE>\nArc 2:\\\n\n<REWRITE>\nArc 3:\\\n\n### 2. First Arc Finished Or Wrapping Up\n\nIf Arc 1 has finished or is wrapping up, remove Arc 1 from the queue, move Arc 2 into the Arc 1 slot, move Arc 3 into the Arc 2 slot, replace Arc 3 with\n```\n<REWRITE>\nArc 3: EMPTY\n```\nDo not rewrite Arc 2 or Arc 3. Move them upward exactly as written.\n\n### 3. A Particular Arc No Longer Fits\n\nIf a particular arc is empty, impossible, extremely unrealistic, or no longer fitting for the story, replace it with:\n```\n<REWRITE>\n`Arc [1/2/3]: EMPTY`\n```\n\nDo not rewrite the other arcs.\n\n## Preservation Rule\n\nOnly change the arc queue in the specific ways described above.\n\nAny arc that is not being removed, moved upward, or marked as `<REWRITE>` must be preserved exactly as received, letter by letter.\n\n## Input Arc Queue\nThe input arc queue is found **under -\"----PREVIOUS OUTPUT----\"** below.\n(if none displayed under ---PREVIOUS OUTPUT----, output \"EMPTY\" for all 3 arcs.)\n",
       "characterInput": false,
       "scenario": false,
       "carryOver": true,
@@ -58,6 +59,7 @@
       "agentBranchLowerInstructions": "{this_response}",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
       "pastMessageCount": 0,
       "parents": [
@@ -65,6 +67,7 @@
       ],
       "children": [],
       "upperChildren": [
+        "bdc8e31ccd824ff7bd5d4f962200da2c",
         "7e0b53afaab54012b7f449dd19cab7b5"
       ],
       "lowerChildren": [
@@ -84,7 +87,7 @@
     {
       "agentName": "Arc Draft",
       "agentId": "7e0b53afaab54012b7f449dd19cab7b5",
-      "agentInstructions": "# Arc Draft Agent\n\nCreate or repair a queue of 3 long-term story arcs based on the marked arc queue, character cards, scenario, and recent story messages.\n\n## What to Write\n\nOnly write new content for arcs marked with `<REWRITE>`.\n\nAny arc not marked with `<REWRITE>` must be preserved exactly as received, letter by letter.\n\nEach rewritten arc must be exactly 1 brief paragraph of 3-4 short sentences and no more than 120 words total. It should summarize the major sequence of events, not describe every step in detail.\n\nDo not write vague thematic summaries, mood descriptions, promotional blurbs, or statements about what the arc \u201ccenters on.\u201d\n\nEach arc should contain concrete developments: what begins, what escalates, what is revealed, what changes, and what new problem appears afterward.\n\nAvoid obvious, trope-first plots. Each arc should contain unusual, scenario-specific development that a generic version of this story would not include.\n\nThe arcs should form one continuous sequence, not three disconnected story ideas. Each arc should grow out of the consequences of the previous arc and create the conditions for the next arc.\n\nDo not write scene-by-scene micro-events, exact dialogue, or guaranteed final endings.\n\n## Rewrite Rules\n\nIf all 3 arcs are marked with `<REWRITE>`, write a full new 3-arc queue.\n\nIf only some arcs are marked with `<REWRITE>`, rewrite only those arcs and preserve the others exactly.\n\nWhen rewriting an arc, make sure it fits naturally with the surrounding preserved arcs.\n\nFor all rewritten arcs, mark it with`<NEW>` by appending it right above the arc.\n\n## Output Format\n\n# ARC QUEUE:\n\n[<NEW> if rewritten, otherwise blank]\nArc 1:\n[Preserved arc or rewritten one-paragraph arc.]\n\n[<NEW> if rewritten, otherwise blank]\nArc 2:\n[Preserved arc or rewritten one-paragraph arc.]\n\n[<NEW> if rewritten, otherwise blank]\nArc 3:\n[Preserved arc or rewritten one-paragraph arc.]\n\n## Marked Arc Queue\n\n{ArcUpdateCheck_output}\n\n## Some world facts to note, maybe make use of or not\n\n{Continuity_output}\n\n## Character's feelings:\n\n{Stat_output}",
+      "agentInstructions": "# Arc Draft Agent\n\nCreate or repair a queue of 3 long-term story arcs based on the marked arc queue, character cards, scenario, recent story messages, and lorebook content.\n\n## What to Write\n\nOnly write new content for arcs marked with `<REWRITE>`.\n\nAny arc not marked with `<REWRITE>` must be preserved exactly as received, letter by letter.\n\n**Each rewritten arc must be exactly 1 brief paragraph of 3-4 short sentences and no more than 120 words total. It should summarize the major sequence of events, not describe every step in detail.**\n\nDo not write vague thematic summaries, mood descriptions, promotional blurbs, or statements about what the arc \u201ccenters on.\u201d\n\nEach arc should contain concrete developments: what begins, what escalates, what is revealed, what changes, and what new problem appears afterward.\n\nAvoid obvious, trope-first plots. Each arc should contain unusual, scenario-specific development that a generic version of this story would not include. Use the lorebook content to this end, and **get creative and write some new concepts/characters/places**.\n\nThe arcs should form one continuous sequence, not three disconnected story ideas. Each arc should grow out of the consequences of the previous arc and create the conditions for the next arc.\n\nDo not write scene-by-scene micro-events, exact dialogue, or guaranteed final endings.\n\n## Rewrite Rules\n\nIf all 3 arcs are marked with `<REWRITE>`, write a full new 3-arc queue.\n\nIf only some arcs are marked with `<REWRITE>`, rewrite only those arcs and preserve the others exactly.\n\nWhen rewriting an arc, make sure it fits naturally with the surrounding preserved arcs.\n\nFor all rewritten arcs, mark it with`<NEW>` by appending it right above the arc.\n\n## Output Format\n\n# ARC QUEUE:\n\n[<NEW> if rewritten, otherwise blank]\nArc 1:\n[Preserved arc or rewritten one-paragraph arc.]\n\n[<NEW> if rewritten, otherwise blank]\nArc 2:\n[Preserved arc or rewritten one-paragraph arc.]\n\n[<NEW> if rewritten, otherwise blank]\nArc 3:\n[Preserved arc or rewritten one-paragraph arc.]\n\n## Marked Arc Queue\n\n{ArcUpdateCheck_output}\n\n## Some world facts to note, maybe make use of or not\n\n{Continuity_output}\n\n## Character's feelings:\n\n{Stat_output}\n\n## Lorebook Content\n\n{LoreQuery_output}",
       "characterInput": true,
       "scenario": true,
       "carryOver": false,
@@ -97,16 +100,18 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": false,
       "publish": false,
-      "pastMessageCount": 0,
+      "pastMessageCount": 30,
       "parents": [
-        "563af260e37e40a3b0a306d92dd2db7b",
         "1baa8140ed3657c385a708f0de7edb4e",
-        "6809c2c524c5581980525124e627ea84"
+        "6809c2c524c5581980525124e627ea84",
+        "563af260e37e40a3b0a306d92dd2db7b",
+        "bdc8e31ccd824ff7bd5d4f962200da2c"
       ],
       "children": [
-        "bdc8e31ccd824ff7bd5d4f962200da2c",
-        "3b420fb9fad24e718157f41717e25e4d"
+        "1abbe620bcf14f2c9efc252da3d910d3",
+        "4068c2cf3d3d4952a2a765c294aa1e8b"
       ],
       "upperChildren": [],
       "lowerChildren": [],
@@ -117,14 +122,14 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 719.975,
-        "y": -17.225
+        "x": 1108.78,
+        "y": -22.025
       }
     },
     {
       "agentName": "Lore Query",
       "agentId": "bdc8e31ccd824ff7bd5d4f962200da2c",
-      "agentInstructions": "# Lore Query Agent\n\nExamine only the story arcs marked with `<NEW>` and select lorebook entries that would be useful for refining, grounding, or complicating those new arcs.\n\nIgnore any arcs that are not marked with `<NEW>`.\n\nYour job is not to write prose, summarize the arcs, or explain your choices.\n\nSelect lorebook entry IDs for:\n\n* characters, places, factions, or other concepts directly involved in the `<NEW>` arcs\n* entries that would help make the `<NEW>` arcs more specific and consistent with existing lore\n* entries that are not immediately required, but could make the `<NEW>` arcs more interesting if incorporated naturally\n\nDo not invent IDs. Only use IDs that appear in the lorebook.\n\nYour output must consist solely of lorebook entry IDs.\n\nThe IDs must be comma-separated with spaces after each comma except the last, like this:\n\n`id1, id2, id3`\n\n## Draft Story Arcs\n\n{ArcDraft_output}\n\n## Lorebook\n\n{name-alias-type-tag-lb}\n",
+      "agentInstructions": "# Lore Query Agent\n\nExamine only the `EMPTY` story arcs and select lorebook entries that would be useful in coming up with new story arcs to replace them.\n\nIgnore any arcs that are not set as `EMPTY`.\n\nYour job is not to write prose, summarize the arcs, or explain your choices.\n\nSelect lorebook entry IDs for:\n\n* characters, places, factions, or other concepts that could naturally drive the new arcs\n* entries that could introduce concrete complications, consequences, conflicts, or opportunities for the new arcs\n* entries connected to preserved surrounding arcs, if they are needed to make the new arcs fit naturally into the existing queue\n\nDo not invent IDs. Only use IDs that appear in the lorebook.\n\nYour output must consist solely of lorebook entry IDs.\n\nThe IDs must be comma-separated with spaces after each comma except the last, like this:\n\n`id1, id2, id3`\n\n## Arc Update Check Output\n\n{ArcUpdateCheck_output}\n\n## Lorebook\n\n{name-alias-type-tag-lb}\n",
       "characterInput": false,
       "scenario": false,
       "carryOver": false,
@@ -137,13 +142,14 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": false,
       "publish": false,
       "pastMessageCount": 0,
       "parents": [
-        "7e0b53afaab54012b7f449dd19cab7b5"
+        "563af260e37e40a3b0a306d92dd2db7b"
       ],
       "children": [
-        "3b420fb9fad24e718157f41717e25e4d"
+        "7e0b53afaab54012b7f449dd19cab7b5"
       ],
       "upperChildren": [],
       "lowerChildren": [],
@@ -154,8 +160,8 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 1011.94,
-        "y": -9.6375
+        "x": 728.725,
+        "y": -9.6
       }
     },
     {
@@ -174,16 +180,11 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": false,
       "publish": false,
       "pastMessageCount": 0,
-      "parents": [
-        "bdc8e31ccd824ff7bd5d4f962200da2c",
-        "7e0b53afaab54012b7f449dd19cab7b5"
-      ],
-      "children": [
-        "1abbe620bcf14f2c9efc252da3d910d3",
-        "4068c2cf3d3d4952a2a765c294aa1e8b"
-      ],
+      "parents": [],
+      "children": [],
       "upperChildren": [],
       "lowerChildren": [],
       "agentLLMConfig": {
@@ -193,14 +194,14 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 1328.73,
-        "y": -5.22499
+        "x": 1739.93,
+        "y": 321.2
       }
     },
     {
       "agentName": "Lore Fill",
       "agentId": "1abbe620bcf14f2c9efc252da3d910d3",
-      "agentInstructions": "# Lorebook Fill Agent\n\nExamine the refined story arc queue and write new lorebook entries for important information that appears in the arcs but is not already present in the lorebook.\n\nThe lorebook may be completely empty. If it is empty, create entries for the important reusable characters, places, factions, objects, concepts, rules, relationships, secrets, or events found in the refined arcs.\n\nIf the lorebook is not empty, do not duplicate existing entries. Only create entries for important reusable information that is genuinely missing.\n\nDo not create entries for minor one-time details, temporary actions, generic emotions, or vague themes.\n\nYour output must be a valid JSON array only.\n\n## Machine Output Contract\n\nYour output is passed directly into a Python function.\n\nIf your output is not valid JSON, the parser will fail and the entire lorebook update pipeline will break.\n\nYou must output exactly one JSON array and nothing else.\n\nDo not include markdown.\n\nDo not include a code block.\n\nDo not include trailing commas.\n\nDo not include placeholder text.\n\nDo not include text before or after the JSON array.\n\nThe first character of your response must be `[`.\n\nThe last character of your response must be `]`.\n\nEvery entry must be a JSON object with exactly these keys:\n\n`name`, `aliases`, `type`, `tags`, `content`\n\nEach key must use double quotes.\n\n`name` must be a string.\n\n`aliases` must be an array of strings.\n\n`type` must be a string.\n\n`tags` must be an array of strings.\n\n`content` must be a string.\n\nExample of valid output:\n\n[\n{\n\"name\": \"Itsuki Nakano\",\n\"aliases\": [\"Fifth Sister\"],\n\"type\": \"character\",\n\"tags\": [\"quintuplet\", \"student\", \"main character\"],\n\"content\": \"The youngest of the Nakano quintuplets, known for her earnest personality and love of food.\"\n},\n{\n\"name\": \"Yotsuba Nakano\",\n\"aliases\": [\"Fourth Sister\"],\n\"type\": \"character\",\n\"tags\": [\"quintuplet\", \"student\", \"athletic\"],\n\"content\": \"One of the Nakano quintuplets, known for her cheerful personality, boundless energy, and willingness to help others.\"\n}\n]\n\nIf there is no new lorebook information to add, output EXACTLY:\n\n[]\n\n## Story Arc Queue\n\n{ArcRefine_output}\n\n## Lorebook\n\n{name-alias-type-tag-lb}\n",
+      "agentInstructions": "# Lorebook Fill Agent\n\nExamine the draft story arc queue and write new lorebook entries for important information that appears in the arcs but is not already present in the lorebook.\n\nThe lorebook may be completely empty. If it is empty, create entries for the important reusable characters, places, factions, objects, concepts, rules, relationships, secrets, or events found in the arcs.\n\nIf the lorebook is not empty, do not duplicate existing entries. Only create entries for important reusable information that is genuinely missing.\n\nDo not create entries for minor one-time details, temporary actions, generic emotions, or vague themes.\n\nYour output must be a valid JSON array only.\n\n## Machine Output Contract\n\nYour output is passed directly into a Python function.\n\nIf your output is not valid JSON, the parser will fail and the entire lorebook update pipeline will break.\n\nYou must output exactly one JSON array and nothing else.\n\nDo not include markdown.\n\nDo not include a code block.\n\nDo not include trailing commas.\n\nDo not include placeholder text.\n\nDo not include text before or after the JSON array.\n\nThe first character of your response must be `[`.\n\nThe last character of your response must be `]`.\n\nEvery entry must be a JSON object with exactly these keys:\n\n`name`, `aliases`, `type`, `tags`, `content`\n\nEach key must use double quotes.\n\n`name` must be a string.\n\n`aliases` must be an array of strings.\n\n`type` must be a string.\n\n`tags` must be an array of strings.\n\n`content` must be a string.\n\nExample of valid output:\n\n[\n{\n\"name\": \"Itsuki Nakano\",\n\"aliases\": [\"Fifth Sister\"],\n\"type\": \"character\",\n\"tags\": [\"quintuplet\", \"student\", \"main character\"],\n\"content\": \"The youngest of the Nakano quintuplets, known for her earnest personality and love of food.\"\n},\n{\n\"name\": \"Yotsuba Nakano\",\n\"aliases\": [\"Fourth Sister\"],\n\"type\": \"character\",\n\"tags\": [\"quintuplet\", \"student\", \"athletic\"],\n\"content\": \"One of the Nakano quintuplets, known for her cheerful personality, boundless energy, and willingness to help others.\"\n}\n]\n\nIf there is no new lorebook information to add, output EXACTLY:\n\n[]\n\n## Story Arc Queue\n\n{ArcDraft_output}\n\n## Lorebook\n\n{name-alias-type-tag-lb}\n",
       "characterInput": false,
       "scenario": false,
       "carryOver": false,
@@ -213,10 +214,11 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
       "pastMessageCount": 0,
       "parents": [
-        "3b420fb9fad24e718157f41717e25e4d"
+        "7e0b53afaab54012b7f449dd19cab7b5"
       ],
       "children": [],
       "upperChildren": [],
@@ -228,8 +230,8 @@
         "topP": 1.0
       },
       "layout": {
-        "x": 2109.1,
-        "y": 127.925
+        "x": 1648.3,
+        "y": 1.50003
       }
     },
     {
@@ -248,6 +250,7 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
       "pastMessageCount": 0,
       "parents": [
@@ -273,7 +276,7 @@
     {
       "agentName": "MTE Update Check",
       "agentId": "33839c824e6e44d6a9744b5db93cfaff",
-      "agentInstructions": "# Mid-Term Event Update Check Agent\n\nDetermine whether the current mid-term event queue needs to be updated based on the current state of the story.\n\nYour default behavior is to preserve the existing mid-term event queue exactly as received.\n\nTrigger a mid-term event update if:\n\n* one or more mid-term events are empty, or\n* one or more mid-term events are extremely unrealistic given the state of the story and are very unlikely to become relevant again, or\n* the first mid-term event has finished or is wrapping up\n* the first mid-term event has been running for too long\n\n**If any events inside the Input Mid-Term Event Queue are marked as `<NEW>`, you MUST not update the mid-term event queue. The only thing you must do is output the mid-term event queue, word for word, but remove the `<NEW>` tag completely. Ignore `<NEW>` tags that appear anywhere else, including the Current Story Arc.**\n\n## Triggering an Update\n\nIf no update is needed, write this exact marker at the top of your response:\n\n`<<<PERFORM MID-TERM EVENT UPDATE: NO>>>`\n\nThen output the mid-term event queue exactly as received, letter by letter.\n\nIf an update is needed, write this exact marker at the top of your response:\n\n`<<<PERFORM MID-TERM EVENT UPDATE: YES>>>`\n\nThen output the updated mid-term event queue using the rules below.\n\n## How to Update Queue\n\n### 1. Entire Queue Is Empty\n\nIf the entire mid-term event queue is empty, output a 3-event queue where each event is marked for rewriting.\n\nOutput:\n\nMID-TERM EVENT QUEUE:\n\n<REWRITE>\nEvent 1: EMPTY\n\n<REWRITE>\nEvent 2:\n\n<REWRITE>\nEvent 3:\n\n### 2. First Event Finished Or Wrapping Up\n\nIf Event 1 has finished or is wrapping up, remove Event 1 from the queue, move Event 2 into the Event 1 slot, move Event 3 into the Event 2 slot, and replace Event 3 with:\n\n<REWRITE>\nEvent 3: EMPTY\n\nDo not rewrite Event 2 or Event 3. Move them upward exactly as written.\n\n### 3. A Particular Event No Longer Fits\n\nIf a particular event is empty, impossible, extremely unrealistic, or no longer fitting for the story, preserve its slot but append this above it:\n\n`<REWRITE>`\n\nDo not rewrite the other events.\n\n## Preservation Rule\n\nOnly change the mid-term event queue in the specific ways described above.\n\nAny event that is not being removed, moved upward, or marked as `<REWRITE>` must be preserved exactly as received, letter by letter.\n\n## Input Mid-Term Event Queue\n\nThe Input Mid-Term Event Queue is ONLY the text under `--------------- PREVIOUS OUTPUT ---------------`.\n\nThe Current Story Arc is NOT the mid-term event queue.\nDo not output the Current Story Arc as the mid-term event queue.\nDo not remove tags from the Current Story Arc.\nDo not use `Arc 1:` as an event.\n(if none displayed under ---PREVIOUS OUTPUTS----, output \"EMPTY\" for all 3 mid-term events.)\n\n## Current Story Arc\n{ArcCrop_output}\n\n",
+      "agentInstructions": "# Mid-Term Event Update Check Agent\n\nDetermine whether the current mid-term event queue needs to be updated based on the current state of the story.\n\nYour default behavior is to preserve the existing mid-term event queue exactly as received.\n\nYour default behavior is to preserve the existing mid-term event queue exactly as received.\n\nTrigger a mid-term event update only if:\n\n* one or more mid-term events are empty, or\n* Event 1 has clearly finished in the actual story, or\n* Event 1 is currently being resolved and only its aftermath remains, or\n* an event has become impossible because the story has directly contradicted a required premise of that event.\n\nDo not update the queue merely because the user took an unexpected action, changed the scene\u2019s mood, or introduced a complication.\n\nIf it is remotely possible for Event 1 to continue, do NOT update the queue.**If any events inside the Input Mid-Term Event Queue are marked as `<NEW>`, you MUST not update the mid-term event queue. The only thing you must do is output the mid-term event queue, word for word, but remove the `<NEW>` tag completely. Ignore `<NEW>` tags that appear anywhere else, including the Current Story Arc.**\n\n## Triggering an Update\n\nIf no update is needed, write this exact marker at the top of your response:\n\n`<<<PERFORM MID-TERM EVENT UPDATE: NO>>>`\n\nThen output the mid-term event queue exactly as received, letter by letter.\n\nIf an update is needed, write this exact marker at the top of your response:\n\n`<<<PERFORM MID-TERM EVENT UPDATE: YES>>>`\n\nThen output the updated mid-term event queue using the rules below.\n\n## How to Update Queue\n\n### 1. Entire Queue Is Empty\n\nIf the entire mid-term event queue is empty, output a 3-event queue where each event is marked for rewriting.\n\nOutput:\n\nMID-TERM EVENT QUEUE:\n\n<REWRITE>\nEvent 1: EMPTY\n\n<REWRITE>\nEvent 2:\n\n<REWRITE>\nEvent 3:\n\n### 2. First Event Finished Or Wrapping Up\n\nIf Event 1 has finished or is wrapping up, remove Event 1 from the queue, move Event 2 into the Event 1 slot, move Event 3 into the Event 2 slot, and replace Event 3 with:\n\n<REWRITE>\nEvent 3: EMPTY\n\nDo not rewrite Event 2 or Event 3. Move them upward exactly as written.\n\n### 3. A Particular Event No Longer Fits\n\nIf a particular event is empty, impossible, extremely unrealistic, or no longer fitting for the story, replace its slot with:\n```\n<REWRITE>\n`EVENT [1/2/3]: EMPTY`\n```\nDo not rewrite the other events.\n\n## Preservation Rule\n\nOnly change the mid-term event queue in the specific ways described above.\n\nAny event that is not being removed, moved upward, or marked as `<REWRITE>` must be preserved exactly as received, letter by letter.\n\n## Input Mid-Term Event Queue\n\nThe Input Mid-Term Event Queue is ONLY the text under `--------------- PREVIOUS OUTPUT ---------------`.\n\nThe Current Story Arc is NOT the mid-term event queue.\nDo not output the Current Story Arc as the mid-term event queue.\nDo not remove tags from the Current Story Arc.\nDo not use `Arc 1:` as an event.\n(if none displayed under ---PREVIOUS OUTPUT----, output \"EMPTY\" for all 3 mid-term events.)\n\n## Current Story Arc\n{ArcCrop_output}\n\n",
       "characterInput": false,
       "scenario": false,
       "carryOver": true,
@@ -286,6 +289,7 @@
       "agentBranchLowerInstructions": "{this_response}",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
       "pastMessageCount": 15,
       "parents": [
@@ -312,7 +316,7 @@
     {
       "agentName": "MTE Writer",
       "agentId": "714725df9c4c4ef89940f2dd20f38548",
-      "agentInstructions": "# Mid-Term Event Writer Agent\n\nYou extract mid-term events from a broader series of events. The broader series of events is known as the story arc.\n\nThe current story arc is an ordered sequence of mid-term events that will occur in the story. You must find the earliest mid-term event in the arc that has not occurred yet, and output that.\n\nDo not continue after the arc. Do not skip ahead. Do not start after a time skip, escape, relocation, aftermath, or explanation scene unless every earlier arc event has already happened. **The arc is not a synopsis; it is a sequence of mid-term events that you must pluck from.**\n\nExample: If the arc is `A. sisters appear in the execution plaza -> B. tower reacts and marks them -> C. factions clash over them -> D. they flee underground`, and `A` has not happened yet, the mid-term queue must be `A -> B -> C`, not `C -> D -> new events after D`.\n\n## What to Rewrite\n\nOnly rewrite queue slots marked with `<REWRITE>`.\n\nPreserve unmarked events exactly, letter by letter.\n\nRemove `<REWRITE>` after rewriting.\n\nPlace `<NEW>` directly above every rewritten event.\n\n## What a Mid-Term Event Is\n\nA mid-term event is one medium-scale event that is extracted directly from the current story arc.\n\nIt is larger than a single moment, but smaller than the entire arc.\n\nIt should describe one concrete development that can later be broken into short-term events.\n\nDo not write prose narration, scene openings, sensory description, exact dialogue, moment-by-moment action, or tiny short-term beats.\n\nWrite each event plainly as a story-planning item.\n\n## Arc Extraction Rules\n\nEvery rewritten mid-term event must come from the current story arc.\n\nThe first rewritten event must be the earliest arc event that has not occurred yet.\n\nDo not summarize the whole arc into one list of mid-term events. Pace it slowly, following the above rules.\n\nAvoid vague goals, thematic summaries, mood descriptions, generic filler, and empty statements about tension or stakes.\n\n## Rewrite Rules\n\nIf all 3 events are marked with `<REWRITE>`, write the next 3 unresolved mid-term events from the current story arc, in order.\n\nIf only some events are marked with `<REWRITE>`, rewrite only those events and preserve the others exactly.\n\nWhen rewriting an event, make sure it fits naturally with the surrounding preserved events.\n\n## Output Format\n\n# MID-TERM EVENT QUEUE:\n\n[<NEW> if rewritten, otherwise blank]\nEvent 1:\n[Preserved event or rewritten mid-term event.]\n\n[<NEW> if rewritten, otherwise blank]\nEvent 2:\n[Preserved event or rewritten mid-term event.]\n\n[<NEW> if rewritten, otherwise blank]\nEvent 3:\n[Preserved event or rewritten mid-term event.]\n\n## Marked Mid-Term Event Queue\n\n{MTEUpdateCheck_output}\n\n## Current Story Arc\n\nThe arc is not a synopsis to continue from. It is an ordered sequence of mid-term events to extract into the queue.\n\n{ArcCrop_output}\n\n## Some world facts\n\n{Continuity_output}\n\n## Goals\n\n{Goal_output}\n\n## Social Relationship Stats towards User\n\n{Stat_output}\n",
+      "agentInstructions": "# Mid-Term Event Writer Agent\n\nYou extract mid-term events from a broader story arc. A mid-term event is one concrete playable event within the arc, large enough to contain several short-term beats, but not a synopsis of the arc or a summary of time passing.\n\nThe current story arc is a sequence of connected developments that together form a larger part of the story. You must find the earliest development in the arc that has not happened yet and output the next mid-term event at that point.\n\nDo not continue after the arc. Do not skip ahead. Do not start after a time skip, escape, relocation, aftermath, or explanation scene unless every earlier arc development has already happened. **The arc is not a synopsis to continue beyond; it is the bounded story sequence you must extract mid-term events from.**\n\nExample: If the arc is `A. sisters appear in the execution plaza -> B. tower reacts and marks them -> C. factions clash over them -> D. they flee underground`, and `A` has not happened yet, the mid-term queue must be `A -> B -> C`, not `C -> D -> new events after D`.\n\n## What a Mid-Term Event Is\n\nA mid-term event is one medium-scale development extracted directly from the current story arc.\n\nIt is larger than a single moment, but smaller than the entire arc. It should describe one concrete development that can unfold over about 5 chat messages.\n\nWrite each event plainly as a story-planning item. Do not write prose narration, scene openings, sensory description, exact dialogue, moment-by-moment action, or tiny short-term beats.\n\nThe mid-term events you write should fit within the Current Story Arc. However, the Current Story Arc is a flexible working premise, not a fixed outcome. Write the next mid-term events as  broad, medium-length segments that occur within the Current Story Arc. These mid-term events also arise from the current state of the story and the user\u2019s recent actions.\n\n## Balancing User Agency and Story Resilience\n\nThis is your most important job, and the hardest one.\n\nIf an event is marked with `<NEW DIRECTION>`, replace it with a mid-term event that better reflects the direction created by the user\u2019s recent actions.\n\nUse the Current Story Arc as the default narrative anchor. When the user\u2019s actions continue that arc, carry its momentum forward. When the user\u2019s actions pull away from it, respond to the emerging direction naturally:\n\n* either follow the user\u2019s momentum into a new story direction, or\n* push back with plausible resistance or consequences.\n\n## Don'ts\n\nDo not summarize the whole arc into one event, and do not jump to the arc\u2019s later consequences before earlier developments have occurred. Pace it slowly, following the above rules.\n\nAvoid vague goals, thematic summaries, mood descriptions, generic filler, and empty statements about tension or stakes.\n\n## Pace\n\n**Take it slow**. The story arc contains many mid-term events. You are in no rush to create a single queue of mid-term events that covers the entire story arc.\n\n## What to Rewrite\n\nOnly rewrite queue slots marked with `<REWRITE>`.\n\nPreserve unmarked events exactly, letter by letter.\n\nRemove `<REWRITE>` after rewriting.\n\nPlace `<NEW>` directly above every rewritten event.\n\n## Rewrite Rules\n\nIf all 3 events are marked with `<REWRITE>`, write the next 3 unresolved mid-term events from the current story arc, in order.\n\nIf only some events are marked with `<REWRITE>`, rewrite only those events and preserve the others exactly.\n\nWhen rewriting an event, make sure it fits naturally with the surrounding preserved events.\n\n## Output Format\n\n# MID-TERM EVENT QUEUE:\n\n[<NEW> if rewritten, otherwise blank]\nEvent 1:\n[Preserved event or rewritten mid-term event.]\n\n[<NEW> if rewritten, otherwise blank]\nEvent 2:\n[Preserved event or rewritten mid-term event.]\n\n[<NEW> if rewritten, otherwise blank]\nEvent 3:\n[Preserved event or rewritten mid-term event.]\n\n## Marked Mid-Term Event Queue\n\n{MTEUpdateCheck_output}\n\n## Current Story Arc\n\nThe arc is not a synopsis to continue from. It is a bounded medium-scale progression to extract mid-term events from.\n\n{ArcCrop_output}\n\n## Some world facts\n\n{Continuity_output}\n\n## Goals\n\n{Goal_output}\n\n## Social Relationship Stats towards User\n\n{Stat_output}\n",
       "characterInput": false,
       "scenario": false,
       "carryOver": false,
@@ -325,8 +329,9 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": false,
       "publish": false,
-      "pastMessageCount": 0,
+      "pastMessageCount": 15,
       "parents": [
         "020c67db5951460bb545c0004c0d7c07",
         "33839c824e6e44d6a9744b5db93cfaff",
@@ -358,7 +363,7 @@
       "characterInput": false,
       "scenario": false,
       "carryOver": true,
-      "carryOverAgentId": "",
+      "carryOverAgentId": "266f165df28343cc9c6ece0af0890bf7",
       "carryOverAgentName": "MTE Buffer",
       "agentBranch": false,
       "agentBranchUpperTrigger": "",
@@ -367,6 +372,7 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
       "pastMessageCount": 0,
       "parents": [
@@ -405,6 +411,7 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
       "pastMessageCount": 0,
       "parents": [
@@ -430,11 +437,11 @@
     {
       "agentName": "STE Update Check",
       "agentId": "dd6223100d4a4fa9a5fecdc767d21ff9",
-      "agentInstructions": "# Short-Term Event Update Check Agent\n\nDetermine whether the current short-term event queue needs to be updated based on the current state of the story.\n\nYour default behavior is to preserve the existing short-term event queue exactly as received.\n\nTrigger a short-term event update if:\n\n* one or more short-term events are empty, or\n* one or more short-term events are extremely unrealistic given the state of the story and are very unlikely to become relevant again, or\n* the first short-term event has already happened or is no longer possible, or\n* the first short-term event has been sitting in the queue for too long without being used\n\n**If any events are marked as `<NEW>`, you MUST not update the queue no matter what. The only thing you must do is output the short-term event queue, word for word, but remove the `<NEW>` tag completely.**\n\n## Triggering an Update\n\nIf no update is needed, write this exact marker at the top of your response:\n\n`<<<PERFORM SHORT-TERM EVENT UPDATE: NO>>>`\n\nThen output the short-term event queue exactly as received, letter by letter.\n\nIf an update is needed, write this exact marker at the top of your response:\n\n`<<<PERFORM SHORT-TERM EVENT UPDATE: YES>>>`\n\nThen output the updated short-term event queue using the rules below.\n\n## How to Update Queue\n\n### 1. Entire Queue Is Empty\n\nIf the entire short-term event queue is empty, output a 3-event queue where each event is marked for rewriting.\n\nOutput:\n\nSHORT-TERM EVENT QUEUE:\n\n<REWRITE>\nEvent 1: EMPTY\n\n<REWRITE>\nEvent 2:\n\n<REWRITE>\nEvent 3:\n\n### 2. First Event Already Happened Or Is No Longer Possible\n\nIf Event 1 has already happened, is no longer possible, or has been sitting too long without being used, remove Event 1 from the queue, move Event 2 into the Event 1 slot, move Event 3 into the Event 2 slot, and replace Event 3 with:\n\n<REWRITE>\nEvent 3: EMPTY\n\nDo not rewrite Event 2 or Event 3. Move them upward exactly as written.\n\n### 3. A Particular Event No Longer Fits\n\nIf a particular event is empty, impossible, extremely unrealistic, or no longer fitting for the story, preserve its slot but append this above it:\n\n`<REWRITE>`\n\nDo not rewrite the other events.\n\n## Preservation Rule\n\nOnly change the short-term event queue in the specific ways described above.\n\nAny event that is not being removed, moved upward, or marked as `<REWRITE>` must be preserved exactly as received, letter by letter.\n\n## Input Short-term Event Queue\nThe input STE queue is found **under -\"----PREVIOUS OUTPUTS----\"** much further below.\n(if none displayed under ---PREVIOUS OUTPUTS----, output \"EMPTY\" for all 3 short-term events.)\n",
+      "agentInstructions": "# Short-Term Event Update Check Agent\n\nDetermine whether the current short-term event queue needs to be updated based on the current state of the story.\n\nDetermine whether the current short-term event queue needs to be updated based on the current state of the story.\n\nYour default behavior is to cycle the short-term event queue upward and produce a new event in the Event 3 slot.\n\n**If it is still remotely possible for an event to occur, preserve it exactly.** Only update events beyond normal cycling if:\n\n* one or more short-term events are empty, or\n* one or more short-term events are extremely unrealistic given the current state of the story and are very unlikely to become relevant again, or\n* the first short-term event has already happened or is no longer possible.\n\n**If any events are marked as `<NEW>`, you MUST not update the queue no matter what. The only thing you must do is output the short-term event queue, word for word, but remove the `<NEW>` tag completely.**\n\n## Triggering an Update\n\nIf no update is needed, write this exact marker at the top of your response:\n\n`<<<PERFORM SHORT-TERM EVENT UPDATE: NO>>>`\n\nThen output the short-term event queue exactly as received, letter by letter.\n\nIf an update is needed, write this exact marker at the top of your response:\n\n`<<<PERFORM SHORT-TERM EVENT UPDATE: YES>>>`\n\nThen output the updated short-term event queue using the rules below.\n\n## How to Update Queue\n\n### 1. Entire Queue Is Empty\n\nIf the entire short-term event queue is empty, output a 3-event queue where each event is marked for rewriting.\n\nOutput:\n\nSHORT-TERM EVENT QUEUE:\n\n<REWRITE>\nEvent 1: EMPTY\n\n<REWRITE>\nEvent 2:\n\n<REWRITE>\nEvent 3:\n\n### 2. First Event Already Happened Or Is No Longer Possible\n\nIf Event 1 has already happened, is no longer possible, or has been sitting too long without being used, remove Event 1 from the queue, move Event 2 into the Event 1 slot, move Event 3 into the Event 2 slot, and replace Event 3 with:\n\n<REWRITE>\nEvent 3: EMPTY\n\nDo not rewrite Event 2 or Event 3. Move them upward exactly as written.\n\n### 3. A Particular Event No Longer Fits\n\nIf a particular event is empty, impossible, extremely unrealistic, or no longer fitting for the story, preserve its slot but append this above it:\n\n`<REWRITE>`\n\nDo not rewrite the other events.\n\n## Preservation Rule\n\nOnly change the short-term event queue in the specific ways described above.\n\nAny event that is not being removed, moved upward, or marked as `<REWRITE>` must be preserved exactly as received, letter by letter.\n\n## Input Short-term Event Queue\nThe input STE queue is found **under -\"----PREVIOUS OUTPUT----\"** much further below.\n(if none displayed under ---PREVIOUS OUTPUT----, output \"EMPTY\" for all 3 short-term events.)\n",
       "characterInput": false,
       "scenario": false,
-      "carryOver": false,
-      "carryOverAgentId": "",
+      "carryOver": true,
+      "carryOverAgentId": "dd6223100d4a4fa9a5fecdc767d21ff9",
       "carryOverAgentName": "STE Update Check",
       "agentBranch": true,
       "agentBranchUpperTrigger": "",
@@ -443,6 +450,7 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
       "pastMessageCount": 30,
       "parents": [
@@ -483,8 +491,9 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": false,
       "publish": false,
-      "pastMessageCount": 0,
+      "pastMessageCount": 5,
       "parents": [
         "dd6223100d4a4fa9a5fecdc767d21ff9",
         "1baa8140ed3657c385a708f0de7edb4e",
@@ -515,7 +524,7 @@
       "characterInput": false,
       "scenario": false,
       "carryOver": true,
-      "carryOverAgentId": "",
+      "carryOverAgentId": "09f0f5c20481483bb99cd88751aadde7",
       "carryOverAgentName": "STE Buffer",
       "agentBranch": false,
       "agentBranchUpperTrigger": "",
@@ -524,6 +533,7 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
       "pastMessageCount": 0,
       "parents": [
@@ -562,6 +572,7 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
       "pastMessageCount": 0,
       "parents": [],
@@ -598,6 +609,7 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
       "pastMessageCount": 2,
       "parents": [
@@ -638,6 +650,7 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
       "pastMessageCount": 20,
       "parents": [
@@ -678,6 +691,7 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
       "pastMessageCount": 5,
       "parents": [
@@ -718,6 +732,7 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": false,
       "pastMessageCount": 5,
       "parents": [
@@ -755,6 +770,7 @@
       "agentBranchLowerInstructions": "",
       "writeLorebook": false,
       "queryLorebook": false,
+      "softActivation": true,
       "publish": true,
       "pastMessageCount": 30,
       "parents": [
