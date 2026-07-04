@@ -22,6 +22,9 @@ app/data/chats/*.json
 app/data/chats/agentOutputs/*.json:
 !app/data/chats/agentOutputs/7.json
 
+# Lorebooks
+app/data/lorebooks
+
 # Optional generated/experimental junk
 scratch.py
 

@@ -343,7 +343,24 @@
             </section>
         </section>
         <section class="loadout-tab-panel" data-panel="other">
-            Other content
+            <section class="loadout-editor-section loadout-editor-inputs-section">
+                <label class="loadout-editor-checkbox-row" for="loadout-soft-activation">
+                    <span class="loadout-editor-checkbox-text">
+                        <span class="loadout-editor-section-title">Soft Activation</span>
+
+                        <span class="loadout-editor-section-description">
+                            By default, a branching agent deactivates any agents located on inactive branches each turn. If soft activation is enabled, an agent on a deactivated branch may still run, but only when another executing agent is connected to it. In that case, the agent will receive blank outputs from any parent branching agents that were deactivated. If soft activation is disabled, then an agent on a deactivated branch will not run under any circumstances.
+                        </span>
+                    </span>
+
+                    <input
+                        id="loadout-soft-activation"
+                        class="loadout-editor-checkbox"
+                        type="checkbox"
+                        {{SOFT_ACTIVATION}}
+                    >
+                </label>
+            </section>
         </section>
     </div>
 </div>

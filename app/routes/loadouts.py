@@ -93,6 +93,7 @@ async def saveLoadoutConfiguration(request: Request):
             "carryOverAgentId": agentConfig["carryOverAgentId"],
             "carryOverAgentName": agentConfig["carryOverAgentName"],
             "agentBranch": agentConfig["agentBranch"],
+            "softActivation": agentConfig["softActivation"],
             "agentBranchUpperTrigger": agentConfig["agentBranchUpperTrigger"],
             "agentBranchUpperInstructions": agentConfig["agentBranchUpperInstructions"],
             "agentBranchLowerTrigger": agentConfig["agentBranchLowerTrigger"],
@@ -136,8 +137,6 @@ async def deleteLoadout(request: Request):
 async def renderAgentPane(request: Request):
     data = await request.json()
 
-    print("data is")
-    print(data)
     agentConfig = data["agentConfig"]["agentConfiguration"]
     agentName = data["agentName"]
     agentNamesByID = data["agentNamesById"]
@@ -188,6 +187,10 @@ async def renderAgentPane(request: Request):
     agentPaneHTML = agentPaneHTML.replace("{{WRITE_LOREBOOK}}", writeLorebookSection)
     agentPaneHTML = agentPaneHTML.replace("{{QUERY_LOREBOOK}}", queryLorebookSection)
     
+    softActivation = "checked" if agentConfig["softActivation"] else ""
+
+    agentPaneHTML = agentPaneHTML.replace("{{SOFT_ACTIVATION}}", softActivation)
+
     inputHTML = ""
     for inputId in agentConfig["parents"]:
         inputName = agentNamesByID[inputId]
@@ -204,8 +207,6 @@ async def renderAgentPane(request: Request):
 async def renderAgentCard(request: Request):
     data = await request.json()
 
-    print("data is")
-    print(data)
     agentConfig = data["agentConfig"]["agentConfiguration"]
     agentID = agentConfig["agentId"]
     agentName = data["agentName"]
@@ -258,7 +259,8 @@ async def getLoadoutConfiguration(loadout_id: str):
     if not loadoutFile.exists():
         raise HTTPException(status_code=404, detail="Loadout not found")
 
-    return file_io.loadLoadout(str(loadoutFile)).model_dump()
+    debugOutput = file_io.loadLoadout(str(loadoutFile)).model_dump()
+    return debugOutput
 
 # agentName: "",
 # agentConfiguration: {

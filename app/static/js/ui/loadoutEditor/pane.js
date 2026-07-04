@@ -216,7 +216,6 @@
 
         branchAgentCheckbox.addEventListener("change", function () {
             const useBranch = branchAgentCheckbox.checked;
-            LoadoutEditor.setAgentToggle(agentId, "branchAgent", branchAgentCheckbox.checked);
             agentBranchUpperTrigger.closest(".loadout-editor-section")
             .classList.toggle("hidden", !useBranch);
             agentBranchUpperInstructions.closest(".loadout-editor-section")
@@ -265,6 +264,11 @@
             writeLorebookCheckbox.disabled = useQueryLorebook;
         })
 
+        const softActivationCheckbox = editorPane.querySelector("#loadout-soft-activation");
+        softActivationCheckbox.addEventListener("change", function () {
+            const softActivation = softActivationCheckbox.checked;
+            config.softActivation = softActivation;
+        })
         registerPaneNameEditor(editorPane, agentId, agent);
     }
 
